@@ -33,6 +33,44 @@ GET host/statistic
 }
 ```
 
+## CardImageRequest
+GET host/images
+```json
+{
+  "deckId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "cardId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "side": "string"
+}
+```
+
+## CardImageResponse
+```json
+{
+  "result": "string",
+  "image": "???"
+}
+```
+
+## AddCardImageRequest
+POST host/images
+```json
+{
+  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "cardId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "side": "string",
+  "image": "string"
+}
+```
+
+## AddCardImageResponse
+```json
+{
+  "result": "string",
+  "imageId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+```
+
 # Authentication
 
 ## RegisterRequest
@@ -187,7 +225,180 @@ PATCH host/users/password
 
 # Creating
 
-TODO
+## UserDecksToEditRequest
+GET host/editing/decks
+```json
+{
+  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "searchQuery": "string",
+  "page": 0
+}
+```
+
+## UserDecksToEditResponse
+```json
+{
+  "decks": [
+    {
+      "deckId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "name": "string",
+      "description": "string",
+      "isPrivate": true
+    }
+  ]
+}
+```
+
+## EditDeckRequest
+PATCH host/editing/editdeck
+```json
+{
+  "deckId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "name": "string",
+  "description": "string",
+  "isPrivate": true,
+  "password": "string"
+}
+```
+
+## EditDeckResponse
+```json
+{
+  "result": "string"
+}
+```
+
+## EditDeckPasswordRequest
+PATCH host/editing/editpass
+```json
+{
+  "deckId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "newPassword": "string"
+}
+```
+
+## EditDeckPasswordResponse
+```json
+{
+  "result": "string"
+}
+```
+
+## CreateDeckRequest
+POST host/editing/create
+```json
+{
+  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "name": "string",
+  "description": "string",
+  "isPrivate": true,
+  "password": "string"
+}
+```
+
+## CreateDeckResponse
+```json
+{
+  "deckId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "result": "string"
+}
+```
+
+## DeleteDeckRequest
+DELETE host/editing/delete
+```json
+{
+  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "deckId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+```
+
+## DeleteDeckResponse
+```json
+{
+  "result": "string"
+}
+```
+
+## DeckCardsRequest
+GET host/editing/cards
+```json
+{
+  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "deckId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "searchQuery": "string",
+  "page": 0
+}
+```
+
+## EditCardRequest
+PATCH host/editing/cards/edit
+```json
+{
+  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "cardId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "frontSide": "string",
+  "backSide": "string"
+}
+```
+
+## EditCardResponse
+```json
+{
+  "result": "string"
+}
+```
+
+## CreateCardRequest
+POST host/editing/cards/create
+```json
+{
+  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "frontSide": "string",
+  "backSide": "string"
+}
+```
+
+## CreateCardResponse
+```json
+{
+  "cardId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "result": "string"
+}
+```
+
+## DeleteCardRequest
+DELETE host/editing/cards/delete
+```json
+{
+  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "cardId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+```
+
+## DeleteCardResponse
+```json
+{
+  "result": "string"
+}
+```
+
+## DeckCardsResponse
+```json
+{
+  "cards": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "frontSide": "string",
+      "backSide": "string",
+      "frontSideImageId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "backSideImageId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    }
+  ]
+}
+```
 
 # Learning
 
@@ -208,10 +419,9 @@ GET host/decks
     {
       "deckId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       "name": "string",
-      "owner": true
+      "isOwner": true
     }
-  ],
-  "pagesCount": 0
+  ]
 }
 ```
 
@@ -253,7 +463,7 @@ TODO: check if user already have this deck
 }
 ```
 
-## RemoveDeckRequest
+## RemoveDeckFromLatestRequest
 POST host/decks/remove
 ```json
 {
@@ -262,7 +472,7 @@ POST host/decks/remove
 }
 ```
 
-## RemoveDeckResponse
+## RemoveDeckFromLatestResponse
 ```json
 {
   "result": "string"
@@ -308,24 +518,5 @@ POST host/cards/grade
 ```json
 {
   "result": "string"
-}
-```
-
-## CardImageRequest
-DELETE host/cards/image
-```json
-{
-  "deckId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "cardId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "side": "string"
-}
-```
-
-## CardImageResponse
-```json
-{
-  "result": "string",
-  "image": "string"
 }
 ```
