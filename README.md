@@ -81,7 +81,8 @@ POST host/account/register
   "email": "string",
   "firstName": "string",
   "lastName": "string",
-  "password": "string"
+  "password": "string",
+  "location": "string"
 }
 ```
 
