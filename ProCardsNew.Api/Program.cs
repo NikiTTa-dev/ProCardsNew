@@ -1,11 +1,13 @@
+using Microsoft.AspNetCore.CookiePolicy;
 using ProCardsNew.Api;
+using ProCardsNew.Api.Middlewares;
 using ProCardsNew.Application;
 using ProCardsNew.Infrastructure;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((context, configuration) =>
+builder.Host.UseSerilog((_, configuration) =>
 {
     configuration.ReadFrom.Configuration(builder.Configuration);
 });
@@ -14,11 +16,21 @@ builder.Services
     .AddApi()
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
-    
 
 var app = builder.Build();
 
 app.UseExceptionHandler("/error");
+
+app.UseHttpsRedirection();
+
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+    MinimumSameSitePolicy = SameSiteMode.Strict,
+    HttpOnly = HttpOnlyPolicy.Always,
+    Secure = CookieSecurePolicy.Always
+});
+
+app.UseCookieAuthentication();
 
 if (app.Environment.IsDevelopment())
 {
@@ -26,9 +38,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

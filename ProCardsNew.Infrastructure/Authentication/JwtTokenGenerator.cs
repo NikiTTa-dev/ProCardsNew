@@ -13,7 +13,6 @@ namespace ProCardsNew.Infrastructure.Authentication;
 public class JwtTokenGenerator : IJwtTokenGenerator
 {
     private readonly IDateTimeProvider _dateTimeProvider;
-
     private readonly JwtSettings _jwtSettings;
 
     public JwtTokenGenerator(IDateTimeProvider dateTimeProvider, IOptions<JwtSettings> jwtSettings)
@@ -31,7 +30,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
 
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()!),
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString()),
             new Claim(JwtRegisteredClaimNames.GivenName, user.NormalizedLogin),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };

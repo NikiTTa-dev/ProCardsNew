@@ -23,7 +23,7 @@ public class RegisterCommandHandler:
     {
         await Task.CompletedTask;
         
-        if (_userRepository.GetUserByLogin(command.Login) is not null)
+        if (_userRepository.GetUserByLogin(command.Login.ToUpper()) is not null)
             return Error.Conflict();
 
         var user = User.Create(

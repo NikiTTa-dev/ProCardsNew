@@ -5,7 +5,9 @@ namespace ProCardsNew.Domain.UserAggregate;
 
 public class User: AggregateRoot<UserId>
 {
-    public string NormalizedLogin { get; }
+    public string Login { get; }
+    public string Email { get; }
+    public string NormalizedLogin { get; } 
     public string NormalizedEmail { get; }
     public string FirstName { get; }
     public string LastName { get; }
@@ -21,6 +23,8 @@ public class User: AggregateRoot<UserId>
     
     private User(
         UserId id,
+        string login,
+        string email,
         string normalizedLogin,
         string normalizedEmail,
         string firstName,
@@ -32,6 +36,8 @@ public class User: AggregateRoot<UserId>
         DateTime updatedAtDateTime)
         : base(id)
     {
+        Login = login;
+        Email = email;
         NormalizedLogin = normalizedLogin;
         NormalizedEmail = normalizedEmail;
         FirstName = firstName;
@@ -53,6 +59,8 @@ public class User: AggregateRoot<UserId>
     {
         return new(
             UserId.CreateUnique(), 
+            login,
+            email,
             login.ToUpper(),
             email.ToUpper(),
             firstName,

@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using ProCardsNew.Api.Common.Http;
+using ProCardsNew.Api.Filters;
 
 namespace ProCardsNew.Api.Controllers.Common;
 
 [ApiController]
 [Authorize]
+[ProCardsActionFilter]
 public class ApiController: ControllerBase
 {
     protected IActionResult Problem(List<Error> errors)
