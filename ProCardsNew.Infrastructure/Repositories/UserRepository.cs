@@ -16,4 +16,9 @@ public class UserRepository: IUserRepository
     {
         return Users.SingleOrDefault(u => u.NormalizedLogin == login);
     }
+
+    public User? GetUserById(Guid id)
+    {
+        return Users.SingleOrDefault(u => u.Id.Value == id);
+    }
 }

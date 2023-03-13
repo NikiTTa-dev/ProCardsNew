@@ -3,6 +3,7 @@ using MediatR;
 using ProCardsNew.Application.Account.Authentication.Common;
 using ProCardsNew.Application.Common.Interfaces.Authentication;
 using ProCardsNew.Application.Common.Interfaces.Repositories;
+using ProCardsNew.Domain.Common.Errors;
 
 namespace ProCardsNew.Application.Account.Authentication.Queries.Login;
 
@@ -23,15 +24,17 @@ public class LoginQueryHandler :
         await Task.CompletedTask;
 
         if (_userRepository.GetUserByLogin(query.Login.ToUpper()) is not { } user)
-            return Error.Conflict();
+            return Errors.Authentication.InvalidCredentials;
 
         if (user.PasswordHash != query.Password)
-            return Error.Failure();
+            return Errors.Authentication.InvalidCredentials;
 
         var token = _jwtTokenGenerator.GenerateToken(user);
+        var refresh = user.GenerateRefreshToken();
         
         return new AuthenticationResult(
             user,
-            token);
+            token,
+            refresh.Value);
     }
 }

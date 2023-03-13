@@ -3,6 +3,7 @@ using MediatR;
 using ProCardsNew.Application.Account.Authentication.Common;
 using ProCardsNew.Application.Common.Interfaces.Authentication;
 using ProCardsNew.Application.Common.Interfaces.Repositories;
+using ProCardsNew.Domain.Common.Errors;
 using ProCardsNew.Domain.UserAggregate;
 
 namespace ProCardsNew.Application.Account.Authentication.Commands.Register;
@@ -24,7 +25,7 @@ public class RegisterCommandHandler:
         await Task.CompletedTask;
         
         if (_userRepository.GetUserByLogin(command.Login.ToUpper()) is not null)
-            return Error.Conflict();
+            return Errors.User.DuplicateLogin;
 
         var user = User.Create(
             command.Login,
@@ -37,9 +38,11 @@ public class RegisterCommandHandler:
         _userRepository.Add(user);
 
         var token = _jwtTokenGenerator.GenerateToken(user);
-
+        var refresh = user.GenerateRefreshToken();
+        
         return new AuthenticationResult(
             user,
-            token);
+            token,
+            refresh.Value);
     }
 }

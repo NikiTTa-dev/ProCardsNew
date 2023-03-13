@@ -4,4 +4,5 @@ namespace ProCardsNew.Application.Account.Authentication.Common;
 
 public record AuthenticationResult(
     User User,
-    string Token);
+    string Token,
+    string RefreshToken);

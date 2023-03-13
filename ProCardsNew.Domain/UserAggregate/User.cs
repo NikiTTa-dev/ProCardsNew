@@ -12,6 +12,7 @@ public class User: AggregateRoot<UserId>
     public string FirstName { get; }
     public string LastName { get; }
     public string Location { get; }
+    public RefreshToken? RefreshToken { get; private set; }
     public string? PasswordRecoveryCode { get; } = null;
     public DateTime? PasswordRecoveryEndDateTime { get; } = null;
     public string PasswordHash { get; }
@@ -58,7 +59,7 @@ public class User: AggregateRoot<UserId>
         string passwordHash)
     {
         return new(
-            UserId.CreateUnique(), 
+            UserId.CreateUnique(),
             login,
             email,
             login.ToUpper(),
@@ -70,5 +71,11 @@ public class User: AggregateRoot<UserId>
             0,
             DateTime.UtcNow, 
             DateTime.UtcNow);
+    }
+
+    public RefreshToken GenerateRefreshToken()
+    {
+        RefreshToken = RefreshToken.CreateUnique();
+        return RefreshToken;
     }
 }

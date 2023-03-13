@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using ProCardsNew.Api.Controllers.Common;
+using ProCardsNew.Application.Account.Authentication.Commands.Refresh;
 using ProCardsNew.Application.Account.Authentication.Commands.Register;
+using ProCardsNew.Application.Account.Authentication.Common;
 using ProCardsNew.Application.Account.Authentication.Queries.Login;
 using ProCardsNew.Contracts.Account.Authentication;
 using ProCardsNew.Infrastructure.Authentication;
@@ -38,7 +40,7 @@ public class AuthenticationController : ApiController
         var registerResult = await _mediator.Send(command);
 
         return registerResult.Match(
-            result => Authenticate(_mapper.Map<AuthenticationResponse>(result)),
+            result => Authenticate(result),
             errors => Problem(errors));
     }
 
@@ -49,17 +51,37 @@ public class AuthenticationController : ApiController
         var authResult = await _mediator.Send(query);
 
         return authResult.Match(
-            result => Authenticate(_mapper.Map<AuthenticationResponse>(result)),
+            result => Authenticate(result),
             errors => Problem(errors));
     }
 
-    private IActionResult Authenticate(AuthenticationResponse result)
+    [HttpPost("refresh")]
+    public async Task<IActionResult> RefreshTokenAsync(RefreshTokenRequest request)
     {
-        HttpContext.Response.Cookies.Append(_jwtSettings.CookieName, result.Token,
+        var command = new RefreshTokenCommand(
+            request.UserId,
+            HttpContext.Request.Cookies[_jwtSettings.RefreshTokenName]);
+        var refreshResult = await _mediator.Send(command);
+        
+        return refreshResult.Match(
+            result => Authenticate(result),
+            errors => Problem(errors));
+    }
+
+    private IActionResult Authenticate(AuthenticationResult result)
+    {
+        HttpContext.Response.Cookies.Append(_jwtSettings.AccessTokenName, result.Token,
             new CookieOptions
             {
-                MaxAge = TimeSpan.FromMinutes(_jwtSettings.ExpiryMinutes)
+                MaxAge = TimeSpan.FromMinutes(_jwtSettings.AccessTokenExpiryMinutes)
             });
-        return Ok(result);
+        HttpContext.Response.Cookies.Append(_jwtSettings.RefreshTokenName, result.RefreshToken,
+            new CookieOptions
+            {
+                MaxAge = TimeSpan.FromHours(_jwtSettings.RefreshTokenExpiryHours),
+                Path = "/account/refresh"
+            });
+        
+        return Ok(_mapper.Map<AuthenticationResponse>(result));
     }
 }

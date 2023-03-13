@@ -5,5 +5,4 @@ public record AuthenticationResponse(
     string Login,
     string Email,
     string FirstName,
-    string LastName,
-    string Token);
+    string LastName);

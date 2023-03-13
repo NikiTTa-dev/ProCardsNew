@@ -12,10 +12,9 @@ public class CookieAuthenticationMiddleware
         _next = next;
     }
 
-    // IMessageWriter is injected into InvokeAsync
     public async Task InvokeAsync(HttpContext context, IOptions<JwtSettings> jwtSettings)
     {
-        var token = context.Request.Cookies[jwtSettings.Value.CookieName];
+        var token = context.Request.Cookies[jwtSettings.Value.AccessTokenName];
         if (!string.IsNullOrEmpty(token))
             context.Request.Headers.Add("Authorization", "Bearer " + token);
         
