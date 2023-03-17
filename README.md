@@ -66,8 +66,7 @@ POST host/images
 ## AddCardImageResponse
 ```json
 {
-  "result": "string",
-  "imageId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  "result": "string"
 }
 ```
 
@@ -497,8 +496,8 @@ GET host/cards
       "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       "frontSide": "string",
       "backSide": "string",
-      "frontSideImageId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "backSideImageId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      "hasFrontImage": true,
+      "HasBackImage": false
     }
   ]
 }
@@ -511,7 +510,8 @@ POST host/cards/grade
   "deckId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "cardId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "grade": 0
+  "grade": 0,
+  "timeInSeconds": 0
 }
 ```
 

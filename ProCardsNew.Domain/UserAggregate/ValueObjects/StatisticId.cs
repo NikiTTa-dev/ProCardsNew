@@ -2,18 +2,18 @@
 
 namespace ProCardsNew.Domain.UserAggregate.ValueObjects;
 
-public sealed class RefreshToken: ValueObject
+public sealed class StatisticId: ValueObject
 {
-    public string Value { get; }
+    public Guid Value { get; }
 
-    private RefreshToken(string value)
+    private StatisticId(Guid value)
     {
         Value = value;
     }
 
-    public static RefreshToken CreateUnique()
+    public static StatisticId CreateUnique()
     {
-        return new(Guid.NewGuid().ToString());
+        return new(Guid.NewGuid());
     }
     
     public override IEnumerable<object> GetEqualityComponents()

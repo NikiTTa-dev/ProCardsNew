@@ -3,7 +3,7 @@ using ProCardsNew.Domain.UserAggregate.ValueObjects;
 
 namespace ProCardsNew.Domain.UserAggregate;
 
-public class User: AggregateRoot<UserId>
+public sealed class User: AggregateRoot<UserId>
 {
     public string Login { get; }
     public string Email { get; }

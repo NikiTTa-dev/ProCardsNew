@@ -2,7 +2,7 @@
 using MediatR;
 using ProCardsNew.Application.Account.Authentication.Common;
 using ProCardsNew.Application.Common.Interfaces.Authentication;
-using ProCardsNew.Application.Common.Interfaces.Repositories;
+using ProCardsNew.Application.Common.Interfaces.Persistence;
 using ProCardsNew.Domain.Common.Errors;
 
 namespace ProCardsNew.Application.Account.Authentication.Commands.Refresh;

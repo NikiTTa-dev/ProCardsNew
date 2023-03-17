@@ -1,6 +1,6 @@
 ﻿using ProCardsNew.Domain.UserAggregate;
 
-namespace ProCardsNew.Application.Common.Interfaces.Repositories;
+namespace ProCardsNew.Application.Common.Interfaces.Persistence;
 
 public interface IUserRepository
 {
