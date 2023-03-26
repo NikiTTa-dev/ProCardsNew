@@ -1,7 +1,7 @@
 ﻿using ProCardsNew.Application.Common.Interfaces.Persistence;
 using ProCardsNew.Domain.UserAggregate;
 
-namespace ProCardsNew.Infrastructure.Persistence;
+namespace ProCardsNew.Infrastructure.Persistence.Repositories;
 
 public class UserRepository: IUserRepository
 {

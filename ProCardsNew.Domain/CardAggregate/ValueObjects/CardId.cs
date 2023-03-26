@@ -15,6 +15,11 @@ public sealed class CardId: ValueObject
     {
         return new(Guid.NewGuid());
     }
+
+    public static CardId Create(Guid value)
+    {
+        return new(value);
+    }
     
     public override IEnumerable<object> GetEqualityComponents()
     {

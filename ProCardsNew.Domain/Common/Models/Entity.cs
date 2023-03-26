@@ -1,6 +1,6 @@
 ﻿namespace ProCardsNew.Domain.Common.Models;
 
-public abstract class Entity<TId> : IEquatable<Entity<TId>>
+public abstract class Entity<TId> : Entity, IEquatable<Entity<TId>>
     where TId: notnull
 {
     public TId Id { get; }
@@ -12,7 +12,13 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
 
     public override bool Equals(object? obj)
     {
-        return obj is Entity<TId> entity && Id.Equals(entity.Id);
+        if (obj is null || obj is not Entity<TId>)
+            return false;
+
+        var entity = (Entity<TId>)obj;
+
+        return GetEqualityComponents()
+            .SequenceEqual(entity.GetEqualityComponents());
     }
     
     public static bool operator ==(Entity<TId> left, Entity<TId> right)
@@ -32,6 +38,19 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
 
     public override int GetHashCode()
     {
-        return Id.GetHashCode();
+        return GetEqualityComponents()
+            .Select(x => x?.GetHashCode() ?? 0)
+            .Aggregate((x, y) => x ^ y);
     }
+    
+    public override IEnumerable<object?> GetEqualityComponents()
+    {
+        yield return Id;
+    }
+    
+#pragma warning disable CS8618
+    protected Entity()
+    {
+    }
+#pragma warning restore CS8618
 }

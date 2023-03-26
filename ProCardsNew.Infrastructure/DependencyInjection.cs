@@ -10,6 +10,7 @@ using ProCardsNew.Application.Common.Interfaces.Persistence;
 using ProCardsNew.Application.Common.Interfaces.Services;
 using ProCardsNew.Infrastructure.Authentication;
 using ProCardsNew.Infrastructure.Persistence;
+using ProCardsNew.Infrastructure.Persistence.Repositories;
 using ProCardsNew.Infrastructure.Services;
 
 namespace ProCardsNew.Infrastructure;

@@ -1,5 +1,7 @@
 ﻿using ProCardsNew.Domain.CardAggregate.ValueObjects;
 using ProCardsNew.Domain.Common.Models;
+using ProCardsNew.Domain.DeckAggregate;
+using ProCardsNew.Domain.DeckAggregate.Entities;
 
 namespace ProCardsNew.Domain.CardAggregate;
 
@@ -7,12 +9,18 @@ namespace ProCardsNew.Domain.CardAggregate;
 
 public sealed class Card: AggregateRoot<CardId>
 {
-    public string FrontSide { get; }
-    public string BackSide { get; }
-    //public string Color { get; }
-    public DateTime CreatedAtDateTime { get; }
-    public DateTime UpdatedAtDateTime { get; }
-
+    public string FrontSide { get; private set; }
+    public string BackSide { get; private set; }
+    //public string Color { get; private set; }
+    public DateTime CreatedAtDateTime { get; private set; }
+    public DateTime UpdatedAtDateTime { get; private set; }
+    
+    private readonly List<DeckCard> _deckCards = new();
+    public IReadOnlyList<DeckCard> DeckCards => _deckCards.AsReadOnly();
+    
+    private readonly List<Deck> _decks = new();
+    public IReadOnlyList<Deck> Decks => _decks.AsReadOnly();
+    
     private Card(
         CardId id, 
         string frontSide,
@@ -40,4 +48,11 @@ public sealed class Card: AggregateRoot<CardId>
             DateTime.UtcNow,
             DateTime.UtcNow);
     }
+    
+#pragma warning disable CS8618
+    private Card()
+    {
+        
+    }
+#pragma warning restore CS8618
 }

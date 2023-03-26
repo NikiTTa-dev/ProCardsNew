@@ -15,6 +15,11 @@ public sealed class DeckId: ValueObject
     {
         return new(Guid.NewGuid());
     }
+
+    public static DeckId Create(Guid value)
+    {
+        return new(value);
+    }
     
     public override IEnumerable<object> GetEqualityComponents()
     {

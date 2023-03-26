@@ -2,7 +2,10 @@ using Microsoft.AspNetCore.CookiePolicy;
 using ProCardsNew.Api;
 using ProCardsNew.Api.Middlewares;
 using ProCardsNew.Application;
+using ProCardsNew.Domain.CardAggregate;
+using ProCardsNew.Domain.DeckAggregate;
 using ProCardsNew.Infrastructure;
+using ProCardsNew.Infrastructure.Persistence;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +31,40 @@ app.UseCookiePolicy(new CookiePolicyOptions
     MinimumSameSitePolicy = SameSiteMode.Strict,
     HttpOnly = HttpOnlyPolicy.Always,
     Secure = CookieSecurePolicy.Always
+});
+
+app.Map("mock",async context =>
+{
+    var dbContext = context.RequestServices.GetService<ProCardsDbContext>()!;
+
+    var cards = new List<Card>
+    {
+        Card.Create("a", "a"),
+        Card.Create("a", "a"),
+        Card.Create("a", "a"),
+        Card.Create("a", "a"),
+        Card.Create("a", "a"),
+        Card.Create("a", "a"),
+    };
+    
+    var deck = Deck.Create("a", "a", true, "a");
+    
+    dbContext.Cards.AddRange(cards);
+    dbContext.Decks.Add(deck);
+    deck.AddCard(cards[0]);
+    deck.AddCard(cards[1]);
+    deck.AddCard(cards[2]);
+    deck.AddCard(cards[3]);
+    deck.AddCard(cards[4]);
+    deck.AddCard(cards[5]);
+    await dbContext.SaveChangesAsync();
+});
+
+app.Map("reboot", async context =>
+{
+    var dbContext = context.RequestServices.GetService<ProCardsDbContext>()!;
+    await dbContext.Database.EnsureDeletedAsync();
+    await dbContext.Database.EnsureCreatedAsync();
 });
 
 app.UseCookieAuthentication();
