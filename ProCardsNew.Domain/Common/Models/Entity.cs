@@ -21,12 +21,12 @@ public abstract class Entity<TId> : Entity, IEquatable<Entity<TId>>
             .SequenceEqual(entity.GetEqualityComponents());
     }
     
-    public static bool operator ==(Entity<TId> left, Entity<TId> right)
+    public static bool operator ==(Entity<TId>? left, Entity<TId>? right)
     {
         return Equals(left, right);
     }
 
-    public static bool operator !=(Entity<TId> left, Entity<TId> right)
+    public static bool operator !=(Entity<TId>? left, Entity<TId>? right)
     {
         return !Equals(left, right);
     }

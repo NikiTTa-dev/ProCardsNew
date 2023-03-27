@@ -15,12 +15,12 @@ public abstract class Entity: IEquatable<Entity>
             .SequenceEqual(valueObject.GetEqualityComponents());
     }
     
-    public static bool operator ==(Entity left, Entity right)
+    public static bool operator ==(Entity? left, Entity? right)
     {
         return Equals(left, right);
     }
 
-    public static bool operator !=(Entity left, Entity right)
+    public static bool operator !=(Entity? left, Entity? right)
     {
         return !Equals(left, right);
     }
@@ -36,11 +36,4 @@ public abstract class Entity: IEquatable<Entity>
     {
         return Equals((object?)other);
     }
-    
-#pragma warning disable CS8618
-    protected Entity()
-    {
-        
-    }
-#pragma warning restore CS8618
 }

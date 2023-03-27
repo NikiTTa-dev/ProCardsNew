@@ -1,4 +1,5 @@
-﻿using ProCardsNew.Domain.CardAggregate.ValueObjects;
+﻿using ProCardsNew.Domain.CardAggregate.Entities;
+using ProCardsNew.Domain.CardAggregate.ValueObjects;
 using ProCardsNew.Domain.Common.Models;
 using ProCardsNew.Domain.DeckAggregate;
 using ProCardsNew.Domain.DeckAggregate.Entities;
@@ -17,9 +18,11 @@ public sealed class Card: AggregateRoot<CardId>
     
     private readonly List<DeckCard> _deckCards = new();
     public IReadOnlyList<DeckCard> DeckCards => _deckCards.AsReadOnly();
-    
     private readonly List<Deck> _decks = new();
     public IReadOnlyList<Deck> Decks => _decks.AsReadOnly();
+    
+    private readonly List<Grade> _grades = new();
+    public IReadOnlyList<Grade> Grades => _grades.AsReadOnly();
     
     private Card(
         CardId id, 
@@ -50,6 +53,7 @@ public sealed class Card: AggregateRoot<CardId>
     }
     
 #pragma warning disable CS8618
+    // ReSharper disable once UnusedMember.Local
     private Card()
     {
         

@@ -4,6 +4,7 @@ using ProCardsNew.Api.Middlewares;
 using ProCardsNew.Application;
 using ProCardsNew.Domain.CardAggregate;
 using ProCardsNew.Domain.DeckAggregate;
+using ProCardsNew.Domain.UserAggregate;
 using ProCardsNew.Infrastructure;
 using ProCardsNew.Infrastructure.Persistence;
 using Serilog;
@@ -57,7 +58,16 @@ app.Map("mock",async context =>
     deck.AddCard(cards[3]);
     deck.AddCard(cards[4]);
     deck.AddCard(cards[5]);
+
+    var user = User.Create("a", "a", "a", "a", "a", "a");
+    dbContext.Users.Add(user);
+    var deckStatistic = deck.AddStatistic(user);
+    deckStatistic.IncreaseStatistic(1, 1);
+    
     await dbContext.SaveChangesAsync();
+
+    var users = dbContext.Users.Select(u => u).ToList();
+    Console.WriteLine(users[0].RefreshToken == null);
 });
 
 app.Map("reboot", async context =>

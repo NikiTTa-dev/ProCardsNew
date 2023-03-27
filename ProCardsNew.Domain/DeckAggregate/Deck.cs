@@ -2,6 +2,8 @@
 using ProCardsNew.Domain.Common.Models;
 using ProCardsNew.Domain.DeckAggregate.Entities;
 using ProCardsNew.Domain.DeckAggregate.ValueObjects;
+using ProCardsNew.Domain.UserAggregate;
+using ProCardsNew.Domain.UserAggregate.Entities;
 
 namespace ProCardsNew.Domain.DeckAggregate;
 
@@ -17,10 +19,19 @@ public sealed class Deck: AggregateRoot<DeckId>
    
     private readonly List<DeckCard> _deckCards = new();
     public IReadOnlyList<DeckCard> DeckCards => _deckCards.AsReadOnly();
-    
     private readonly List<Card> _cards = new();
     public IReadOnlyList<Card> Cards => _cards.AsReadOnly();
-
+    
+    private readonly List<DeckStatistic> _deckStatistics = new();
+    public IReadOnlyList<DeckStatistic> DeckStatistics => _deckStatistics.AsReadOnly();
+    private readonly List<User> _leaderboardUsers = new();
+    public IReadOnlyList<User> LeaderboardUsers => _leaderboardUsers.AsReadOnly(); 
+    
+    private readonly List<UserDeck> _userDecks = new();
+    public IReadOnlyList<UserDeck> UserDecks => _userDecks.AsReadOnly();
+    private readonly List<User> _users = new();
+    public IReadOnlyList<User> Users => _users.AsReadOnly(); 
+    
     private Deck(
         DeckId id,
         string name,
@@ -58,15 +69,26 @@ public sealed class Deck: AggregateRoot<DeckId>
             DateTime.UtcNow);
     }
 
-    public Card AddCard(Card card)
+    public DeckCard AddCard(Card card)
     {
         _cards.Add(card);
-        _deckCards.Add(DeckCard.Create(card.Id, Id));
+        var deckCard = DeckCard.Create(card.Id, Id);
+        _deckCards.Add(deckCard);
         CardsCount++;
         
-        return card;
+        return deckCard;
     }
+
+    public DeckStatistic AddStatistic(User user)
+    {
+        var deckStatistic = DeckStatistic.Create(Id, user.Id);
+        _deckStatistics.Add(deckStatistic);
+
+        return deckStatistic;
+    }
+    
 #pragma warning disable CS8618
+    // ReSharper disable once UnusedMember.Local
     private Deck()
     {
         

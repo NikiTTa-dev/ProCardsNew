@@ -15,6 +15,11 @@ public sealed class RefreshToken: ValueObject
     {
         return new(Guid.NewGuid().ToString());
     }
+    public static RefreshToken Create(string value)
+    {
+        return new(value);
+    }
+    
     
     public override IEnumerable<object> GetEqualityComponents()
     {

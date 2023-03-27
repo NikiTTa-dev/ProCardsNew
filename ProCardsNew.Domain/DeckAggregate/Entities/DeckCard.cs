@@ -13,6 +13,7 @@ public class DeckCard: Entity
     public CardId CardId { get; private set; }
     public DeckId DeckId { get; private set; }
     
+    
     private DeckCard(
         DateTime addedAt,
         CardId card,
@@ -36,7 +37,7 @@ public class DeckCard: Entity
         yield return CardId;
         yield return DeckId;
     }
-    
+
 #pragma warning disable CS8618
     private DeckCard()
     {

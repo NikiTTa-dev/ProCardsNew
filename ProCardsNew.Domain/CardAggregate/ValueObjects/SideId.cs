@@ -1,19 +1,24 @@
 ﻿using ProCardsNew.Domain.Common.Models;
 
-namespace ProCardsNew.Domain.UserAggregate.ValueObjects;
+namespace ProCardsNew.Domain.CardAggregate.ValueObjects;
 
-public sealed class UserDeckId: ValueObject
+public sealed class SideId: ValueObject
 {
     public Guid Value { get; }
 
-    private UserDeckId(Guid value)
+    private SideId(Guid value)
     {
         Value = value;
     }
 
-    public static UserDeckId CreateUnique()
+    public static SideId CreateUnique()
     {
         return new(Guid.NewGuid());
+    }
+
+    public static SideId Create(Guid value)
+    {
+        return new(value);
     }
     
     public override IEnumerable<object> GetEqualityComponents()

@@ -15,6 +15,11 @@ public sealed class UserId: ValueObject
     {
         return new(Guid.NewGuid());
     }
+
+    public static UserId Create(Guid value)
+    {
+        return new(value);
+    }
     
     public override IEnumerable<object> GetEqualityComponents()
     {

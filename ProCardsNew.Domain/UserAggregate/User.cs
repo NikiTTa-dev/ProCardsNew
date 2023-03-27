@@ -1,26 +1,39 @@
 ﻿using ProCardsNew.Domain.Common.Models;
+using ProCardsNew.Domain.DeckAggregate;
+using ProCardsNew.Domain.DeckAggregate.Entities;
+using ProCardsNew.Domain.UserAggregate.Entities;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;
 
 namespace ProCardsNew.Domain.UserAggregate;
 
 public sealed class User: AggregateRoot<UserId>
 {
-    public string Login { get; }
-    public string Email { get; }
-    public string NormalizedLogin { get; } 
-    public string NormalizedEmail { get; }
-    public string FirstName { get; }
-    public string LastName { get; }
-    public string Location { get; }
-    public RefreshToken? RefreshToken { get; private set; }
-    public string? PasswordRecoveryCode { get; } = null;
-    public DateTime? PasswordRecoveryEndDateTime { get; } = null;
-    public string PasswordHash { get; }
-    public int AccessFailedCount { get; }
-    public DateTime? LockoutEndDateTime { get; } = null;
-    public DateTime CreatedAtDateTime { get; }
-    public DateTime UpdatedAtDateTime { get; }
+    public string Login { get; private set;}
+    public string Email { get; private set;}
+    public string NormalizedLogin { get; private set;} 
+    public string NormalizedEmail { get; private set;}
+    public string FirstName { get; private set;}
+    public string LastName { get; private set;}
+    public string Location { get; private set;}
+    public RefreshToken? RefreshToken { get; private set;}
+    public string? PasswordRecoveryCode { get; private set;} = null;
+    public DateTime? PasswordRecoveryEndDateTime { get; private set;} = null;
+    public string PasswordHash { get; private set;}
+    public int AccessFailedCount { get; private set;}
+    public DateTime? LockoutEndDateTime { get; private set;} = null;
+    public DateTime CreatedAtDateTime { get; private set;}
+    public DateTime UpdatedAtDateTime { get; private set;}
+    public Statistic? Statistic { get; private set; }
     
+    private readonly List<DeckStatistic> _deckStatistics = new();
+    public IReadOnlyList<DeckStatistic> DeckStatistics => _deckStatistics.AsReadOnly();
+    private readonly List<Deck> _leaderboardWithUserDecks = new();
+    public IReadOnlyList<Deck> LeaderboardWithUserDecks => _leaderboardWithUserDecks.AsReadOnly();
+    
+    private readonly List<UserDeck> _userDecks = new();
+    public IReadOnlyList<UserDeck> UserDecks => _userDecks.AsReadOnly();
+    private readonly List<Deck> _decks = new();
+    public IReadOnlyList<Deck> Decks => _decks.AsReadOnly();
     
     private User(
         UserId id,
@@ -78,4 +91,10 @@ public sealed class User: AggregateRoot<UserId>
         RefreshToken = RefreshToken.CreateUnique();
         return RefreshToken;
     }
+    
+#pragma warning disable CS8618
+    private User()
+    {
+    }
+#pragma warning restore CS8618
 }

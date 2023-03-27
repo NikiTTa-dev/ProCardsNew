@@ -6,9 +6,16 @@ using ProCardsNew.Domain.DeckAggregate.Entities;
 
 namespace ProCardsNew.Infrastructure.Persistence.Configurations;
 
-public class CardConfiguration: IEntityTypeConfiguration<Card>
+public class CardConfiguration : IEntityTypeConfiguration<Card>
 {
     public void Configure(EntityTypeBuilder<Card> builder)
+    {
+        ConfigureCard(builder);
+        ConfigureDeckCard(builder);
+        ConfigureGrade(builder);
+    }
+
+    private void ConfigureCard(EntityTypeBuilder<Card> builder)
     {
         builder.ToTable("Cards");
 
@@ -19,12 +26,21 @@ public class CardConfiguration: IEntityTypeConfiguration<Card>
             .HasConversion(
                 id => id.Value,
                 value => CardId.Create(value));
+    }
 
+    private void ConfigureDeckCard(EntityTypeBuilder<Card> builder)
+    {
         builder.HasMany(c => c.DeckCards)
-            .WithOne(dc=>dc.Card);
+            .WithOne(dc => dc.Card);
 
         builder.HasMany(c => c.Decks)
             .WithMany(d => d.Cards)
             .UsingEntity<DeckCard>();
+    }
+    
+    private void ConfigureGrade(EntityTypeBuilder<Card> builder)
+    {
+        builder.HasMany(c => c.Grades)
+            .WithOne(g => g.Card);
     }
 }
