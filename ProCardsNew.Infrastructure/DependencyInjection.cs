@@ -28,12 +28,13 @@ public static class DependencyInjection
             .AddAuth(configuration)
             .AddSingleton<IDateTimeProvider, DateTimeProvider>()
             .AddSettings(configuration)
-            .AddPersistence(configuration);
+            .AddPersistence(configuration)
+            .AddEmailSender(configuration);
         
         return services;
     }
 
-    private static void AddPersistence(
+    private static IServiceCollection AddPersistence(
         this IServiceCollection services,
         ConfigurationManager configuration)
     {
@@ -43,6 +44,8 @@ public static class DependencyInjection
         {
             options.UseNpgsql(configuration.GetConnectionString("default"));
         });
+
+        return services;
     }
 
     private static IServiceCollection AddAuth(
@@ -84,5 +87,16 @@ public static class DependencyInjection
         services.AddSingleton(Options.Create(validationSettings));
         
         return services;
+    }
+
+    private static void AddEmailSender(
+        this IServiceCollection services,
+        ConfigurationManager configuration)
+    {
+        var emailSettings = new EmailSettings();
+        configuration.Bind(EmailSettings.SectionName, emailSettings);
+        services.AddSingleton(Options.Create(emailSettings));
+
+        services.AddScoped<IEmailSender, EmailSender>();
     }
 }

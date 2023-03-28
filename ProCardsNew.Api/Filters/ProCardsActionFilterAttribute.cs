@@ -2,7 +2,7 @@
 
 namespace ProCardsNew.Api.Filters;
 
-public class ProCardsActionFilter : Attribute, IAsyncActionFilter
+public class ProCardsActionFilterAttribute : Attribute, IAsyncActionFilter
 {
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
