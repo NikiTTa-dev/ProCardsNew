@@ -39,6 +39,7 @@ public class DeckCard: Entity
     }
 
 #pragma warning disable CS8618
+    // ReSharper disable once UnusedMember.Local
     private DeckCard()
     {
     }

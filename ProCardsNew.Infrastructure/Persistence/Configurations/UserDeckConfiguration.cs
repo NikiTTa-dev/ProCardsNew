@@ -25,5 +25,16 @@ public class UserDeckConfiguration : IEntityTypeConfiguration<UserDeck>
             .HasConversion(
                 id => id.Value,
                 value => DeckId.Create(value));
+        
+        ConfigureProperties(builder);
+    }
+
+    private void ConfigureProperties(EntityTypeBuilder<UserDeck> builder)
+    {
+        builder.Property(ud => ud.OpenedAtDateTime)
+            .IsRequired();
+
+        builder.Property(ud => ud.IsActive)
+            .IsRequired();
     }
 }

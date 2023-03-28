@@ -1,4 +1,5 @@
-﻿using ProCardsNew.Domain.Common.Models;
+﻿using ProCardsNew.Domain.CardAggregate;
+using ProCardsNew.Domain.Common.Models;
 using ProCardsNew.Domain.DeckAggregate;
 using ProCardsNew.Domain.DeckAggregate.Entities;
 using ProCardsNew.Domain.UserAggregate.Entities;
@@ -24,7 +25,13 @@ public sealed class User: AggregateRoot<UserId>
     public DateTime CreatedAtDateTime { get; private set;}
     public DateTime UpdatedAtDateTime { get; private set;}
     public Statistic? Statistic { get; private set; }
+
+    private readonly List<Deck> _ownedDecks = new();
+    public IReadOnlyList<Deck> OwnedDecks => _ownedDecks.AsReadOnly();
     
+    private readonly List<Card> _ownedCards = new();
+    public IReadOnlyList<Card> OwnedCards => _ownedCards.AsReadOnly();
+
     private readonly List<DeckStatistic> _deckStatistics = new();
     public IReadOnlyList<DeckStatistic> DeckStatistics => _deckStatistics.AsReadOnly();
     private readonly List<Deck> _leaderboardWithUserDecks = new();
@@ -34,7 +41,7 @@ public sealed class User: AggregateRoot<UserId>
     public IReadOnlyList<UserDeck> UserDecks => _userDecks.AsReadOnly();
     private readonly List<Deck> _decks = new();
     public IReadOnlyList<Deck> Decks => _decks.AsReadOnly();
-    
+
     private User(
         UserId id,
         string login,
@@ -91,8 +98,16 @@ public sealed class User: AggregateRoot<UserId>
         RefreshToken = RefreshToken.CreateUnique();
         return RefreshToken;
     }
+
+    public string RehashPassword(string newPasswordHash)
+    {
+        PasswordHash = newPasswordHash;
+        
+        return PasswordHash;
+    }
     
 #pragma warning disable CS8618
+    // ReSharper disable once UnusedMember.Local
     private User()
     {
     }

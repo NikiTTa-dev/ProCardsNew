@@ -22,5 +22,22 @@ public class StatisticConfiguration : IEntityTypeConfiguration<Statistic>
         builder.HasOne(s => s.User)
             .WithOne(u => u.Statistic)
             .HasForeignKey(typeof(Statistic));
+
+        ConfigureProperties(builder);
+    }
+
+    private void ConfigureProperties(EntityTypeBuilder<Statistic> builder)
+    {
+        builder.Property(s => s.CardsViewed)
+            .IsRequired();
+
+        builder.Property(s => s.Hours)
+            .IsRequired();
+
+        builder.Property(s => s.CardsCreated)
+            .IsRequired();
+
+        builder.Property(s => s.Score)
+            .IsRequired();
     }
 }

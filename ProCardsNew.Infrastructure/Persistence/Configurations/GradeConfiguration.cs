@@ -32,5 +32,16 @@ public class GradeConfiguration : IEntityTypeConfiguration<Grade>
             .HasConversion(
                 id => id.Value,
                 value => UserId.Create(value));
+        
+        ConfigureProperties(builder);
+    }
+
+    private void ConfigureProperties(EntityTypeBuilder<Grade> builder)
+    {
+        builder.Property(g => g.GradeValue)
+            .IsRequired();
+
+        builder.Property(g => g.GradedAtDateTime)
+            .IsRequired();
     }
 }

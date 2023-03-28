@@ -4,6 +4,7 @@ using ProCardsNew.Domain.DeckAggregate.Entities;
 using ProCardsNew.Domain.DeckAggregate.ValueObjects;
 using ProCardsNew.Domain.UserAggregate;
 using ProCardsNew.Domain.UserAggregate.Entities;
+using ProCardsNew.Domain.UserAggregate.ValueObjects;
 
 namespace ProCardsNew.Domain.DeckAggregate;
 
@@ -14,8 +15,11 @@ public sealed class Deck: AggregateRoot<DeckId>
     public string? PasswordHash { get; private set; }
     public bool IsPublic { get; private set; }
     public int CardsCount { get; private set; }
+    public UserId OwnerId { get; private set; } 
+    public User? Owner { get; private set; }
     public DateTime CreatedAtDateTime { get; private set; }
     public DateTime UpdatedAtDateTime { get; private set; }
+    
    
     private readonly List<DeckCard> _deckCards = new();
     public IReadOnlyList<DeckCard> DeckCards => _deckCards.AsReadOnly();
@@ -38,16 +42,16 @@ public sealed class Deck: AggregateRoot<DeckId>
         string description,
         string passwordHash,
         bool isPublic,
-        int cardsCount,
+        UserId ownerId,
         DateTime createdAtDateTime,
         DateTime updatedAtDateTime)
         : base(id)
     {
+        OwnerId = ownerId;
         Name = name;
         Description = description;
         PasswordHash = passwordHash;
         IsPublic = isPublic;
-        CardsCount = cardsCount;
         CreatedAtDateTime = createdAtDateTime;
         UpdatedAtDateTime = updatedAtDateTime;
     }
@@ -56,7 +60,8 @@ public sealed class Deck: AggregateRoot<DeckId>
         string name,
         string description,
         bool isPublic,
-        string passwordHash)
+        string passwordHash,
+        UserId ownerId)
     {
         return new(
             DeckId.CreateUnique(),
@@ -64,7 +69,7 @@ public sealed class Deck: AggregateRoot<DeckId>
             description,
             passwordHash,
             isPublic,
-            0,
+            ownerId,
             DateTime.UtcNow,
             DateTime.UtcNow);
     }

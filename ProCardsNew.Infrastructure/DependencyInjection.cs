@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,10 +9,12 @@ using Microsoft.IdentityModel.Tokens;
 using ProCardsNew.Application.Common.Interfaces.Authentication;
 using ProCardsNew.Application.Common.Interfaces.Persistence;
 using ProCardsNew.Application.Common.Interfaces.Services;
+using ProCardsNew.Domain.UserAggregate;
 using ProCardsNew.Infrastructure.Authentication;
 using ProCardsNew.Infrastructure.Persistence;
 using ProCardsNew.Infrastructure.Persistence.Repositories;
 using ProCardsNew.Infrastructure.Services;
+using ProCardsNew.Infrastructure.Settings;
 
 namespace ProCardsNew.Infrastructure;
 
@@ -21,32 +24,37 @@ public static class DependencyInjection
         this IServiceCollection services,
         ConfigurationManager configuration)
     {
-        services.AddAuth(configuration);
-        services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
-        services.AddPersistence(configuration);
+        services
+            .AddAuth(configuration)
+            .AddSingleton<IDateTimeProvider, DateTimeProvider>()
+            .AddSettings(configuration)
+            .AddPersistence(configuration);
         
         return services;
     }
 
-    public static IServiceCollection AddPersistence(
+    private static void AddPersistence(
         this IServiceCollection services,
         ConfigurationManager configuration)
     {
         services.AddScoped<IUserRepository, UserRepository>();
+        
         services.AddDbContext<ProCardsDbContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("default"));
         });
-        return services;
     }
 
-    public static IServiceCollection AddAuth(
+    private static IServiceCollection AddAuth(
         this IServiceCollection services,
         ConfigurationManager configuration)
     {
         var jwtSettings = new JwtSettings();
         configuration.Bind(JwtSettings.SectionName, jwtSettings);
 
+        services.AddSingleton<IPasswordHasherService, PasswordHasherService>();
+        services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
+        
         services.AddSingleton(Options.Create(jwtSettings));
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddAuthentication(options =>
@@ -64,6 +72,17 @@ public static class DependencyInjection
                     Encoding.UTF8.GetBytes(jwtSettings.Secret))
             });
 
+        return services;
+    }
+
+    private static IServiceCollection AddSettings(
+        this IServiceCollection services,
+        ConfigurationManager configuration)
+    {
+        var validationSettings = new ValidationSettings();
+        configuration.Bind(ValidationSettings.SectionName, validationSettings);
+        services.AddSingleton(Options.Create(validationSettings));
+        
         return services;
     }
 }

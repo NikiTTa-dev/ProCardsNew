@@ -3,6 +3,8 @@ using ProCardsNew.Domain.CardAggregate.ValueObjects;
 using ProCardsNew.Domain.Common.Models;
 using ProCardsNew.Domain.DeckAggregate;
 using ProCardsNew.Domain.DeckAggregate.Entities;
+using ProCardsNew.Domain.UserAggregate;
+using ProCardsNew.Domain.UserAggregate.ValueObjects;
 
 namespace ProCardsNew.Domain.CardAggregate;
 
@@ -13,9 +15,11 @@ public sealed class Card: AggregateRoot<CardId>
     public string FrontSide { get; private set; }
     public string BackSide { get; private set; }
     //public string Color { get; private set; }
+    public UserId OwnerId { get; private set; }
+    public User? Owner { get; private set; }
     public DateTime CreatedAtDateTime { get; private set; }
     public DateTime UpdatedAtDateTime { get; private set; }
-    
+
     private readonly List<DeckCard> _deckCards = new();
     public IReadOnlyList<DeckCard> DeckCards => _deckCards.AsReadOnly();
     private readonly List<Deck> _decks = new();
@@ -28,6 +32,7 @@ public sealed class Card: AggregateRoot<CardId>
         CardId id, 
         string frontSide,
         string backSide,
+        UserId ownerId,
         //string color, 
         DateTime createdAtDateTime, 
         DateTime updatedAtDateTime)
@@ -35,12 +40,14 @@ public sealed class Card: AggregateRoot<CardId>
     {
         FrontSide = frontSide;
         BackSide = backSide;
+        OwnerId = ownerId;
         //Color = color;
         CreatedAtDateTime = createdAtDateTime;
         UpdatedAtDateTime = updatedAtDateTime;
     }
 
     public static Card Create(
+        UserId ownerId,
         string frontSide,
         string backSide)
     {
@@ -48,6 +55,7 @@ public sealed class Card: AggregateRoot<CardId>
             CardId.CreateUnique(), 
             frontSide,
             backSide,
+            ownerId,
             DateTime.UtcNow,
             DateTime.UtcNow);
     }

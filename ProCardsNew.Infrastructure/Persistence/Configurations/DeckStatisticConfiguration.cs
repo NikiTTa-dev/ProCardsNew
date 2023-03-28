@@ -25,5 +25,19 @@ public class DeckStatisticConfiguration : IEntityTypeConfiguration<DeckStatistic
             .HasConversion(
                 id => id.Value,
                 value => UserId.Create(value));
+        
+        ConfigureProperties(builder);
+    }
+
+    private void ConfigureProperties(EntityTypeBuilder<DeckStatistic> builder)
+    {
+        builder.Property(ds => ds.CardsViewed)
+            .IsRequired();
+
+        builder.Property(ds => ds.Hours)
+            .IsRequired();
+
+        builder.Property(ds => ds.Score)
+            .IsRequired();
     }
 }

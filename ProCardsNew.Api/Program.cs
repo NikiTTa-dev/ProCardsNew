@@ -38,17 +38,19 @@ app.Map("mock",async context =>
 {
     var dbContext = context.RequestServices.GetService<ProCardsDbContext>()!;
 
+    var user = User.Create("a", "a", "a", "a", "a", "a");
+
     var cards = new List<Card>
     {
-        Card.Create("a", "a"),
-        Card.Create("a", "a"),
-        Card.Create("a", "a"),
-        Card.Create("a", "a"),
-        Card.Create("a", "a"),
-        Card.Create("a", "a"),
+        Card.Create(user.Id, "a", "a"),
+        Card.Create(user.Id, "a", "a"),
+        Card.Create(user.Id, "a", "a"),
+        Card.Create(user.Id, "a", "a"),
+        Card.Create(user.Id, "a", "a"),
+        Card.Create(user.Id, "a", "a"),
     };
     
-    var deck = Deck.Create("a", "a", true, "a");
+    var deck = Deck.Create("a", "a", true, "a", user.Id);
     
     dbContext.Cards.AddRange(cards);
     dbContext.Decks.Add(deck);
@@ -59,7 +61,6 @@ app.Map("mock",async context =>
     deck.AddCard(cards[4]);
     deck.AddCard(cards[5]);
 
-    var user = User.Create("a", "a", "a", "a", "a", "a");
     dbContext.Users.Add(user);
     var deckStatistic = deck.AddStatistic(user);
     deckStatistic.IncreaseStatistic(1, 1);

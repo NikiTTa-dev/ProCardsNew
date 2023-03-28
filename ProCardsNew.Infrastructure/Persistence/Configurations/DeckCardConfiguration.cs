@@ -33,5 +33,13 @@ public class DeckCardConfiguration : IEntityTypeConfiguration<DeckCard>
         builder.HasOne(dc => dc.Card)
             .WithMany(c => c.DeckCards)
             .HasForeignKey(dc => dc.CardId);
+        
+        ConfigureProperties(builder);
+    }
+
+    private void ConfigureProperties(EntityTypeBuilder<DeckCard> builder)
+    {
+        builder.Property(dc => dc.AddedAt)
+            .IsRequired();
     }
 }

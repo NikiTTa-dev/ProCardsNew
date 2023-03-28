@@ -4,6 +4,7 @@ using ProCardsNew.Application.Account.Authentication.Common;
 using ProCardsNew.Application.Common.Interfaces.Authentication;
 using ProCardsNew.Application.Common.Interfaces.Persistence;
 using ProCardsNew.Domain.Common.Errors;
+using ProCardsNew.Domain.UserAggregate.ValueObjects;
 
 namespace ProCardsNew.Application.Account.Authentication.Commands.Refresh;
 
@@ -23,7 +24,7 @@ public class RefreshTokenHandler
     {
         await Task.CompletedTask;
 
-        if (_userRepository.GetUserById(request.UserId) is not { } user)
+        if (_userRepository.GetUserById(UserId.Create(request.UserId)) is not { } user)
             return Errors.User.NotFound;
 
         if (user.RefreshToken!.Value != request.RefreshToken)
@@ -32,6 +33,8 @@ public class RefreshTokenHandler
         var access = _jwtTokenGenerator.GenerateToken(user);
         var refresh = user.GenerateRefreshToken();
         
+        _userRepository.SaveChanges();
+
         return new AuthenticationResult(user, access, refresh.Value);
     }
 }
