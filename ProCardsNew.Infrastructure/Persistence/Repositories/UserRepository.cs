@@ -1,4 +1,5 @@
-﻿using ProCardsNew.Application.Common.Interfaces.Persistence;
+﻿using Microsoft.EntityFrameworkCore;
+using ProCardsNew.Application.Common.Interfaces.Persistence;
 using ProCardsNew.Domain.UserAggregate;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;
 
@@ -13,23 +14,28 @@ public class UserRepository: IUserRepository
         _dbContext = dbContext;
     }
     
-    public void Add(User user)
+    public async Task AddAsync(User user)
     {
-        _dbContext.Users.Add(user);
+        await _dbContext.Users.AddAsync(user);
     }
     
-    public User? GetUserByLogin(string login)
+    public async Task<User?> GetUserByLoginAsync(string normalizedLogin)
     {
-        return _dbContext.Users.SingleOrDefault(u => u.NormalizedLogin == login);
+        return await _dbContext.Users.SingleOrDefaultAsync(u => u.NormalizedLogin == normalizedLogin);
     }
 
-    public User? GetUserById(UserId id)
+    public async Task<User?> GetUserByIdAsync(UserId id)
     {
-        return _dbContext.Users.SingleOrDefault(u => u.Id == id);
+        return await _dbContext.Users.SingleOrDefaultAsync(u => u.Id == id);
     }
 
-    public void SaveChanges()
+    public async Task<User?> GetUserByEmailAsync(string normalizedEmail)
     {
-        _dbContext.SaveChanges();
+        return await _dbContext.Users.SingleOrDefaultAsync(u => u.NormalizedEmail == normalizedEmail);
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        await _dbContext.SaveChangesAsync();
     }
 }

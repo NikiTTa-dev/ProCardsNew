@@ -87,9 +87,9 @@ namespace ProCardsNew.Infrastructure.Migrations
                     b.Property<Guid>("SideId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Data")
+                    b.Property<byte[]>("Data")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("bytea");
 
                     b.Property<string>("FileExtension")
                         .IsRequired()

@@ -27,27 +27,25 @@ public class RegisterCommandHandler:
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
-        
-        if (_userRepository.GetUserByLogin(command.Login.ToUpper()) is not null)
+        if (await _userRepository.GetUserByLoginAsync(command.Login.ToUpper()) is not null)
             return Errors.User.DuplicateLogin;
 
         var hashedPassword = _passwordHasherService.GeneratePasswordHash(command.Password);
         
         var user = User.Create(
-            command.Login,
-            command.FirstName,
-            command.LastName,
-            command.Email,
-            command.Location,
-            hashedPassword);
+            login: command.Login,
+            email: command.Email,
+            firstName: command.FirstName,
+            lastName: command.LastName,
+            location: command.Location,
+            passwordHash: hashedPassword);
         
-        _userRepository.Add(user);
+        await _userRepository.AddAsync(user);
 
         var token = _jwtTokenGenerator.GenerateToken(user);
         var refresh = user.GenerateRefreshToken();
         
-        _userRepository.SaveChanges();
+        await _userRepository.SaveChangesAsync();
         
         return new AuthenticationResult(
             user,

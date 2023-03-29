@@ -1,15 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.Options;
+using ProCardsNew.Application.Common.Settings;
 using ProCardsNew.Domain.DeckAggregate.Entities;
 using ProCardsNew.Domain.UserAggregate;
 using ProCardsNew.Domain.UserAggregate.Entities;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;
-using ProCardsNew.Infrastructure.Settings;
 
 namespace ProCardsNew.Infrastructure.Persistence.Configurations;
 
 public class UserConfiguration : IEntityTypeConfiguration<User>
 {
+    private readonly ValidationSettings _validationSettings;
+
+    public UserConfiguration(IOptions<ValidationSettings> validationSettings)
+    {
+        _validationSettings = validationSettings.Value;
+    }
+    
     public void Configure(EntityTypeBuilder<User> builder)
     {
         ConfigureUser(builder);
@@ -42,41 +50,41 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         builder.Property(u => u.Login)
             .IsRequired()
-            .HasMaxLength(DbContextEntitiesSettings.UserLoginLength);
+            .HasMaxLength(_validationSettings.UserLoginLength);
 
         builder.Property(u => u.Email)
             .IsRequired()
-            .HasMaxLength(DbContextEntitiesSettings.UserEmailLength);
+            .HasMaxLength(_validationSettings.UserEmailLength);
 
         builder.Property(u => u.NormalizedLogin)
             .IsRequired()
-            .HasMaxLength(DbContextEntitiesSettings.UserNormalizedLoginLength);
+            .HasMaxLength(_validationSettings.UserNormalizedLoginLength);
 
         builder.Property(u => u.NormalizedEmail)
             .IsRequired()
-            .HasMaxLength(DbContextEntitiesSettings.UserNormalizedEmailLength);
+            .HasMaxLength(_validationSettings.UserNormalizedEmailLength);
 
         builder.Property(u => u.FirstName)
             .IsRequired()
-            .HasMaxLength(DbContextEntitiesSettings.UserFirstNameLength);
+            .HasMaxLength(_validationSettings.UserFirstNameLength);
 
         builder.Property(u => u.LastName)
             .IsRequired()
-            .HasMaxLength(DbContextEntitiesSettings.UserLastNameLength);
+            .HasMaxLength(_validationSettings.UserLastNameLength);
 
         builder.Property(u => u.Location)
             .IsRequired()
-            .HasMaxLength(DbContextEntitiesSettings.UserLocationLength);
+            .HasMaxLength(_validationSettings.UserLocationLength);
 
         builder.Property(u => u.RefreshToken)
-            .HasMaxLength(DbContextEntitiesSettings.UserRefreshTokenLength);
+            .HasMaxLength(_validationSettings.UserRefreshTokenLength);
 
         builder.Property(u => u.PasswordRecoveryCode)
-            .HasMaxLength(DbContextEntitiesSettings.UserRecoveryCodeLength);
+            .HasMaxLength(_validationSettings.UserRecoveryCodeLength);
 
         builder.Property(u => u.PasswordHash)
             .IsRequired()
-            .HasMaxLength(DbContextEntitiesSettings.UserPasswordHashLength);
+            .HasMaxLength(_validationSettings.UserPasswordHashLength);
 
         builder.Property(u => u.AccessFailedCount)
             .IsRequired();

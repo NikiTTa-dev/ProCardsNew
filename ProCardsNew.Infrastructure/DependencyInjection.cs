@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using ProCardsNew.Application.Common.Interfaces.Authentication;
 using ProCardsNew.Application.Common.Interfaces.Persistence;
 using ProCardsNew.Application.Common.Interfaces.Services;
+using ProCardsNew.Application.Common.Settings;
 using ProCardsNew.Domain.UserAggregate;
 using ProCardsNew.Infrastructure.Authentication;
 using ProCardsNew.Infrastructure.Persistence;
@@ -26,10 +27,12 @@ public static class DependencyInjection
     {
         services
             .AddAuth(configuration)
+            .AddSingleton<IRandomNumberGeneratorService, RandomNumberGeneratorServiceService>()
             .AddSingleton<IDateTimeProvider, DateTimeProvider>()
             .AddSettings(configuration)
             .AddPersistence(configuration)
-            .AddEmailSender(configuration);
+            .AddEmailSender(configuration)
+            .AddPasswordRecoveryCodeSettings(configuration);
         
         return services;
     }
@@ -43,6 +46,7 @@ public static class DependencyInjection
         services.AddDbContext<ProCardsDbContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("default"));
+            options.EnableSensitiveDataLogging();
         });
 
         return services;
@@ -89,7 +93,7 @@ public static class DependencyInjection
         return services;
     }
 
-    private static void AddEmailSender(
+    private static IServiceCollection AddEmailSender(
         this IServiceCollection services,
         ConfigurationManager configuration)
     {
@@ -98,5 +102,16 @@ public static class DependencyInjection
         services.AddSingleton(Options.Create(emailSettings));
 
         services.AddScoped<IEmailSender, EmailSender>();
+
+        return services;
+    }
+
+    private static void AddPasswordRecoveryCodeSettings(
+        this IServiceCollection services,
+        ConfigurationManager configuration)
+    {
+        var settings = new PasswordRecoveryCodeSettings();
+        configuration.Bind(PasswordRecoveryCodeSettings.SectionName, settings);
+        services.AddSingleton(Options.Create(settings));
     }
 }

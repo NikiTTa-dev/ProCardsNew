@@ -1,16 +1,24 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.Options;
+using ProCardsNew.Application.Common.Settings;
 using ProCardsNew.Domain.DeckAggregate;
 using ProCardsNew.Domain.DeckAggregate.Entities;
 using ProCardsNew.Domain.DeckAggregate.ValueObjects;
 using ProCardsNew.Domain.UserAggregate.Entities;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;
-using ProCardsNew.Infrastructure.Settings;
 
 namespace ProCardsNew.Infrastructure.Persistence.Configurations;
 
 public class DeckConfiguration : IEntityTypeConfiguration<Deck>
 {
+    private readonly ValidationSettings _validationSettings;
+
+    public DeckConfiguration(IOptions<ValidationSettings> validationSettings)
+    {
+        _validationSettings = validationSettings.Value;
+    }
+    
     public void Configure(EntityTypeBuilder<Deck> builder)
     {
         ConfigureDeck(builder);
@@ -38,15 +46,15 @@ public class DeckConfiguration : IEntityTypeConfiguration<Deck>
     {
         builder.Property(d => d.Name)
             .IsRequired()
-            .HasMaxLength(DbContextEntitiesSettings.DeckNameLength);
+            .HasMaxLength(_validationSettings.DeckNameLength);
 
         builder.Property(d => d.Description)
             .IsRequired()
-            .HasMaxLength(DbContextEntitiesSettings.DeckDescriptionLength);
+            .HasMaxLength(_validationSettings.DeckDescriptionLength);
 
         builder.Property(d => d.PasswordHash)
             .IsRequired()
-            .HasMaxLength(DbContextEntitiesSettings.DeckPasswordHashLength);
+            .HasMaxLength(_validationSettings.DeckPasswordHashLength);
 
         builder.Property(d => d.IsPublic)
             .IsRequired();

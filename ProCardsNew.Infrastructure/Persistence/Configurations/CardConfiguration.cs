@@ -1,15 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.Options;
+using ProCardsNew.Application.Common.Settings;
 using ProCardsNew.Domain.CardAggregate;
 using ProCardsNew.Domain.CardAggregate.ValueObjects;
 using ProCardsNew.Domain.DeckAggregate.Entities;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;
-using ProCardsNew.Infrastructure.Settings;
 
 namespace ProCardsNew.Infrastructure.Persistence.Configurations;
 
 public class CardConfiguration : IEntityTypeConfiguration<Card>
 {
+    private readonly ValidationSettings _validationSettings;
+
+    public CardConfiguration(IOptions<ValidationSettings> validationSettings)
+    {
+        _validationSettings = validationSettings.Value;
+    }
+    
     public void Configure(EntityTypeBuilder<Card> builder)
     {
         ConfigureCard(builder);
@@ -35,11 +43,11 @@ public class CardConfiguration : IEntityTypeConfiguration<Card>
     private void ConfigureProperties(EntityTypeBuilder<Card> builder)
     {
         builder.Property(c => c.FrontSide)
-            .HasMaxLength(DbContextEntitiesSettings.CardSideLength)
+            .HasMaxLength(_validationSettings.CardSideLength)
             .IsRequired();
 
         builder.Property(c => c.BackSide)
-            .HasMaxLength(DbContextEntitiesSettings.CardSideLength)
+            .HasMaxLength(_validationSettings.CardSideLength)
             .IsRequired();
 
         builder.Property(c => c.OwnerId)

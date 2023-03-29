@@ -5,8 +5,9 @@ namespace ProCardsNew.Application.Common.Interfaces.Persistence;
 
 public interface IUserRepository
 {
-    void Add(User user);
-    User? GetUserByLogin(string login);
-    User? GetUserById(UserId id);
-    void SaveChanges();
+    Task AddAsync(User user);
+    Task<User?> GetUserByLoginAsync(string normalizedLogin);
+    Task<User?> GetUserByIdAsync(UserId id);
+    Task<User?> GetUserByEmailAsync(string normalizedEmail);
+    Task SaveChangesAsync();
 }

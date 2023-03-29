@@ -123,13 +123,6 @@ POST host/account/recovery/code
 }
 ```
 
-## PasswordRecoveryResponse
-```json
-{
-  "result": "string"
-}
-```
-
 ## PasswordRecoveryNewPasswordRequest
 POST host/account/recovery/newpass
 ```json
@@ -140,7 +133,7 @@ POST host/account/recovery/newpass
 }
 ```
 
-## PasswordRecoveryNewPasswordResponse
+## PasswordRecoveryResponse
 ```json
 {
   "result": "string"

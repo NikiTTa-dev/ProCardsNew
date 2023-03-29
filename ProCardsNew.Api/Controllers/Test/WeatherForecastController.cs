@@ -1,5 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProCardsNew.Api.Controllers.Common;
+using ProCardsNew.Domain.CardAggregate;
+using ProCardsNew.Domain.CardAggregate.Entities;
+using ProCardsNew.Domain.UserAggregate.ValueObjects;
+using ProCardsNew.Infrastructure.Persistence;
 
 namespace ProCardsNew.Api.Controllers.Test;
 
@@ -11,14 +16,37 @@ public class WeatherForecastController : ApiController
     {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
-    
-    [HttpGet]
-    public async Task<IActionResult> Get()
+
+    [HttpPost]
+    public async Task<IActionResult> Post(IFormFile file)
     {
         await Task.CompletedTask;
-        
+
+        var context = HttpContext.RequestServices.GetService<ProCardsDbContext>()!;
+
+        var card = Card.Create(UserId.Create(Guid.Parse("310fcbba-24e6-439c-95a1-42bc4529a49a")), "firstS", "backS");
+        var side = Side.Create("Front");
+        context.Add(card);
+        context.Add(side);
+        await context.SaveChangesAsync();
+        using (var stream = new MemoryStream())
+        {
+            await file.CopyToAsync(stream);
+            var image = Image.Create(
+                card.Id,
+                side.Id,
+                file.FileName,
+                file.ContentType,
+                stream.ToArray());
+
+            context.Add(image);
+            await context.SaveChangesAsync();
+        }
+
+
+        return File(file.OpenReadStream(), file.ContentType);
+
         var rng = new Random();
-        
         return Ok(Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),
@@ -26,5 +54,25 @@ public class WeatherForecastController : ApiController
                 Summary = Summaries[rng.Next(Summaries.Length)]
             })
             .ToArray());
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Get()
+    {
+        await Task.CompletedTask;
+        
+        var context = HttpContext.RequestServices.GetService<ProCardsDbContext>()!;
+
+        var mage = context.Cards
+            .Include(c => c.Images)
+            .Where(c => c.OwnerId == UserId.Create(Guid.Parse("310fcbba-24e6-439c-95a1-42bc4529a49a")))
+            .SelectMany(c => c.Images)
+            .Include(i => i.Side)
+            .ToList();
+        
+        var image = mage     
+            .FirstOrDefault(i => i.Side?.SideName == "Front");
+        
+        return File(image.Data, image.FileExtension);
     }
 }

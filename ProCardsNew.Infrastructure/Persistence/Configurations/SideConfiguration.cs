@@ -1,13 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.Options;
+using ProCardsNew.Application.Common.Settings;
 using ProCardsNew.Domain.CardAggregate.Entities;
 using ProCardsNew.Domain.CardAggregate.ValueObjects;
-using ProCardsNew.Infrastructure.Settings;
 
 namespace ProCardsNew.Infrastructure.Persistence.Configurations;
 
 public class SideConfiguration : IEntityTypeConfiguration<Side>
 {
+    private readonly ValidationSettings _validationSettings;
+
+    public SideConfiguration(IOptions<ValidationSettings> validationSettings)
+    {
+        _validationSettings = validationSettings.Value;
+    }
+    
     public void Configure(EntityTypeBuilder<Side> builder)
     {
         builder.ToTable("Sides");
@@ -27,6 +35,6 @@ public class SideConfiguration : IEntityTypeConfiguration<Side>
     {
         builder.Property(sd => sd.SideName)
             .IsRequired()
-            .HasMaxLength(DbContextEntitiesSettings.SideNameLength);
+            .HasMaxLength(_validationSettings.SideNameLength);
     }
 }

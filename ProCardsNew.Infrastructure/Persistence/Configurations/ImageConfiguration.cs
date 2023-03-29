@@ -1,13 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.Options;
+using ProCardsNew.Application.Common.Settings;
 using ProCardsNew.Domain.CardAggregate.Entities;
 using ProCardsNew.Domain.CardAggregate.ValueObjects;
-using ProCardsNew.Infrastructure.Settings;
 
 namespace ProCardsNew.Infrastructure.Persistence.Configurations;
 
 public class ImageConfiguration : IEntityTypeConfiguration<Image>
 {
+    private readonly ValidationSettings _validationSettings;
+
+    public ImageConfiguration(IOptions<ValidationSettings> validationSettings)
+    {
+        _validationSettings = validationSettings.Value;
+    }
+    
     public void Configure(EntityTypeBuilder<Image> builder)
     {
         builder.ToTable("Images");
@@ -27,6 +35,9 @@ public class ImageConfiguration : IEntityTypeConfiguration<Image>
                 value => SideId.Create(value));
 
         builder.HasOne(i => i.Side);
+
+        builder.HasOne(i => i.Card)
+            .WithMany(c => c.Images);
         
         ConfigureProperties(builder);
     }
@@ -35,11 +46,11 @@ public class ImageConfiguration : IEntityTypeConfiguration<Image>
     {
         builder.Property(i => i.Name)
             .IsRequired()
-            .HasMaxLength(DbContextEntitiesSettings.ImageNameLength);
+            .HasMaxLength(_validationSettings.ImageNameLength);
 
         builder.Property(i => i.FileExtension)
             .IsRequired()
-            .HasMaxLength(DbContextEntitiesSettings.ImageFileExtensionLength);
+            .HasMaxLength(_validationSettings.ImageFileExtensionLength);
 
         builder.Property(i => i.Data)
             .IsRequired();

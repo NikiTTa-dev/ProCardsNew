@@ -27,9 +27,7 @@ public class LoginQueryHandler :
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
-
-        if (_userRepository.GetUserByLogin(query.Login.ToUpper()) is not { } user)
+        if (await _userRepository.GetUserByLoginAsync(query.Login.ToUpper()) is not { } user)
             return Errors.Authentication.InvalidCredentials;
 
         var passwordVerificationResult = _passwordHasherService.VerifyPasswordHash(
@@ -45,7 +43,7 @@ public class LoginQueryHandler :
         var token = _jwtTokenGenerator.GenerateToken(user);
         var refresh = user.GenerateRefreshToken();
         
-        _userRepository.SaveChanges();
+        await _userRepository.SaveChangesAsync();
         
         return new AuthenticationResult(
             user,

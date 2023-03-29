@@ -17,8 +17,8 @@ public sealed class User: AggregateRoot<UserId>
     public string LastName { get; private set;}
     public string Location { get; private set;}
     public RefreshToken? RefreshToken { get; private set;}
-    public string? PasswordRecoveryCode { get; private set;} = null;
-    public DateTime? PasswordRecoveryEndDateTime { get; private set;} = null;
+    public string? PasswordRecoveryCode { get; private set;}
+    public DateTime? PasswordRecoveryEndDateTime { get; private set;}
     public string PasswordHash { get; private set;}
     public int AccessFailedCount { get; private set;}
     public DateTime? LockoutEndDateTime { get; private set;} = null;
@@ -99,13 +99,24 @@ public sealed class User: AggregateRoot<UserId>
         return RefreshToken;
     }
 
-    public string RehashPassword(string newPasswordHash)
+    public void RehashPassword(string newPasswordHash)
     {
         PasswordHash = newPasswordHash;
-        
-        return PasswordHash;
     }
-    
+
+    public void SetPasswordRecoveryCode(
+        string recoveryCode,
+        int expirationMinutes)
+    {
+        PasswordRecoveryCode = recoveryCode;
+        PasswordRecoveryEndDateTime = DateTime.UtcNow.AddMinutes(expirationMinutes);
+    }
+
+    public void DeletePasswordRecoveryCode()
+    {
+        PasswordRecoveryCode = null;
+    }
+
 #pragma warning disable CS8618
     // ReSharper disable once UnusedMember.Local
     private User()

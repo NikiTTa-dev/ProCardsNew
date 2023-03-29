@@ -27,7 +27,10 @@ public sealed class Card: AggregateRoot<CardId>
     
     private readonly List<Grade> _grades = new();
     public IReadOnlyList<Grade> Grades => _grades.AsReadOnly();
-    
+
+    private readonly List<Image> _images = new();
+    public IReadOnlyList<Image> Images => _images.AsReadOnly();
+
     private Card(
         CardId id, 
         string frontSide,

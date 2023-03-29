@@ -11,7 +11,7 @@ public sealed class Image: Entity
     public Side? Side { get; private set; }
     public string Name { get; private set; }
     public string FileExtension { get; private set; }
-    public string Data { get; private set; }
+    public byte[] Data { get; private set; }
     public DateTime UpdatedAt { get; private set; }
     
     private Image(
@@ -19,7 +19,7 @@ public sealed class Image: Entity
         SideId sideId,
         string name,
         string fileExtension, 
-        string data,
+        byte[] data,
         DateTime updatedAt)
     {
         CardId = cardId;
@@ -35,7 +35,7 @@ public sealed class Image: Entity
         SideId sideId,
         string name,
         string fileExtension,
-        string data)
+        byte[] data)
     {
         return new(
             cardId,

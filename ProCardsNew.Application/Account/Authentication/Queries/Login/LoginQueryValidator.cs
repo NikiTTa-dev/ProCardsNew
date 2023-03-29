@@ -1,12 +1,21 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Options;
+using ProCardsNew.Application.Common.Settings;
 
 namespace ProCardsNew.Application.Account.Authentication.Queries.Login;
 
 public class LoginQueryValidator: AbstractValidator<LoginQuery>
 {
-    public LoginQueryValidator()
+    public LoginQueryValidator(IOptions<ValidationSettings> settings)
     {
-        RuleFor(query => query.Login).NotEmpty();
-        RuleFor(query => query.Password).NotEmpty();
+        var validationSettings = settings.Value;
+        
+        RuleFor(query => query.Login)
+            .NotEmpty()
+            .MaximumLength(validationSettings.UserLoginLength);
+        
+        RuleFor(query => query.Password)
+            .NotEmpty()
+            .MaximumLength(validationSettings.UserPasswordMaxLength);
     }
 }

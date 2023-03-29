@@ -34,48 +34,10 @@ app.UseCookiePolicy(new CookiePolicyOptions
     Secure = CookieSecurePolicy.Always
 });
 
-app.Map("mock",async context =>
-{
-    var dbContext = context.RequestServices.GetService<ProCardsDbContext>()!;
-
-    var user = User.Create("a", "a", "a", "a", "a", "a");
-
-    var cards = new List<Card>
-    {
-        Card.Create(user.Id, "a", "a"),
-        Card.Create(user.Id, "a", "a"),
-        Card.Create(user.Id, "a", "a"),
-        Card.Create(user.Id, "a", "a"),
-        Card.Create(user.Id, "a", "a"),
-        Card.Create(user.Id, "a", "a"),
-    };
-    
-    var deck = Deck.Create("a", "a", true, "a", user.Id);
-    
-    dbContext.Cards.AddRange(cards);
-    dbContext.Decks.Add(deck);
-    deck.AddCard(cards[0]);
-    deck.AddCard(cards[1]);
-    deck.AddCard(cards[2]);
-    deck.AddCard(cards[3]);
-    deck.AddCard(cards[4]);
-    deck.AddCard(cards[5]);
-
-    dbContext.Users.Add(user);
-    var deckStatistic = deck.AddStatistic(user);
-    deckStatistic.IncreaseStatistic(1, 1);
-    
-    await dbContext.SaveChangesAsync();
-
-    var users = dbContext.Users.Select(u => u).ToList();
-    Console.WriteLine(users[0].RefreshToken == null);
-});
-
 app.Map("reboot", async context =>
 {
     var dbContext = context.RequestServices.GetService<ProCardsDbContext>()!;
     await dbContext.Database.EnsureDeletedAsync();
-    await dbContext.Database.EnsureCreatedAsync();
 });
 
 app.UseCookieAuthentication();

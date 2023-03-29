@@ -12,43 +12,11 @@ namespace ProCardsNew.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Cards",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    FrontSide = table.Column<string>(type: "text", nullable: false),
-                    BackSide = table.Column<string>(type: "text", nullable: false),
-                    CreatedAtDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAtDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cards", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Decks",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    PasswordHash = table.Column<string>(type: "text", nullable: true),
-                    IsPublic = table.Column<bool>(type: "boolean", nullable: false),
-                    CardsCount = table.Column<int>(type: "integer", nullable: false),
-                    CreatedAtDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAtDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Decks", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Sides",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    SideName = table.Column<string>(type: "text", nullable: false)
+                    SideName = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -60,17 +28,17 @@ namespace ProCardsNew.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Login = table.Column<string>(type: "text", nullable: false),
-                    Email = table.Column<string>(type: "text", nullable: false),
-                    NormalizedLogin = table.Column<string>(type: "text", nullable: false),
-                    NormalizedEmail = table.Column<string>(type: "text", nullable: false),
-                    FirstName = table.Column<string>(type: "text", nullable: false),
-                    LastName = table.Column<string>(type: "text", nullable: false),
-                    Location = table.Column<string>(type: "text", nullable: false),
-                    RefreshToken = table.Column<string>(type: "text", nullable: true),
-                    PasswordRecoveryCode = table.Column<string>(type: "text", nullable: true),
+                    Login = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
+                    Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    NormalizedLogin = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
+                    NormalizedEmail = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    FirstName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Location = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    RefreshToken = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    PasswordRecoveryCode = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     PasswordRecoveryEndDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    PasswordHash = table.Column<string>(type: "text", nullable: false),
+                    PasswordHash = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
                     AccessFailedCount = table.Column<int>(type: "integer", nullable: false),
                     LockoutEndDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAtDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -79,6 +47,102 @@ namespace ProCardsNew.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cards",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    FrontSide = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
+                    BackSide = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
+                    OwnerId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAtDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAtDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cards", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cards_Users_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Decks",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
+                    Description = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
+                    PasswordHash = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    IsPublic = table.Column<bool>(type: "boolean", nullable: false),
+                    CardsCount = table.Column<int>(type: "integer", nullable: false),
+                    OwnerId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAtDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAtDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Decks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Decks_Users_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Statistic",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    CardsViewed = table.Column<int>(type: "integer", nullable: false),
+                    Hours = table.Column<float>(type: "real", nullable: false),
+                    CardsCreated = table.Column<int>(type: "integer", nullable: false),
+                    Score = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Statistic", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Statistic_Users_Id",
+                        column: x => x.Id,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Images",
+                columns: table => new
+                {
+                    CardId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SideId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
+                    FileExtension = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                    Data = table.Column<byte[]>(type: "bytea", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Images", x => new { x.CardId, x.SideId });
+                    table.ForeignKey(
+                        name: "FK_Images_Cards_CardId",
+                        column: x => x.CardId,
+                        principalTable: "Cards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Images_Sides_SideId",
+                        column: x => x.SideId,
+                        principalTable: "Sides",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -102,34 +166,6 @@ namespace ProCardsNew.Infrastructure.Migrations
                         name: "FK_DeckCard_Decks_DeckId",
                         column: x => x.DeckId,
                         principalTable: "Decks",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Images",
-                columns: table => new
-                {
-                    CardId = table.Column<Guid>(type: "uuid", nullable: false),
-                    SideId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    FileExtension = table.Column<string>(type: "text", nullable: false),
-                    Data = table.Column<string>(type: "text", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Images", x => new { x.CardId, x.SideId });
-                    table.ForeignKey(
-                        name: "FK_Images_Cards_CardId",
-                        column: x => x.CardId,
-                        principalTable: "Cards",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Images_Sides_SideId",
-                        column: x => x.SideId,
-                        principalTable: "Sides",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -195,27 +231,6 @@ namespace ProCardsNew.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Statistic",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    CardsViewed = table.Column<int>(type: "integer", nullable: false),
-                    Hours = table.Column<float>(type: "real", nullable: false),
-                    CardsCreated = table.Column<int>(type: "integer", nullable: false),
-                    Score = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Statistic", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Statistic_Users_Id",
-                        column: x => x.Id,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UserDeck",
                 columns: table => new
                 {
@@ -242,9 +257,19 @@ namespace ProCardsNew.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cards_OwnerId",
+                table: "Cards",
+                column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DeckCard_DeckId",
                 table: "DeckCard",
                 column: "DeckId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Decks_OwnerId",
+                table: "Decks",
+                column: "OwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeckStatistic_UserId",

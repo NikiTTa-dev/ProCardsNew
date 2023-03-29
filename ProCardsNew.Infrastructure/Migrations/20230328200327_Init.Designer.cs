@@ -12,7 +12,7 @@ using ProCardsNew.Infrastructure.Persistence;
 namespace ProCardsNew.Infrastructure.Migrations
 {
     [DbContext(typeof(ProCardsDbContext))]
-    [Migration("20230327163908_Init")]
+    [Migration("20230328200327_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -32,19 +32,26 @@ namespace ProCardsNew.Infrastructure.Migrations
 
                     b.Property<string>("BackSide")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
 
                     b.Property<DateTime>("CreatedAtDateTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("FrontSide")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedAtDateTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Cards", (string)null);
                 });
@@ -83,17 +90,19 @@ namespace ProCardsNew.Infrastructure.Migrations
                     b.Property<Guid>("SideId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Data")
+                    b.Property<byte[]>("Data")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("bytea");
 
                     b.Property<string>("FileExtension")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -112,7 +121,8 @@ namespace ProCardsNew.Infrastructure.Migrations
 
                     b.Property<string>("SideName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
 
                     b.HasKey("Id");
 
@@ -130,20 +140,33 @@ namespace ProCardsNew.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAtDateTime")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
                     b.Property<bool>("IsPublic")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
 
                     b.Property<DateTime>("UpdatedAtDateTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Decks", (string)null);
                 });
@@ -248,47 +271,57 @@ namespace ProCardsNew.Infrastructure.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Location")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<DateTime?>("LockoutEndDateTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Login")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
 
                     b.Property<string>("NormalizedEmail")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("NormalizedLogin")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
 
                     b.Property<string>("PasswordRecoveryCode")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<DateTime?>("PasswordRecoveryEndDateTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("RefreshToken")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<DateTime>("UpdatedAtDateTime")
                         .HasColumnType("timestamp with time zone");
@@ -296,6 +329,17 @@ namespace ProCardsNew.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users", (string)null);
+                });
+
+            modelBuilder.Entity("ProCardsNew.Domain.CardAggregate.Card", b =>
+                {
+                    b.HasOne("ProCardsNew.Domain.UserAggregate.User", "Owner")
+                        .WithMany("OwnedCards")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("ProCardsNew.Domain.CardAggregate.Entities.Grade", b =>
@@ -342,6 +386,17 @@ namespace ProCardsNew.Infrastructure.Migrations
                     b.Navigation("Card");
 
                     b.Navigation("Side");
+                });
+
+            modelBuilder.Entity("ProCardsNew.Domain.DeckAggregate.Deck", b =>
+                {
+                    b.HasOne("ProCardsNew.Domain.UserAggregate.User", "Owner")
+                        .WithMany("OwnedDecks")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("ProCardsNew.Domain.DeckAggregate.Entities.DeckCard", b =>
@@ -431,6 +486,10 @@ namespace ProCardsNew.Infrastructure.Migrations
             modelBuilder.Entity("ProCardsNew.Domain.UserAggregate.User", b =>
                 {
                     b.Navigation("DeckStatistics");
+
+                    b.Navigation("OwnedCards");
+
+                    b.Navigation("OwnedDecks");
 
                     b.Navigation("Statistic");
 
