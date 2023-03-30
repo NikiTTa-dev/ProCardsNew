@@ -1,8 +1,10 @@
 ﻿using ErrorOr;
 using MediatR;
+using Microsoft.Extensions.Options;
 using ProCardsNew.Application.Account.PasswordRecovery.Common;
 using ProCardsNew.Application.Common.Interfaces.Persistence;
 using ProCardsNew.Application.Common.Interfaces.Services;
+using ProCardsNew.Application.Common.Settings;
 using ProCardsNew.Domain.Common.Errors;
 
 namespace ProCardsNew.Application.Account.PasswordRecovery.Queries.PasswordRecoveryCode;
@@ -12,13 +14,16 @@ public class PasswordRecoveryCodeQueryHandler
 {
     private readonly IUserRepository _userRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly LockoutSettings _lockoutSettings;
 
     public PasswordRecoveryCodeQueryHandler(
         IUserRepository userRepository,
-        IDateTimeProvider dateTimeProvider)
+        IDateTimeProvider dateTimeProvider,
+        IOptions<LockoutSettings> lockoutSettings)
     {
         _userRepository = userRepository;
         _dateTimeProvider = dateTimeProvider;
+        _lockoutSettings = lockoutSettings.Value;
     }
     
     public async Task<ErrorOr<PasswordRecoveryResult>> Handle(PasswordRecoveryCodeQuery query, CancellationToken cancellationToken)
@@ -33,9 +38,11 @@ public class PasswordRecoveryCodeQueryHandler
         if (user.PasswordRecoveryEndDateTime < _dateTimeProvider.UtcNow)
             return Errors.User.RecoveryCodeExpired;
 
-        if (user.PasswordRecoveryCode != query.Code)
-            return Errors.User.WrongRecoveryCode;
-
-        return new PasswordRecoveryResult();
+        if (user.PasswordRecoveryCode == query.Code) 
+            return new PasswordRecoveryResult();
+        
+        user.PasswordRecoveryFail(_lockoutSettings.PasswordRecoveryFailMaxCountInclusive);
+        await _userRepository.SaveChangesAsync();
+        return Errors.User.WrongRecoveryCode;
     }
 }

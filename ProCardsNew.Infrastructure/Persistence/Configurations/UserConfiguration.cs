@@ -82,6 +82,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.PasswordRecoveryCode)
             .HasMaxLength(_validationSettings.UserRecoveryCodeLength);
 
+        builder.Property(u => u.PasswordRecoveryFailedCount)
+            .IsRequired();
+
         builder.Property(u => u.PasswordHash)
             .IsRequired()
             .HasMaxLength(_validationSettings.UserPasswordHashLength);

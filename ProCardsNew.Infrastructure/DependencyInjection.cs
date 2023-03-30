@@ -32,7 +32,8 @@ public static class DependencyInjection
             .AddSettings(configuration)
             .AddPersistence(configuration)
             .AddEmailSender(configuration)
-            .AddPasswordRecoveryCodeSettings(configuration);
+            .AddPasswordRecoveryCodeSettings(configuration)
+            .AddLockoutSettings(configuration);
         
         return services;
     }
@@ -106,12 +107,23 @@ public static class DependencyInjection
         return services;
     }
 
-    private static void AddPasswordRecoveryCodeSettings(
+    private static IServiceCollection AddPasswordRecoveryCodeSettings(
         this IServiceCollection services,
         ConfigurationManager configuration)
     {
         var settings = new PasswordRecoveryCodeSettings();
         configuration.Bind(PasswordRecoveryCodeSettings.SectionName, settings);
         services.AddSingleton(Options.Create(settings));
+
+        return services;
+    }
+
+    private static void AddLockoutSettings(
+        this IServiceCollection services,
+        ConfigurationManager configuration)
+    {
+        var lockoutSettings = new LockoutSettings();
+        configuration.Bind(LockoutSettings.SectionName, lockoutSettings);
+        services.AddSingleton(Options.Create(lockoutSettings));
     }
 }

@@ -316,6 +316,9 @@ namespace ProCardsNew.Infrastructure.Migrations
                     b.Property<DateTime?>("PasswordRecoveryEndDateTime")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("PasswordRecoveryFailedCount")
+                        .HasColumnType("integer");
+
                     b.Property<string>("RefreshToken")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
@@ -369,7 +372,7 @@ namespace ProCardsNew.Infrastructure.Migrations
             modelBuilder.Entity("ProCardsNew.Domain.CardAggregate.Entities.Image", b =>
                 {
                     b.HasOne("ProCardsNew.Domain.CardAggregate.Card", "Card")
-                        .WithMany()
+                        .WithMany("Images")
                         .HasForeignKey("CardId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -469,6 +472,8 @@ namespace ProCardsNew.Infrastructure.Migrations
                     b.Navigation("DeckCards");
 
                     b.Navigation("Grades");
+
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("ProCardsNew.Domain.DeckAggregate.Deck", b =>

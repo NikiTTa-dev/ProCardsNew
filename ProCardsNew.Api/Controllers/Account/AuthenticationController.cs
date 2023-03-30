@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using ProCardsNew.Api.Controllers.Common;
+using ProCardsNew.Application.Account.Authentication.Commands.Login;
 using ProCardsNew.Application.Account.Authentication.Commands.Refresh;
 using ProCardsNew.Application.Account.Authentication.Commands.Register;
 using ProCardsNew.Application.Account.Authentication.Common;
-using ProCardsNew.Application.Account.Authentication.Queries.Login;
 using ProCardsNew.Contracts.Account.Authentication;
 using ProCardsNew.Infrastructure.Authentication;
 
@@ -47,7 +47,7 @@ public class AuthenticationController : ApiController
     [HttpPost("login")]
     public async Task<IActionResult> LoginAsync(LoginRequest request)
     {
-        var query = _mapper.Map<LoginQuery>(request);
+        var query = _mapper.Map<LoginCommand>(request);
         var authResult = await _mediator.Send(query);
 
         return authResult.Match(

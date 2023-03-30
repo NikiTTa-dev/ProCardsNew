@@ -38,6 +38,7 @@ namespace ProCardsNew.Infrastructure.Migrations
                     RefreshToken = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     PasswordRecoveryCode = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     PasswordRecoveryEndDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    PasswordRecoveryFailedCount = table.Column<int>(type: "integer", nullable: false),
                     PasswordHash = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
                     AccessFailedCount = table.Column<int>(type: "integer", nullable: false),
                     LockoutEndDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),

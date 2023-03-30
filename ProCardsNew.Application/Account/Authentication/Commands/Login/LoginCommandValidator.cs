@@ -2,11 +2,11 @@
 using Microsoft.Extensions.Options;
 using ProCardsNew.Application.Common.Settings;
 
-namespace ProCardsNew.Application.Account.Authentication.Queries.Login;
+namespace ProCardsNew.Application.Account.Authentication.Commands.Login;
 
-public class LoginQueryValidator: AbstractValidator<LoginQuery>
+public class LoginCommandValidator: AbstractValidator<LoginCommand>
 {
-    public LoginQueryValidator(IOptions<ValidationSettings> settings)
+    public LoginCommandValidator(IOptions<ValidationSettings> settings)
     {
         var validationSettings = settings.Value;
         

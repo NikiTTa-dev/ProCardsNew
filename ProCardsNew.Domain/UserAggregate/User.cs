@@ -3,6 +3,7 @@ using ProCardsNew.Domain.Common.Models;
 using ProCardsNew.Domain.DeckAggregate;
 using ProCardsNew.Domain.DeckAggregate.Entities;
 using ProCardsNew.Domain.UserAggregate.Entities;
+using ProCardsNew.Domain.UserAggregate.Enums;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;
 
 namespace ProCardsNew.Domain.UserAggregate;
@@ -19,9 +20,10 @@ public sealed class User: AggregateRoot<UserId>
     public RefreshToken? RefreshToken { get; private set;}
     public string? PasswordRecoveryCode { get; private set;}
     public DateTime? PasswordRecoveryEndDateTime { get; private set;}
+    public int PasswordRecoveryFailedCount { get; private set; }
     public string PasswordHash { get; private set;}
-    public int AccessFailedCount { get; private set;}
-    public DateTime? LockoutEndDateTime { get; private set;} = null;
+    public int AccessFailedCount { get; private set; }
+    public DateTime? LockoutEndDateTime { get; private set;}
     public DateTime CreatedAtDateTime { get; private set;}
     public DateTime UpdatedAtDateTime { get; private set;}
     public Statistic? Statistic { get; private set; }
@@ -52,7 +54,6 @@ public sealed class User: AggregateRoot<UserId>
         string lastName,
         string location,
         string passwordHash,
-        int accessFailedCount,
         DateTime createdAtDateTime,
         DateTime updatedAtDateTime)
         : base(id)
@@ -67,7 +68,6 @@ public sealed class User: AggregateRoot<UserId>
         PasswordHash = passwordHash;
         CreatedAtDateTime = createdAtDateTime;
         UpdatedAtDateTime = updatedAtDateTime;
-        AccessFailedCount = accessFailedCount;
     }
 
     public static User Create(
@@ -88,7 +88,6 @@ public sealed class User: AggregateRoot<UserId>
             lastName,
             location,
             passwordHash,
-            0,
             DateTime.UtcNow, 
             DateTime.UtcNow);
     }
@@ -117,6 +116,43 @@ public sealed class User: AggregateRoot<UserId>
         PasswordRecoveryCode = null;
     }
 
+    public AccessFailResult AccessFail(
+        int lockoutMinutes,
+        int accessFailedMaxCountInclusive)
+    {
+        AccessFailedCount++;
+        if (AccessFailedCount < accessFailedMaxCountInclusive)
+            return AccessFailResult.AccessFailedCounterIncreased;
+        
+        LockoutUserLogin(lockoutMinutes);
+        return AccessFailResult.LockedOut;
+    }
+    
+    public bool IsLockedOut()
+    {
+        return LockoutEndDateTime > DateTime.UtcNow;
+    }
+
+    public void ResetAccessFailsCount()
+    {
+        AccessFailedCount = 0;
+    }
+
+    private void LockoutUserLogin(int lockoutMinutes)
+    {
+        ResetAccessFailsCount();
+        LockoutEndDateTime = DateTime.UtcNow.AddMinutes(lockoutMinutes);
+    }
+
+    public void PasswordRecoveryFail(int passwordRecoveryFailedMaxCountInclusive)
+    {
+        PasswordRecoveryFailedCount++;
+        if (PasswordRecoveryFailedCount < passwordRecoveryFailedMaxCountInclusive)
+            return;
+        PasswordRecoveryCode = null;
+        PasswordRecoveryFailedCount = 0;
+    }
+    
 #pragma warning disable CS8618
     // ReSharper disable once UnusedMember.Local
     private User()
