@@ -1,7 +1,7 @@
-﻿using System.Text.RegularExpressions;
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.Extensions.Options;
 using ProCardsNew.Application.Common.Settings;
+using ProCardsNew.Application.Common.Validators;
 
 namespace ProCardsNew.Application.Account.Authentication.Commands.Register;
 
@@ -13,31 +13,37 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
 
         RuleFor(rc => rc.FirstName)
             .NotEmpty()
+            .ContainsNoEdgeSpaces()
+            .ContainsNoMultipleSpaces()
             .MaximumLength(validationSettings.UserFirstNameLength);
 
         RuleFor(rc => rc.LastName)
             .NotEmpty()
+            .ContainsNoEdgeSpaces()
+            .ContainsNoMultipleSpaces()
             .MaximumLength(validationSettings.UserLastNameLength);
         
         RuleFor(rc => rc.Email)
             .NotEmpty()
             .EmailAddress()
+            .ContainsNoSpaces()
             .MaximumLength(validationSettings.UserEmailLength);
         
         RuleFor(rc => rc.Location)
             .NotEmpty()
+            .ContainsNoEdgeSpaces()
+            .ContainsNoMultipleSpaces()
             .MaximumLength(validationSettings.UserLocationLength);
         
         RuleFor(rc => rc.Login)
             .NotEmpty()
+            .ContainsNoSpaces()
             .MaximumLength(validationSettings.UserLoginLength);
-        
+
         RuleFor(rc => rc.Password)
             .NotEmpty()
-            .MinimumLength(validationSettings.UserPasswordMinLength)
-            .MaximumLength(validationSettings.UserPasswordMaxLength)
-            .Must(p => 
-                Regex.Match(p, @"[a-z]", RegexOptions.ECMAScript).Success &&
-                Regex.Match(p, @"[A-Z]", RegexOptions.ECMAScript).Success);
+            .Password(
+                validationSettings.UserPasswordMinLength,
+                validationSettings.UserPasswordMaxLength);
     }
 }

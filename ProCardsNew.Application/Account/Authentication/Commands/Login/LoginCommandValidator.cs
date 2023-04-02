@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Options;
 using ProCardsNew.Application.Common.Settings;
+using ProCardsNew.Application.Common.Validators;
 
 namespace ProCardsNew.Application.Account.Authentication.Commands.Login;
 
@@ -12,10 +13,13 @@ public class LoginCommandValidator: AbstractValidator<LoginCommand>
         
         RuleFor(query => query.Login)
             .NotEmpty()
+            .ContainsNoSpaces()
             .MaximumLength(validationSettings.UserLoginLength);
         
         RuleFor(query => query.Password)
             .NotEmpty()
-            .MaximumLength(validationSettings.UserPasswordMaxLength);
+            .Password(
+                validationSettings.UserPasswordMinLength,
+                validationSettings.UserPasswordMaxLength);
     }
 }

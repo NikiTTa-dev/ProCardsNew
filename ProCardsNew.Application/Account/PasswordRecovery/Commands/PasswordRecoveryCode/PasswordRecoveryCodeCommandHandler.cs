@@ -7,16 +7,16 @@ using ProCardsNew.Application.Common.Interfaces.Services;
 using ProCardsNew.Application.Common.Settings;
 using ProCardsNew.Domain.Common.Errors;
 
-namespace ProCardsNew.Application.Account.PasswordRecovery.Queries.PasswordRecoveryCode;
+namespace ProCardsNew.Application.Account.PasswordRecovery.Commands.PasswordRecoveryCode;
 
-public class PasswordRecoveryCodeQueryHandler
-    : IRequestHandler<PasswordRecoveryCodeQuery, ErrorOr<PasswordRecoveryResult>>
+public class PasswordRecoveryCodeCommandHandler
+    : IRequestHandler<PasswordRecoveryCodeCommand, ErrorOr<PasswordRecoveryResult>>
 {
     private readonly IUserRepository _userRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly LockoutSettings _lockoutSettings;
 
-    public PasswordRecoveryCodeQueryHandler(
+    public PasswordRecoveryCodeCommandHandler(
         IUserRepository userRepository,
         IDateTimeProvider dateTimeProvider,
         IOptions<LockoutSettings> lockoutSettings)
@@ -26,9 +26,9 @@ public class PasswordRecoveryCodeQueryHandler
         _lockoutSettings = lockoutSettings.Value;
     }
     
-    public async Task<ErrorOr<PasswordRecoveryResult>> Handle(PasswordRecoveryCodeQuery query, CancellationToken cancellationToken)
+    public async Task<ErrorOr<PasswordRecoveryResult>> Handle(PasswordRecoveryCodeCommand command, CancellationToken cancellationToken)
     {
-        if (await _userRepository.GetUserByEmailAsync(query.Email.ToUpper()) is not { } user)
+        if (await _userRepository.GetUserByEmailAsync(command.Email.ToUpper()) is not { } user)
             return Errors.User.NotFound;
 
         if (user.PasswordRecoveryCode == null ||
@@ -38,7 +38,7 @@ public class PasswordRecoveryCodeQueryHandler
         if (user.PasswordRecoveryEndDateTime < _dateTimeProvider.UtcNow)
             return Errors.User.RecoveryCodeExpired;
 
-        if (user.PasswordRecoveryCode == query.Code) 
+        if (user.PasswordRecoveryCode == command.Code) 
             return new PasswordRecoveryResult();
         
         user.PasswordRecoveryFail(_lockoutSettings.PasswordRecoveryFailMaxCountInclusive);

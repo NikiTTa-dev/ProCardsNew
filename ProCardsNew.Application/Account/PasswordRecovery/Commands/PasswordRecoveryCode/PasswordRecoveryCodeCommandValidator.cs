@@ -1,22 +1,26 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Options;
 using ProCardsNew.Application.Common.Settings;
+using ProCardsNew.Application.Common.Validators;
 
-namespace ProCardsNew.Application.Account.PasswordRecovery.Queries.PasswordRecoveryCode;
+namespace ProCardsNew.Application.Account.PasswordRecovery.Commands.PasswordRecoveryCode;
 
-public class PasswordRecoveryCodeQueryValidator : AbstractValidator<PasswordRecoveryCodeQuery>
+public class PasswordRecoveryCodeCommandValidator : AbstractValidator<PasswordRecoveryCodeCommand>
 {
-    public PasswordRecoveryCodeQueryValidator(IOptions<ValidationSettings> settings)
+    public PasswordRecoveryCodeCommandValidator(IOptions<ValidationSettings> settings)
     {
         var validationSettings = settings.Value;
 
         RuleFor(q => q.Code)
             .NotEmpty()
+            .ContainsNoSpaces()
+            .ContainsNumbersOnly()
             .MaximumLength(validationSettings.UserPasswordRecoveryCodeLength);
 
         RuleFor(q => q.Email)
             .NotEmpty()
             .EmailAddress()
+            .ContainsNoSpaces()
             .MaximumLength(validationSettings.UserEmailLength);
     }
 }

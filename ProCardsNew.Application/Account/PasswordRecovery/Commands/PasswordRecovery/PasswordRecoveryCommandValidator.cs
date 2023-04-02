@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Options;
 using ProCardsNew.Application.Common.Settings;
+using ProCardsNew.Application.Common.Validators;
 
 namespace ProCardsNew.Application.Account.PasswordRecovery.Commands.PasswordRecovery;
 
@@ -11,8 +12,9 @@ public class PasswordRecoveryCommandValidator: AbstractValidator<PasswordRecover
         var validationSettings = settings.Value;
         
         RuleFor(c => c.Email)
-            .NotNull()
+            .NotEmpty()
             .EmailAddress()
+            .ContainsNoSpaces()
             .MaximumLength(validationSettings.UserEmailLength);
     }
 }

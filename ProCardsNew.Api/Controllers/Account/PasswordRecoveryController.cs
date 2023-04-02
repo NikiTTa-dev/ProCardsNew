@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProCardsNew.Api.Controllers.Common;
 using ProCardsNew.Application.Account.PasswordRecovery.Commands.PasswordRecovery;
+using ProCardsNew.Application.Account.PasswordRecovery.Commands.PasswordRecoveryCode;
 using ProCardsNew.Application.Account.PasswordRecovery.Commands.PasswordRecoveryNewPassword;
-using ProCardsNew.Application.Account.PasswordRecovery.Queries.PasswordRecoveryCode;
 using ProCardsNew.Contracts.Account.PasswordRecovery;
 
 namespace ProCardsNew.Api.Controllers.Account;
@@ -41,8 +41,8 @@ public class PasswordRecoveryController: ApiController
     public async Task<IActionResult> ValidateCodeAsync(
         PasswordRecoveryCodeRequest request)
     {
-        var query = _mapper.Map<PasswordRecoveryCodeQuery>(request);
-        var passwordRecoveryResult = await _mediator.Send(query);
+        var command = _mapper.Map<PasswordRecoveryCodeCommand>(request);
+        var passwordRecoveryResult = await _mediator.Send(command);
 
         return passwordRecoveryResult.Match(
             result => Ok(_mapper.Map<PasswordRecoveryResponse>(result)),
