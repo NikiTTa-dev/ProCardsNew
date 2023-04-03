@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using System.Data;
+using Microsoft.Extensions.Options;
 using ProCardsNew.Infrastructure.Authentication;
 
 namespace ProCardsNew.Api.Middlewares;
@@ -16,7 +17,7 @@ public class CookieAuthenticationMiddleware
     {
         var token = context.Request.Cookies[jwtSettings.Value.AccessTokenName];
         if (!string.IsNullOrEmpty(token))
-            context.Request.Headers.Add("Authorization", "Bearer " + token);
+            context.Request.Headers["Authorization"] = "Bearer " + token;
         
         await _next(context);
     }
@@ -24,7 +25,7 @@ public class CookieAuthenticationMiddleware
 
 public static class CookieAuthenticationMiddlewareExtensions
 {
-    public static IApplicationBuilder UseCookieAuthentication(
+    public static IApplicationBuilder UseCookieReader(
         this IApplicationBuilder builder)
     {
         return builder.UseMiddleware<CookieAuthenticationMiddleware>();

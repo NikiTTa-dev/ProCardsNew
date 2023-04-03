@@ -6,7 +6,6 @@ using Microsoft.IdentityModel.Tokens;
 using ProCardsNew.Application.Common.Interfaces.Authentication;
 using ProCardsNew.Application.Common.Interfaces.Services;
 using ProCardsNew.Domain.UserAggregate;
-using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace ProCardsNew.Infrastructure.Authentication;
 

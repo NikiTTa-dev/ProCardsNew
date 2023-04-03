@@ -24,7 +24,7 @@ public class WeatherForecastController : ApiController
 
         var context = HttpContext.RequestServices.GetService<ProCardsDbContext>()!;
 
-        var card = Card.Create(UserId.Create(Guid.Parse("310fcbba-24e6-439c-95a1-42bc4529a49a")), "firstS", "backS");
+        var card = Card.Create(UserId.Create(Guid.Parse("ccf4b043-a07b-457b-a7bb-5b5a4cb96aae")), "firstS", "backS");
         var side = Side.Create("Front");
         context.Add(card);
         context.Add(side);
@@ -60,12 +60,12 @@ public class WeatherForecastController : ApiController
     public async Task<IActionResult> Get()
     {
         await Task.CompletedTask;
-        
+
         var context = HttpContext.RequestServices.GetService<ProCardsDbContext>()!;
 
         var mage = context.Cards
             .Include(c => c.Images)
-            .Where(c => c.OwnerId == UserId.Create(Guid.Parse("310fcbba-24e6-439c-95a1-42bc4529a49a")))
+            .Where(c => c.OwnerId == UserId.Create(Guid.Parse("ccf4b043-a07b-457b-a7bb-5b5a4cb96aae")))
             .SelectMany(c => c.Images)
             .Include(i => i.Side)
             .ToList();

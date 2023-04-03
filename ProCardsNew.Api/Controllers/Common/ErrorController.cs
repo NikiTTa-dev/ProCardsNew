@@ -4,13 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace ProCardsNew.Api.Controllers.Common;
 
 [ApiExplorerSettings(IgnoreApi = true)]
-public class ErrorsController: ControllerBase
+public class ErrorsController : ControllerBase
 {
     [Route("/error")]
     public IActionResult Error()
     {
-        Exception? exception = HttpContext.Features.Get<IExceptionHandlerFeature>()?.Error;
-
-        return Problem(title: exception!.Message);
+        if (HttpContext.Features.Get<IExceptionHandlerFeature>()?.Error is { } exception)
+            return Problem(title: exception.Message);
+        
+        return Problem();
     }
 }

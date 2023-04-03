@@ -1,9 +1,10 @@
+using static System.Net.Mime.MediaTypeNames;
 using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.Diagnostics;
 using ProCardsNew.Api;
 using ProCardsNew.Api.Middlewares;
 using ProCardsNew.Application;
 using ProCardsNew.Infrastructure;
-using ProCardsNew.Infrastructure.Persistence;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,13 +32,7 @@ app.UseCookiePolicy(new CookiePolicyOptions
     Secure = CookieSecurePolicy.Always
 });
 
-app.Map("reboot", async context =>
-{
-    var dbContext = context.RequestServices.GetService<ProCardsDbContext>()!;
-    await dbContext.Database.EnsureDeletedAsync();
-});
-
-app.UseCookieAuthentication();
+app.UseCookieReader();
 
 if (app.Environment.IsDevelopment())
 {

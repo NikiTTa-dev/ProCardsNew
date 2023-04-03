@@ -6,7 +6,7 @@ public static partial class Errors
 {
     public static class Email
     {
-        public static Error EmailSendingFailure => Error.Failure(
+        public static Error EmailSendingFailure => Error.Conflict(
             code: "Email.EmailSendingFailure",
             description: "An error occurred while sending the email.");
     }

@@ -92,9 +92,7 @@ public class ProCardsProblemDetailsFactory: ProblemDetailsFactory
             problemDetails.Extensions["traceId"] = traceId;
         }
 
-        var errors = httpContext?.Items[HttpContextKeys.Errors] as List<Error>;
-        
-        if(errors is not null)
+        if(httpContext?.Items[HttpContextKeys.Errors] is List<Error> errors)
             problemDetails.Extensions.Add("errorCodes", errors.Select(e=>e.Code));
     }
 }

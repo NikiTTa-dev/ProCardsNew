@@ -11,6 +11,8 @@ public class ValidationSettings
     public int DeckNameLength { get; init; }
     public int DeckDescriptionLength { get; init; }
     public int DeckPasswordHashLength { get; init; }
+    public int DeckPasswordMinLength { get; init; }
+    public int DeckPasswordMaxLength { get; init; }
 
     public int UserLoginLength { get; init; }
     public int UserEmailLength { get; init; }

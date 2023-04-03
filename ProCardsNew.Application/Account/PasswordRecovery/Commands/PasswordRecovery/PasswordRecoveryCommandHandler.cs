@@ -35,6 +35,7 @@ public class PasswordRecoveryCommandHandler:
         if (await _userRepository.GetUserByEmailAsync(command.Email.ToUpper()) is not { } user)
             return new PasswordRecoveryResult();
         
+        user.DeletePasswordRecoveryCode();
         user.SetPasswordRecoveryCode(
             _randomNumberGeneratorService
                 .GeneratePasswordRecoveryCode()

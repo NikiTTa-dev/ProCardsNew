@@ -114,6 +114,16 @@ public sealed class User: AggregateRoot<UserId>
     public void DeletePasswordRecoveryCode()
     {
         PasswordRecoveryCode = null;
+        PasswordRecoveryFailedCount = 0;
+    }
+    
+    public void PasswordRecoveryFail(int passwordRecoveryFailedMaxCountInclusive)
+    {
+        PasswordRecoveryFailedCount++;
+        if (PasswordRecoveryFailedCount < passwordRecoveryFailedMaxCountInclusive)
+            return;
+        PasswordRecoveryCode = null;
+        PasswordRecoveryFailedCount = 0;
     }
 
     public AccessFailResult AccessFail(
@@ -144,15 +154,6 @@ public sealed class User: AggregateRoot<UserId>
         LockoutEndDateTime = DateTime.UtcNow.AddMinutes(lockoutMinutes);
     }
 
-    public void PasswordRecoveryFail(int passwordRecoveryFailedMaxCountInclusive)
-    {
-        PasswordRecoveryFailedCount++;
-        if (PasswordRecoveryFailedCount < passwordRecoveryFailedMaxCountInclusive)
-            return;
-        PasswordRecoveryCode = null;
-        PasswordRecoveryFailedCount = 0;
-    }
-    
 #pragma warning disable CS8618
     // ReSharper disable once UnusedMember.Local
     private User()
