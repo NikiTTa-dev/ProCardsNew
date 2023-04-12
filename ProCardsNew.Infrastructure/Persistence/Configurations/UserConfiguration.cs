@@ -56,14 +56,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasMaxLength(_validationSettings.UserEmailLength);
 
-        builder.Property(u => u.NormalizedLogin)
-            .IsRequired()
-            .HasMaxLength(_validationSettings.UserNormalizedLoginLength);
-
-        builder.Property(u => u.NormalizedEmail)
-            .IsRequired()
-            .HasMaxLength(_validationSettings.UserNormalizedEmailLength);
-
         builder.Property(u => u.FirstName)
             .IsRequired()
             .HasMaxLength(_validationSettings.UserFirstNameLength);

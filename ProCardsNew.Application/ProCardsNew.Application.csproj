@@ -18,8 +18,4 @@
       <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="7.0.4" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Editing\Decks\Queries" />
-    </ItemGroup>
-
 </Project>

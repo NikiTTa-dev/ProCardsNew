@@ -4,6 +4,7 @@ using ProCardsNew.Application.Account.PasswordRecovery.Commands.PasswordRecovery
 using ProCardsNew.Application.Account.PasswordRecovery.Commands.PasswordRecoveryNewPassword;
 using ProCardsNew.Application.Account.PasswordRecovery.Common;
 using ProCardsNew.Contracts.Account.PasswordRecovery;
+using ProCardsNew.Contracts.Common;
 
 namespace ProCardsNew.Api.Common.Mapping;
 
@@ -15,6 +16,6 @@ public class PasswordRecoveryMapping: IRegister
         config.NewConfig<PasswordRecoveryCodeRequest, PasswordRecoveryCodeCommand>();
         config.NewConfig<PasswordRecoveryNewPasswordRequest, PasswordRecoveryNewPasswordCommand>();
         
-        config.NewConfig<PasswordRecoveryResult, PasswordRecoveryResponse>();
+        config.NewConfig<PasswordRecoveryResult, ResultResponse>();
     }
 }

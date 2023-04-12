@@ -22,7 +22,7 @@ public class RefreshTokenCommandHandler
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(RefreshTokenCommand command, CancellationToken cancellationToken)
     {
-        if (await _userRepository.GetUserByIdAsync(UserId.Create(command.UserId)) is not { } user)
+        if (await _userRepository.GetByIdAsync(UserId.Create(command.UserId)) is not { } user)
             return Errors.User.NotFound;
 
         if (user.RefreshToken!.Value != command.RefreshToken)

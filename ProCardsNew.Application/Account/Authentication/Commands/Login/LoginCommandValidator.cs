@@ -15,11 +15,10 @@ public class LoginCommandValidator: AbstractValidator<LoginCommand>
             .NotEmpty()
             .ContainsNoSpaces()
             .MaximumLength(validationSettings.UserLoginLength);
-        
+
         RuleFor(query => query.Password)
             .NotEmpty()
-            .Password(
-                validationSettings.UserPasswordMinLength,
-                validationSettings.UserPasswordMaxLength);
+            .ContainsNoSpaces()
+            .MaximumLength(validationSettings.UserPasswordMaxLength);
     }
 }

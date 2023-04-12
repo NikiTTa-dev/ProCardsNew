@@ -8,4 +8,5 @@ public record CreateDeckCommand(
     string Name,
     string Description,
     bool IsPrivate,
-    string Password) : IRequest<ErrorOr<CreateDeckCommandResult>>;
+    string Password)
+    : IRequest<ErrorOr<CreateDeckCommandResult>>;

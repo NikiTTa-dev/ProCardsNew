@@ -11,7 +11,7 @@ namespace ProCardsNew.Domain.DeckAggregate;
 public sealed class Deck: AggregateRoot<DeckId>
 {
     public string Name { get; private set; }
-    public string Description { get; }
+    public string Description { get; private set; }
     public string? PasswordHash { get; private set; }
     public bool IsPublic { get; private set; }
     public int CardsCount { get; private set; }
@@ -40,7 +40,7 @@ public sealed class Deck: AggregateRoot<DeckId>
         DeckId id,
         string name,
         string description,
-        string passwordHash,
+        string? passwordHash,
         bool isPublic,
         UserId ownerId,
         DateTime createdAtDateTime,
@@ -60,7 +60,7 @@ public sealed class Deck: AggregateRoot<DeckId>
         string name,
         string description,
         bool isPublic,
-        string passwordHash,
+        string? passwordHash,
         UserId ownerId)
     {
         return new(
@@ -84,12 +84,12 @@ public sealed class Deck: AggregateRoot<DeckId>
         return deckCard;
     }
 
-    public DeckStatistic AddStatistic(User user)
+    public void Edit(
+        string name,
+        string description)
     {
-        var deckStatistic = DeckStatistic.Create(Id, user.Id);
-        _deckStatistics.Add(deckStatistic);
-
-        return deckStatistic;
+        Name = name;
+        Description = description;
     }
     
 #pragma warning disable CS8618

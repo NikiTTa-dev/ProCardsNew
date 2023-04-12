@@ -3,6 +3,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ProCardsNew.Api.Controllers.Common;
 using ProCardsNew.Application.Editing.Decks.Commands.CreateDeck;
+using ProCardsNew.Application.Editing.Decks.Commands.EditDeck;
+using ProCardsNew.Application.Editing.Decks.Queries.UserDecksToEdit;
 using ProCardsNew.Contracts.Editing.Decks;
 
 namespace ProCardsNew.Api.Controllers.Editing;
@@ -31,6 +33,32 @@ public class DeckController: ApiController
 
         return createResult.Match(
             result => Ok(_mapper.Map<CreateDeckResponse>(result)),
+            errors => Problem(errors));
+    }
+
+    [HttpPost("get")]
+    public async Task<IActionResult> UserDecksToEdit(UserDecksToEditRequest request)
+    {
+        if (request.UserId.ToString() != ClaimUserId)
+            return AccessDenied;
+        var query = _mapper.Map<UserDecksToEditQuery>(request);
+        var createResult = await _mediator.Send(query);
+
+        return createResult.Match(
+            result => Ok(_mapper.Map<UserDecksToEditResponse>(result)),
+            errors => Problem(errors));
+    }
+    
+    [HttpPatch]
+    public async Task<IActionResult> EditDeck(EditDeckRequest request)
+    {
+        if (request.UserId.ToString() != ClaimUserId)
+            return AccessDenied;
+        var query = _mapper.Map<EditDeckCommand>(request);
+        var createResult = await _mediator.Send(query);
+
+        return createResult.Match(
+            result => Ok(_mapper.Map<EditDeckResult>(result)),
             errors => Problem(errors));
     }
 }

@@ -1,6 +1,4 @@
-using static System.Net.Mime.MediaTypeNames;
 using Microsoft.AspNetCore.CookiePolicy;
-using Microsoft.AspNetCore.Diagnostics;
 using ProCardsNew.Api;
 using ProCardsNew.Api.Middlewares;
 using ProCardsNew.Application;
@@ -21,8 +19,6 @@ builder.Services
 
 var app = builder.Build();
 
-app.UseExceptionHandler("/error");
-
 app.UseHttpsRedirection();
 
 app.UseCookiePolicy(new CookiePolicyOptions
@@ -33,6 +29,8 @@ app.UseCookiePolicy(new CookiePolicyOptions
 });
 
 app.UseCookieReader();
+
+app.UseExceptionHandler("/error");
 
 if (app.Environment.IsDevelopment())
 {

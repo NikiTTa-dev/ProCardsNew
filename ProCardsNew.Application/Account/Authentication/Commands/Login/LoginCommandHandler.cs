@@ -33,7 +33,7 @@ public class LoginCommandHandler :
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(LoginCommand command, CancellationToken cancellationToken)
     {
-        if (await _userRepository.GetUserByLoginAsync(command.Login.ToUpper()) is not { } user)
+        if (await _userRepository.GetByLoginAsync(command.Login.ToUpper()) is not { } user)
             return Errors.Authentication.InvalidCredentials;
 
         if (user.IsLockedOut())

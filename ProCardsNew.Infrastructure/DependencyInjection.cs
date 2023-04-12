@@ -43,6 +43,7 @@ public static class DependencyInjection
         ConfigurationManager configuration)
     {
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IDeckRepository, DeckRepository>();
         
         services.AddDbContext<ProCardsDbContext>(options =>
         {

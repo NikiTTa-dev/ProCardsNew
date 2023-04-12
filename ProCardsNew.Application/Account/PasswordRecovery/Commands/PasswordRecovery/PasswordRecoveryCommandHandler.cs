@@ -1,5 +1,6 @@
 ﻿using ErrorOr;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProCardsNew.Application.Account.PasswordRecovery.Common;
 using ProCardsNew.Application.Common.Enums;
@@ -16,23 +17,26 @@ public class PasswordRecoveryCommandHandler:
     private readonly IEmailSender _emailSender;
     private readonly IUserRepository _userRepository;
     private readonly IRandomNumberGeneratorService _randomNumberGeneratorService;
+    private readonly ILogger<PasswordRecoveryCommandHandler> _logger;
     private readonly PasswordRecoveryCodeSettings _recoveryCodeSettings;
 
     public PasswordRecoveryCommandHandler(
         IEmailSender emailSender,
         IUserRepository userRepository,
         IRandomNumberGeneratorService randomNumberGeneratorService,
-        IOptions<PasswordRecoveryCodeSettings> recoveryCodeSettings)
+        IOptions<PasswordRecoveryCodeSettings> recoveryCodeSettings,
+        ILogger<PasswordRecoveryCommandHandler> logger)
     {
         _emailSender = emailSender;
         _userRepository = userRepository;
         _randomNumberGeneratorService = randomNumberGeneratorService;
+        _logger = logger;
         _recoveryCodeSettings = recoveryCodeSettings.Value;
     }
     
     public async Task<ErrorOr<PasswordRecoveryResult>> Handle(PasswordRecoveryCommand command, CancellationToken cancellationToken)
     {
-        if (await _userRepository.GetUserByEmailAsync(command.Email.ToUpper()) is not { } user)
+        if (await _userRepository.GetByEmailAsync(command.Email.ToUpper()) is not { } user)
             return new PasswordRecoveryResult();
         
         user.DeletePasswordRecoveryCode();
@@ -44,14 +48,17 @@ public class PasswordRecoveryCommandHandler:
 
         await _userRepository.SaveChangesAsync();
         
+        _logger.Log(LogLevel.Information, "Sending email");
         var result = await _emailSender.SendEmailAsync(
             command.Email,
             user.PasswordRecoveryCode!,
             "RecoveryCode");
-
+        
         if (result == EmailResult.Failure)
             return Errors.Email.EmailSendingFailure;
         
+        _logger.Log(LogLevel.Information, "Email sent");
+
         return new PasswordRecoveryResult();
     }
 }

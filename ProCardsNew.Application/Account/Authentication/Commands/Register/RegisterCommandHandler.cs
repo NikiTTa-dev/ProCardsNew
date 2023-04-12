@@ -27,7 +27,7 @@ public class RegisterCommandHandler:
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
-        if (await _userRepository.GetUserByLoginAsync(command.Login.ToUpper()) is not null)
+        if (await _userRepository.GetByLoginAsync(command.Login.ToUpper()) is not null)
             return Errors.User.DuplicateLogin;
 
         var hashedPassword = _passwordHasherService.GeneratePasswordHash(command.Password);

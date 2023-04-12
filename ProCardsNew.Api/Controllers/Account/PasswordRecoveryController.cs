@@ -7,6 +7,7 @@ using ProCardsNew.Application.Account.PasswordRecovery.Commands.PasswordRecovery
 using ProCardsNew.Application.Account.PasswordRecovery.Commands.PasswordRecoveryCode;
 using ProCardsNew.Application.Account.PasswordRecovery.Commands.PasswordRecoveryNewPassword;
 using ProCardsNew.Contracts.Account.PasswordRecovery;
+using ProCardsNew.Contracts.Common;
 
 namespace ProCardsNew.Api.Controllers.Account;
 
@@ -33,7 +34,7 @@ public class PasswordRecoveryController: ApiController
         var passwordRecoveryResult = await _mediator.Send(command);
         
         return passwordRecoveryResult.Match(
-            result => Ok(_mapper.Map<PasswordRecoveryResponse>(result)),
+            result => Ok(_mapper.Map<ResultResponse>(result)),
             errors => Problem(errors));
     }
 
@@ -45,7 +46,7 @@ public class PasswordRecoveryController: ApiController
         var passwordRecoveryResult = await _mediator.Send(command);
 
         return passwordRecoveryResult.Match(
-            result => Ok(_mapper.Map<PasswordRecoveryResponse>(result)),
+            result => Ok(_mapper.Map<ResultResponse>(result)),
             errors => Problem(errors));
     }
 
@@ -57,7 +58,7 @@ public class PasswordRecoveryController: ApiController
         var passwordRecoveryResult = await _mediator.Send(command);
 
         return passwordRecoveryResult.Match(
-            result => Ok(_mapper.Map<PasswordRecoveryResponse>(result)),
+            result => Ok(_mapper.Map<ResultResponse>(result)),
             errors => Problem(errors));
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Data;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using ProCardsNew.Infrastructure.Authentication;
 
 namespace ProCardsNew.Api.Middlewares;

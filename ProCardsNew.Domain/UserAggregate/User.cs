@@ -12,8 +12,6 @@ public sealed class User: AggregateRoot<UserId>
 {
     public string Login { get; private set;}
     public string Email { get; private set;}
-    public string NormalizedLogin { get; private set;} 
-    public string NormalizedEmail { get; private set;}
     public string FirstName { get; private set;}
     public string LastName { get; private set;}
     public string Location { get; private set;}
@@ -48,24 +46,22 @@ public sealed class User: AggregateRoot<UserId>
         UserId id,
         string login,
         string email,
-        string normalizedLogin,
-        string normalizedEmail,
         string firstName,
         string lastName,
         string location,
         string passwordHash,
+        Statistic statistic,
         DateTime createdAtDateTime,
         DateTime updatedAtDateTime)
         : base(id)
     {
         Login = login;
         Email = email;
-        NormalizedLogin = normalizedLogin;
-        NormalizedEmail = normalizedEmail;
         FirstName = firstName;
         LastName = lastName;
         Location = location;
         PasswordHash = passwordHash;
+        Statistic = statistic;
         CreatedAtDateTime = createdAtDateTime;
         UpdatedAtDateTime = updatedAtDateTime;
     }
@@ -78,18 +74,25 @@ public sealed class User: AggregateRoot<UserId>
         string location,
         string passwordHash)
     {
+        var userId = UserId.CreateUnique();
         return new(
-            UserId.CreateUnique(),
+            userId,
             login,
             email,
-            login.ToUpper(),
-            email.ToUpper(),
             firstName,
             lastName,
             location,
             passwordHash,
+            Statistic.Create(userId),
             DateTime.UtcNow, 
             DateTime.UtcNow);
+    }
+
+    public void AddDeck(Deck deck)
+    {
+        _decks.Add(deck);
+        _userDecks.Add(UserDeck.Create(Id, deck.Id));
+        _deckStatistics.Add(DeckStatistic.Create(deck.Id, Id));
     }
 
     public RefreshToken GenerateRefreshToken()

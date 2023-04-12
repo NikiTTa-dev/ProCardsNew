@@ -44,7 +44,7 @@ public class WeatherForecastController : ApiController
         }
 
 
-        return File(file.OpenReadStream(), file.ContentType);
+        //return File(file.OpenReadStream(), file.ContentType);
 
         var rng = new Random();
         return Ok(Enumerable.Range(1, 5).Select(index => new WeatherForecast
@@ -73,6 +73,6 @@ public class WeatherForecastController : ApiController
         var image = mage     
             .FirstOrDefault(i => i.Side?.SideName == "Front");
         
-        return File(image.Data, image.FileExtension);
+        return File(image!.Data, image.FileExtension);
     }
 }

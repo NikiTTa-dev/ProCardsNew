@@ -53,7 +53,6 @@ public class DeckConfiguration : IEntityTypeConfiguration<Deck>
             .HasMaxLength(_validationSettings.DeckDescriptionLength);
 
         builder.Property(d => d.PasswordHash)
-            .IsRequired()
             .HasMaxLength(_validationSettings.DeckPasswordHashLength);
 
         builder.Property(d => d.IsPublic)

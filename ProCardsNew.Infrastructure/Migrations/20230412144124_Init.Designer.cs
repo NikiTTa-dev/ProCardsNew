@@ -12,7 +12,7 @@ using ProCardsNew.Infrastructure.Persistence;
 namespace ProCardsNew.Infrastructure.Migrations
 {
     [DbContext(typeof(ProCardsDbContext))]
-    [Migration("20230330113232_Init")]
+    [Migration("20230412144124_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -157,7 +157,6 @@ namespace ProCardsNew.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
 
@@ -293,16 +292,6 @@ namespace ProCardsNew.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Login")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
-
-                    b.Property<string>("NormalizedEmail")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("NormalizedLogin")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)");
