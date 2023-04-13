@@ -73,6 +73,11 @@ public class DeckRepository: IDeckRepository
         return await decks.ToListAsync();
     }
 
+    public void DeleteAsync(Deck deck)
+    {
+        _dbContext.Remove(deck);
+    }
+
     public async Task SaveChangesAsync()
     {
         await _dbContext.SaveChangesAsync();

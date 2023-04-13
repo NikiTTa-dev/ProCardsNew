@@ -263,9 +263,10 @@ PATCH host/editing/decks
 PATCH host/editing/decks/password
 ```json
 {
-  "deckId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "newPassword": "string"
+  "deckId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "isPrivate": true,
+  "password": "string"
 }
 ```
 
@@ -330,8 +331,8 @@ GET host/editing/cards
       "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       "frontSide": "string",
       "backSide": "string",
-      "frontSideImageId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "backSideImageId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      "hasFrontImage": true,
+      "hasBackImage": false
     }
   ]
 }
@@ -485,7 +486,7 @@ GET host/cards
       "frontSide": "string",
       "backSide": "string",
       "hasFrontImage": true,
-      "HasBackImage": false
+      "hasBackImage": false
     }
   ]
 }

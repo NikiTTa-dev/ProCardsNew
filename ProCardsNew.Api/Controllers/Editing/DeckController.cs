@@ -3,8 +3,11 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ProCardsNew.Api.Controllers.Common;
 using ProCardsNew.Application.Editing.Decks.Commands.CreateDeck;
+using ProCardsNew.Application.Editing.Decks.Commands.DeleteDeck;
 using ProCardsNew.Application.Editing.Decks.Commands.EditDeck;
+using ProCardsNew.Application.Editing.Decks.Commands.EditDeckPassword;
 using ProCardsNew.Application.Editing.Decks.Queries.UserDecksToEdit;
+using ProCardsNew.Contracts.Common;
 using ProCardsNew.Contracts.Editing.Decks;
 
 namespace ProCardsNew.Api.Controllers.Editing;
@@ -54,11 +57,37 @@ public class DeckController: ApiController
     {
         if (request.UserId.ToString() != ClaimUserId)
             return AccessDenied;
-        var query = _mapper.Map<EditDeckCommand>(request);
-        var createResult = await _mediator.Send(query);
+        var command = _mapper.Map<EditDeckCommand>(request);
+        var createResult = await _mediator.Send(command);
 
         return createResult.Match(
-            result => Ok(_mapper.Map<EditDeckResult>(result)),
+            result => Ok(_mapper.Map<ResultResponse>(result)),
+            errors => Problem(errors));
+    }
+
+    [HttpPatch("password")]
+    public async Task<IActionResult> EditDeckPassword(EditDeckPasswordRequest request)
+    {
+        if (request.UserId.ToString() != ClaimUserId)
+            return AccessDenied;
+        var command = _mapper.Map<EditDeckPasswordCommand>(request);
+        var createResult = await _mediator.Send(command);
+
+        return createResult.Match(
+            result => Ok(_mapper.Map<ResultResponse>(result)),
+            errors => Problem(errors));
+    }
+    
+    [HttpDelete]
+    public async Task<IActionResult> DeleteDeck(DeleteDeckRequest request)
+    {
+        if (request.UserId.ToString() != ClaimUserId)
+            return AccessDenied;
+        var command = _mapper.Map<DeleteDeckCommand>(request);
+        var createResult = await _mediator.Send(command);
+
+        return createResult.Match(
+            result => Ok(_mapper.Map<ResultResponse>(result)),
             errors => Problem(errors));
     }
 }

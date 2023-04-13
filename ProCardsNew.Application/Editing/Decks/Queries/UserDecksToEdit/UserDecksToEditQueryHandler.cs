@@ -27,7 +27,7 @@ public class UserDecksToEditQueryHandler :
         if (await _userRepository.GetByIdAsync(userId) is null)
             return Errors.User.NotFound;
 
-        var deck = await _deckRepository.GetByOwnerIdWhereAsync(
+        var decks = await _deckRepository.GetByOwnerIdWhereAsync(
             userId: userId,
             filter: d => d.Name
                 .ToUpper()
@@ -35,7 +35,7 @@ public class UserDecksToEditQueryHandler :
             orderByDesc: d => d.UpdatedAtDateTime);
 
         return new UserDecksToEditQueryResult(
-            deck.ConvertAll(d => new DeckPreview(
+            decks.ConvertAll(d => new DeckPreview(
                 DeckId: d.Id.Value,
                 Name: d.Name,
                 IsOwner: true)));

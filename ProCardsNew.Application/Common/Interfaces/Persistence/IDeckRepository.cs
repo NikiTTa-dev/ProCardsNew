@@ -23,6 +23,8 @@ public interface IDeckRepository
     Task<List<Deck>> GetWhereIncludingAsync(
         Expression<Func<Deck, bool>> filter,
         params Expression<Func<Deck, object?>>[] includeProperties);
+
+    void DeleteAsync(Deck deck);
     
     Task SaveChangesAsync();
 }

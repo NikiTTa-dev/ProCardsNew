@@ -19,6 +19,12 @@ builder.Services
 
 var app = builder.Build();
 
+app.UseCors(c =>
+{
+    c.AllowAnyOrigin();
+    c.AllowAnyMethod();
+    c.AllowAnyHeader();
+});
 app.UseHttpsRedirection();
 
 app.UseCookiePolicy(new CookiePolicyOptions
