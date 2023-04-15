@@ -27,7 +27,7 @@ public interface IDeckRepository
         Expression<Func<Deck, bool>> filter,
         params Expression<Func<Deck, object?>>[] includeProperties);
 
-    void DeleteAsync(Deck deck);
+    void Delete(Deck deck);
     
     Task SaveChangesAsync();
 }

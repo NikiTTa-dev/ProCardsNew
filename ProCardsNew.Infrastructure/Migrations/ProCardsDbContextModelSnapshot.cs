@@ -131,9 +131,6 @@ namespace ProCardsNew.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("CardsCount")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("CreatedAtDateTime")
                         .HasColumnType("timestamp with time zone");
 

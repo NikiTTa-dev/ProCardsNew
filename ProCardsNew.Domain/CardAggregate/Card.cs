@@ -17,8 +17,8 @@ public sealed class Card: AggregateRoot<CardId>
     //public string Color { get; private set; }
     public UserId OwnerId { get; private set; }
     public User? Owner { get; private set; }
-    public DateTime CreatedAtDateTime { get; private set; }
     public DateTime UpdatedAtDateTime { get; private set; }
+    public DateTime CreatedAtDateTime { get; private set; }
 
     private readonly List<DeckCard> _deckCards = new();
     public IReadOnlyList<DeckCard> DeckCards => _deckCards.AsReadOnly();
@@ -61,6 +61,15 @@ public sealed class Card: AggregateRoot<CardId>
             ownerId,
             DateTime.UtcNow,
             DateTime.UtcNow);
+    }
+
+    public void Edit(
+        string frontSide,
+        string backSide)
+    {
+        FrontSide = frontSide;
+        BackSide = backSide;
+        UpdatedAtDateTime = DateTime.UtcNow;
     }
     
 #pragma warning disable CS8618

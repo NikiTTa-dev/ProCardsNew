@@ -1,5 +1,7 @@
 ﻿using Mapster;
 using ProCardsNew.Application.Editing.Cards.Commands.CreateCard;
+using ProCardsNew.Application.Editing.Cards.Commands.DeleteCard;
+using ProCardsNew.Application.Editing.Cards.Commands.EditCard;
 using ProCardsNew.Application.Editing.Cards.Queries.DeckCards;
 using ProCardsNew.Application.Editing.Decks.Commands.CreateDeck;
 using ProCardsNew.Application.Editing.Decks.Commands.DeleteDeck;
@@ -15,6 +17,12 @@ namespace ProCardsNew.Api.Common.Mapping;
 public class EditingMapping : IRegister
 {
     public void Register(TypeAdapterConfig config)
+    {
+        RegisterDecks(config);
+        RegisterCards(config);
+    }
+
+    private void RegisterDecks(TypeAdapterConfig config)
     {
         config.NewConfig<CreateDeckRequest, CreateDeckCommand>();
         config.NewConfig<CreateDeckCommandResult, CreateDeckResponse>();
@@ -32,11 +40,9 @@ public class EditingMapping : IRegister
 
         config.NewConfig<DeleteDeckRequest, DeleteDeckCommand>();
         config.NewConfig<DeleteDeckCommandResult, ResultResponse>();
-        
-        RegisterCards(config);
     }
 
-    public void RegisterCards(TypeAdapterConfig config)
+    private void RegisterCards(TypeAdapterConfig config)
     {
         config.NewConfig<DeckCardsRequest, DeckCardsQuery>();
         config.NewConfig<DeckCardsQueryResult, DeckCardsResponse>();
@@ -46,5 +52,11 @@ public class EditingMapping : IRegister
 
         config.NewConfig<CreateCardRequest, CreateCardCommand>();
         config.NewConfig<CreateCardCommandResult, CreateCardResponse>();
+
+        config.NewConfig<EditCardRequest, EditCardCommand>();
+        config.NewConfig<EditCardCommandResult, ResultResponse>();
+
+        config.NewConfig<DeleteCardRequest, DeleteCardCommand>();
+        config.NewConfig<DeleteCardCommandResult, ResultResponse>();
     }
 }

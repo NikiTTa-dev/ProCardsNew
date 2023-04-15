@@ -32,7 +32,7 @@ public class DeleteDeckCommandHandler
         if (deck.OwnerId != user.Id)
             return Errors.User.AccessDenied;
         
-        _deckRepository.DeleteAsync(deck);
+        _deckRepository.Delete(deck);
         await _deckRepository.SaveChangesAsync();
 
         return new DeleteDeckCommandResult();

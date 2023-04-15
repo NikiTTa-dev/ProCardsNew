@@ -14,7 +14,6 @@ public sealed class Deck : AggregateRoot<DeckId>
     public string Description { get; private set; }
     public string? PasswordHash { get; private set; }
     public bool IsPublic { get; private set; }
-    public int CardsCount { get; private set; }
     public UserId OwnerId { get; private set; }
     public User? Owner { get; private set; }
     public DateTime CreatedAtDateTime { get; private set; }
@@ -79,7 +78,6 @@ public sealed class Deck : AggregateRoot<DeckId>
         _cards.Add(card);
         var deckCard = DeckCard.Create(card.Id, Id);
         _deckCards.Add(deckCard);
-        CardsCount++;
         
         return deckCard;
     }

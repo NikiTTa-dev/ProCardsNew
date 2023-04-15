@@ -3,7 +3,10 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ProCardsNew.Api.Controllers.Common;
 using ProCardsNew.Application.Editing.Cards.Commands.CreateCard;
+using ProCardsNew.Application.Editing.Cards.Commands.DeleteCard;
+using ProCardsNew.Application.Editing.Cards.Commands.EditCard;
 using ProCardsNew.Application.Editing.Cards.Queries.DeckCards;
+using ProCardsNew.Contracts.Common;
 using ProCardsNew.Contracts.Editing.Cards;
 
 namespace ProCardsNew.Api.Controllers.Editing;
@@ -45,6 +48,32 @@ public class CardController: ApiController
 
         return createResult.Match(
             result => Ok(_mapper.Map<DeckCardsResponse>(result)),
+            errors => Problem(errors));
+    }
+
+    [HttpPatch]
+    public async Task<IActionResult> EditCard(EditCardRequest request)
+    {
+        if (request.UserId.ToString() != ClaimUserId)
+            return AccessDenied;
+        var command = _mapper.Map<EditCardCommand>(request);
+        var createResult = await _mediator.Send(command);
+
+        return createResult.Match(
+            result => Ok(_mapper.Map<ResultResponse>(result)),
+            errors => Problem(errors));
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteCard(DeleteCardRequest request)
+    {
+        if (request.UserId.ToString() != ClaimUserId)
+            return AccessDenied;
+        var command = _mapper.Map<DeleteCardCommand>(request);
+        var createResult = await _mediator.Send(command);
+
+        return createResult.Match(
+            result => Ok(_mapper.Map<ResultResponse>(result)),
             errors => Problem(errors));
     }
 }

@@ -70,7 +70,7 @@ public class CardRepository : ICardRepository
             .CountAsync(i => i.Side!.SideName == side && i.CardId == cardId) > 0;
     }
     
-    public void DeleteAsync(Card card)
+    public void Delete(Card card)
     {
         _dbContext.Remove(card);
     }

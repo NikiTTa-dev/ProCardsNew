@@ -83,7 +83,7 @@ public class DeckRepository : IDeckRepository
         return await decks.ToListAsync();
     }
 
-    public void DeleteAsync(Deck deck)
+    public void Delete(Deck deck)
     {
         _dbContext.Remove(deck);
     }

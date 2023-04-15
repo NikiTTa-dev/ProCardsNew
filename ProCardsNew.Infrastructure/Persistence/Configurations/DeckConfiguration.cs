@@ -58,9 +58,6 @@ public class DeckConfiguration : IEntityTypeConfiguration<Deck>
         builder.Property(d => d.IsPublic)
             .IsRequired();
 
-        builder.Property(d => d.CardsCount)
-            .IsRequired();
-
         builder.Property(d => d.CreatedAtDateTime)
             .IsRequired();
 

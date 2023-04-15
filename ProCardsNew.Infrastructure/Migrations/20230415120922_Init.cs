@@ -56,8 +56,8 @@ namespace ProCardsNew.Infrastructure.Migrations
                     FrontSide = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
                     BackSide = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
                     OwnerId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAtDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAtDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAtDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAtDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -79,7 +79,6 @@ namespace ProCardsNew.Infrastructure.Migrations
                     Description = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
                     PasswordHash = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: true),
                     IsPublic = table.Column<bool>(type: "boolean", nullable: false),
-                    CardsCount = table.Column<int>(type: "integer", nullable: false),
                     OwnerId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAtDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAtDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)

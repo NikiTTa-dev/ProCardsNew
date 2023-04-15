@@ -29,7 +29,7 @@ public interface ICardRepository
         CardId cardId,
         string side);
 
-    public void DeleteAsync(Card card);
+    public void Delete(Card card);
 
     public Task SaveChangesAsync();
 }

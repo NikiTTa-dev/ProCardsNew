@@ -12,7 +12,7 @@ using ProCardsNew.Infrastructure.Persistence;
 namespace ProCardsNew.Infrastructure.Migrations
 {
     [DbContext(typeof(ProCardsDbContext))]
-    [Migration("20230415100310_Init")]
+    [Migration("20230415120922_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -133,9 +133,6 @@ namespace ProCardsNew.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
-
-                    b.Property<int>("CardsCount")
-                        .HasColumnType("integer");
 
                     b.Property<DateTime>("CreatedAtDateTime")
                         .HasColumnType("timestamp with time zone");
