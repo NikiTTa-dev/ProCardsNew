@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using ProCardsNew.Domain.DeckAggregate;
+using ProCardsNew.Domain.DeckAggregate.Entities;
 using ProCardsNew.Domain.DeckAggregate.ValueObjects;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;
 
@@ -7,6 +8,8 @@ namespace ProCardsNew.Application.Common.Interfaces.Persistence;
 
 public interface IDeckRepository
 {
+    void ChangeStateToAdd(object entity);
+    Task AddDeckCardAsync(DeckCard dc);
     Task AddAsync(Deck deck);
     
     Task<Deck?> GetByIdAsync(DeckId id);

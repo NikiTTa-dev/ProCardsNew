@@ -154,7 +154,7 @@ namespace ProCardsNew.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DeckCard", x => new { x.CardId, x.DeckId });
+                    table.PrimaryKey("PK_DeckCard", x => new { x.DeckId, x.CardId });
                     table.ForeignKey(
                         name: "FK_DeckCard_Cards_CardId",
                         column: x => x.CardId,
@@ -261,9 +261,9 @@ namespace ProCardsNew.Infrastructure.Migrations
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DeckCard_DeckId",
+                name: "IX_DeckCard_CardId",
                 table: "DeckCard",
-                column: "DeckId");
+                column: "CardId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Decks_OwnerId",

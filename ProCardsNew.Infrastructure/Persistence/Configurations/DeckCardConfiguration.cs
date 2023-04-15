@@ -12,14 +12,14 @@ public class DeckCardConfiguration : IEntityTypeConfiguration<DeckCard>
     {
         builder.ToTable("DeckCard");
 
-        builder.HasKey(dc=> new {dc.CardId, dc.DeckId});
+        builder.HasKey(dc => new { dc.DeckId, dc.CardId });
 
         builder.Property(dc => dc.DeckId)
             .ValueGeneratedOnAdd()
             .HasConversion(
                 id => id.Value,
                 value => DeckId.Create(value));
-        
+
         builder.Property(dc => dc.CardId)
             .ValueGeneratedOnAdd()
             .HasConversion(
@@ -29,11 +29,11 @@ public class DeckCardConfiguration : IEntityTypeConfiguration<DeckCard>
         builder.HasOne(dc => dc.Deck)
             .WithMany(d => d.DeckCards)
             .HasForeignKey(dc => dc.DeckId);
-
+        
         builder.HasOne(dc => dc.Card)
             .WithMany(c => c.DeckCards)
             .HasForeignKey(dc => dc.CardId);
-        
+
         ConfigureProperties(builder);
     }
 

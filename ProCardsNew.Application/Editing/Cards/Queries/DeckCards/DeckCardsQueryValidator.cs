@@ -20,6 +20,6 @@ public class DeckCardsQueryValidator
         RuleFor(q => q.SearchQuery)
             .NotNull()
             .ContainsNoMultipleSpaces()
-            .MaximumLength(validationSettings.CardSideLength);
+            .MaximumLength(validationSettings.CardSideMaxLength);
     }
 }

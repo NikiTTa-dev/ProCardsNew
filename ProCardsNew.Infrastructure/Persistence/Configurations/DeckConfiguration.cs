@@ -85,7 +85,7 @@ public class DeckConfiguration : IEntityTypeConfiguration<Deck>
     {
         builder.HasMany(d => d.DeckCards)
             .WithOne(dc => dc.Deck);
-
+        
         builder.HasMany(d => d.Cards)
             .WithMany(c => c.Decks)
             .UsingEntity<DeckCard>();

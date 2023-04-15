@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ProCardsNew.Api.Controllers.Common;
+using ProCardsNew.Application.Editing.Cards.Commands.CreateCard;
 using ProCardsNew.Application.Editing.Cards.Queries.DeckCards;
 using ProCardsNew.Contracts.Editing.Cards;
 
@@ -22,7 +23,20 @@ public class CardController: ApiController
     }
 
     [HttpPost]
-    public async Task<IActionResult> DeckCards(DeckCardsRequest request)
+    public async Task<IActionResult> CreateCard(CreateCardRequest request)
+    {
+        if (request.UserId.ToString() != ClaimUserId)
+            return AccessDenied;
+        var command = _mapper.Map<CreateCardCommand>(request);
+        var createResult = await _mediator.Send(command);
+
+        return createResult.Match(
+            result => Ok(_mapper.Map<CreateCardResponse>(result)),
+            errors => Problem(errors));
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> DeckCards([FromQuery]DeckCardsRequest request)
     {
         if (request.UserId.ToString() != ClaimUserId)
             return AccessDenied;

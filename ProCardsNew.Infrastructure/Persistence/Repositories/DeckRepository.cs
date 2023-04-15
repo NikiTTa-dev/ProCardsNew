@@ -2,18 +2,29 @@
 using Microsoft.EntityFrameworkCore;
 using ProCardsNew.Application.Common.Interfaces.Persistence;
 using ProCardsNew.Domain.DeckAggregate;
+using ProCardsNew.Domain.DeckAggregate.Entities;
 using ProCardsNew.Domain.DeckAggregate.ValueObjects;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;
 
 namespace ProCardsNew.Infrastructure.Persistence.Repositories;
 
-public class DeckRepository: IDeckRepository
+public class DeckRepository : IDeckRepository
 {
     private readonly ProCardsDbContext _dbContext;
 
     public DeckRepository(ProCardsDbContext dbContext)
     {
         _dbContext = dbContext;
+    }
+
+    public void ChangeStateToAdd(object entity)
+    {
+        _dbContext.Entry(entity).State = EntityState.Added;
+    }
+
+    public async Task AddDeckCardAsync(DeckCard dc)
+    {
+        await _dbContext.AddAsync(dc);
     }
 
     public async Task AddAsync(Deck deck)
@@ -23,8 +34,7 @@ public class DeckRepository: IDeckRepository
 
     public async Task<Deck?> GetByIdAsync(DeckId id)
     {
-        return await _dbContext.Decks
-            .FirstOrDefaultAsync(u => u.Id == id);
+        return await _dbContext.Decks.FirstOrDefaultAsync(d => d.Id == id);
     }
 
     public async Task<Deck?> GetByNameAsync(UserId userId, string name)
@@ -33,7 +43,7 @@ public class DeckRepository: IDeckRepository
             .Where(d => d.Name == name)
             .FirstOrDefaultAsync(d => d.OwnerId == userId);
     }
-    
+
     public async Task<List<Deck>> GetByOwnerIdWhereAsync(
         UserId userId,
         Expression<Func<Deck, bool>> filter,
@@ -49,7 +59,7 @@ public class DeckRepository: IDeckRepository
     public async Task<List<Deck>> GetAllIncludingAsync(params Expression<Func<Deck, object?>>[] includeProperties)
     {
         var decks = _dbContext.Decks.AsQueryable();
-        
+
         foreach (var includedProperty in includeProperties)
         {
             decks = decks.Include(includedProperty);
@@ -64,7 +74,7 @@ public class DeckRepository: IDeckRepository
     {
         var decks = _dbContext.Decks
             .Where(filter);
-        
+
         foreach (var includedProperty in includeProperties)
         {
             decks = decks.Include(includedProperty);

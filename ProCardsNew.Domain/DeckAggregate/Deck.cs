@@ -80,7 +80,7 @@ public sealed class Deck : AggregateRoot<DeckId>
         var deckCard = DeckCard.Create(card.Id, Id);
         _deckCards.Add(deckCard);
         CardsCount++;
-
+        
         return deckCard;
     }
 
@@ -90,6 +90,7 @@ public sealed class Deck : AggregateRoot<DeckId>
     {
         Name = name;
         Description = description;
+        UpdatedAtDateTime = DateTime.UtcNow;
     }
 
     public void EditPassword(
@@ -101,6 +102,8 @@ public sealed class Deck : AggregateRoot<DeckId>
 
         if (!isPublic)
             PasswordHash = null;
+
+        UpdatedAtDateTime = DateTime.UtcNow;
     }
 
 #pragma warning disable CS8618

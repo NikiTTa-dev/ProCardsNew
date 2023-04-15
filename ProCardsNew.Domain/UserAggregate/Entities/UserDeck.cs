@@ -39,6 +39,7 @@ public class UserDeck: Entity
     {
         yield return UserId;
         yield return DeckId;
+        yield return OpenedAtDateTime;
     }
     
 #pragma warning disable CS8618

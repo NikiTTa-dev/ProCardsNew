@@ -43,11 +43,11 @@ public class CardConfiguration : IEntityTypeConfiguration<Card>
     private void ConfigureProperties(EntityTypeBuilder<Card> builder)
     {
         builder.Property(c => c.FrontSide)
-            .HasMaxLength(_validationSettings.CardSideLength)
+            .HasMaxLength(_validationSettings.CardSideMaxLength)
             .IsRequired();
 
         builder.Property(c => c.BackSide)
-            .HasMaxLength(_validationSettings.CardSideLength)
+            .HasMaxLength(_validationSettings.CardSideMaxLength)
             .IsRequired();
 
         builder.Property(c => c.OwnerId)

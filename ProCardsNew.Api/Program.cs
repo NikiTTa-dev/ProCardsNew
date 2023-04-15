@@ -19,12 +19,6 @@ builder.Services
 
 var app = builder.Build();
 
-app.UseCors(c =>
-{
-    c.AllowAnyOrigin();
-    c.AllowAnyMethod();
-    c.AllowAnyHeader();
-});
 app.UseHttpsRedirection();
 
 app.UseCookiePolicy(new CookiePolicyOptions
@@ -42,6 +36,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    // app.UseCors(c =>
+    // {
+    //     c.AllowCredentials();
+    //     c.WithOrigins("http://localhost:3000");
+    //     c.AllowAnyMethod();
+    //     c.AllowAnyHeader();
+    // });
 }
 
 app.UseAuthentication();

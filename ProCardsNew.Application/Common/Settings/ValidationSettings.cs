@@ -6,7 +6,8 @@ public class ValidationSettings
     
     public int GuidLength { get; init; }
     
-    public int CardSideLength { get; init; }
+    public int CardSideMaxLength { get; init; }
+    public int CardSideMinLength { get; init; }
     
     public int DeckNameLength { get; init; }
     public int DeckDescriptionLength { get; init; }

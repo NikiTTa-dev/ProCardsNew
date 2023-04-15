@@ -1,6 +1,7 @@
 ﻿namespace ProCardsNew.Contracts.Editing.Cards;
 
-public record DeckCardsRequest(
+public record CreateCardRequest(
     Guid UserId,
     Guid DeckId,
-    string SearchQuery = "");
+    string FrontSide,
+    string BackSide);

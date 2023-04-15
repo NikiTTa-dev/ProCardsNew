@@ -39,8 +39,8 @@ public class DeckController: ApiController
             errors => Problem(errors));
     }
 
-    [HttpPost("get")]
-    public async Task<IActionResult> UserDecksToEdit(UserDecksToEditRequest request)
+    [HttpGet]
+    public async Task<IActionResult> UserDecksToEdit([FromQuery]UserDecksToEditRequest request)
     {
         if (request.UserId.ToString() != ClaimUserId)
             return AccessDenied;

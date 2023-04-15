@@ -219,12 +219,11 @@ PATCH host/users/password
 # Creating
 
 ## UserDecksToEditRequest
-POST host/editing/decks/get
-```json
-{
-  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "searchQuery": "string"
-}
+GET host/editing/decks/get
+```text
+QUERY
+userId=3fa85f64-5717-4562-b3fc-2c963f66afa6
+searchQuery=string
 ```
 
 ## UserDecksToEditResponse
@@ -315,12 +314,10 @@ DELETE host/editing/decks
 
 ## DeckCardsRequest
 GET host/editing/cards
-```json
-{
-  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "deckId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "searchQuery": "string"
-}
+```text
+userId=3fa85f64-5717-4562-b3fc-2c963f66afa6
+deckId=3fa85f64-5717-4562-b3fc-2c963f66afa6
+searchQuery=string
 ```
 
 ## DeckCardsResponse
@@ -361,6 +358,7 @@ POST host/editing/cards
 ```json
 {
   "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "deckId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "frontSide": "string",
   "backSide": "string"
 }
@@ -369,8 +367,7 @@ POST host/editing/cards
 ## CreateCardResponse
 ```json
 {
-  "cardId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "result": "string"
+  "cardId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 }
 ```
 

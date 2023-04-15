@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using ProCardsNew.Application.Editing.Cards.Commands.CreateCard;
 using ProCardsNew.Application.Editing.Cards.Queries.DeckCards;
 using ProCardsNew.Application.Editing.Decks.Commands.CreateDeck;
 using ProCardsNew.Application.Editing.Decks.Commands.DeleteDeck;
@@ -42,5 +43,8 @@ public class EditingMapping : IRegister
 
         config.NewConfig<CardResult, CardResponse>()
             .TwoWays();
+
+        config.NewConfig<CreateCardRequest, CreateCardCommand>();
+        config.NewConfig<CreateCardCommandResult, CreateCardResponse>();
     }
 }

@@ -17,7 +17,7 @@ namespace ProCardsNew.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.4")
+                .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -169,20 +169,20 @@ namespace ProCardsNew.Infrastructure.Migrations
 
             modelBuilder.Entity("ProCardsNew.Domain.DeckAggregate.Entities.DeckCard", b =>
                 {
-                    b.Property<Guid>("CardId")
+                    b.Property<Guid>("DeckId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("DeckId")
+                    b.Property<Guid>("CardId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("CardId", "DeckId");
+                    b.HasKey("DeckId", "CardId");
 
-                    b.HasIndex("DeckId");
+                    b.HasIndex("CardId");
 
                     b.ToTable("DeckCard", (string)null);
                 });

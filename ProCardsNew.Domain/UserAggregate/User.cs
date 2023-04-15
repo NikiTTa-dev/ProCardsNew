@@ -104,6 +104,7 @@ public sealed class User: AggregateRoot<UserId>
     public void RehashPassword(string newPasswordHash)
     {
         PasswordHash = newPasswordHash;
+        UpdatedAtDateTime = DateTime.UtcNow;
     }
 
     public void SetPasswordRecoveryCode(

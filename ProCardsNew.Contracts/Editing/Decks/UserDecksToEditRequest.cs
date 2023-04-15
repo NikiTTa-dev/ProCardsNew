@@ -2,4 +2,4 @@
 
 public record UserDecksToEditRequest(
     Guid UserId,
-    string SearchQuery);
+    string SearchQuery = "");

@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ProCardsNew.Application.Common.Interfaces.Persistence;
 using ProCardsNew.Domain.UserAggregate;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;
@@ -25,17 +24,8 @@ public class UserRepository: IUserRepository
         return await _dbContext.Users.FirstOrDefaultAsync(u => u.Login.ToUpper() == normalizedLogin);
     }
 
-    public async Task<User?> GetByIdAsync(
-        UserId id,
-        params Expression<Func<User, object?>>[] includeProperties)
+    public async Task<User?> GetByIdAsync(UserId id)
     {
-        var users = _dbContext.Users.AsQueryable();
-
-        foreach (var property in includeProperties)
-        {
-            users = users.Include(property);
-        }
-        
         return await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
     }
 
