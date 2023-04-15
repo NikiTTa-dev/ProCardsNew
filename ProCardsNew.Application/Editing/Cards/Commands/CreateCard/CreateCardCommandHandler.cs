@@ -24,8 +24,12 @@ public class CreateCardCommandHandler
     
     public async Task<ErrorOr<CreateCardCommandResult>> Handle(CreateCardCommand command, CancellationToken cancellationToken)
     {
-        var userId = UserId.Create(command.UserId);
-        if (await _userRepository.GetByIdAsync(userId) is not {} user)
+        UserId.Create(command.UserId);
+        var user = await _userRepository.GetByIdIncludeAsync(
+            UserId.Create(command.UserId),
+            u => u.Statistic);
+        
+        if (user is null)
             return Errors.User.NotFound;
 
         if (await _deckRepository.GetByIdAsync(DeckId.Create(command.DeckId)) is not { } deck)
@@ -35,10 +39,11 @@ public class CreateCardCommandHandler
             return Errors.User.AccessDenied;
 
         var card = Card.Create(
-            ownerId: userId,
+            ownerId: user.Id,
             frontSide: command.FrontSide,
             backSide: command.BackSide);
 
+        user.AddCard(card);
         _deckRepository.ChangeStateToAdd(deck.AddCard(card));
         await _deckRepository.SaveChangesAsync();
         

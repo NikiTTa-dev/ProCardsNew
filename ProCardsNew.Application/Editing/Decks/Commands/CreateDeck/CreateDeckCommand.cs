@@ -6,7 +6,5 @@ namespace ProCardsNew.Application.Editing.Decks.Commands.CreateDeck;
 public record CreateDeckCommand(
     Guid UserId,
     string Name,
-    string Description,
-    bool IsPrivate,
-    string Password)
+    string Description)
     : IRequest<ErrorOr<CreateDeckCommandResult>>;

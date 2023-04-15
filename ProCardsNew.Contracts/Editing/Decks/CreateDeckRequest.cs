@@ -3,6 +3,4 @@
 public record CreateDeckRequest(
     Guid UserId,
     string Name,
-    string Description,
-    bool IsPrivate,
-    string Password);
+    string Description);

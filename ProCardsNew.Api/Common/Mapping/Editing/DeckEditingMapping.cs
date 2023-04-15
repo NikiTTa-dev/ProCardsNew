@@ -1,28 +1,17 @@
 ﻿using Mapster;
-using ProCardsNew.Application.Editing.Cards.Commands.CreateCard;
-using ProCardsNew.Application.Editing.Cards.Commands.DeleteCard;
-using ProCardsNew.Application.Editing.Cards.Commands.EditCard;
-using ProCardsNew.Application.Editing.Cards.Queries.DeckCards;
 using ProCardsNew.Application.Editing.Decks.Commands.CreateDeck;
 using ProCardsNew.Application.Editing.Decks.Commands.DeleteDeck;
 using ProCardsNew.Application.Editing.Decks.Commands.EditDeck;
 using ProCardsNew.Application.Editing.Decks.Commands.EditDeckPassword;
 using ProCardsNew.Application.Editing.Decks.Queries.UserDecksToEdit;
 using ProCardsNew.Contracts.Common;
-using ProCardsNew.Contracts.Editing.Cards;
 using ProCardsNew.Contracts.Editing.Decks;
 
-namespace ProCardsNew.Api.Common.Mapping;
+namespace ProCardsNew.Api.Common.Mapping.Editing;
 
-public class EditingMapping : IRegister
+public class DeckEditingMapping : IRegister
 {
     public void Register(TypeAdapterConfig config)
-    {
-        RegisterDecks(config);
-        RegisterCards(config);
-    }
-
-    private void RegisterDecks(TypeAdapterConfig config)
     {
         config.NewConfig<CreateDeckRequest, CreateDeckCommand>();
         config.NewConfig<CreateDeckCommandResult, CreateDeckResponse>();
@@ -40,23 +29,5 @@ public class EditingMapping : IRegister
 
         config.NewConfig<DeleteDeckRequest, DeleteDeckCommand>();
         config.NewConfig<DeleteDeckCommandResult, ResultResponse>();
-    }
-
-    private void RegisterCards(TypeAdapterConfig config)
-    {
-        config.NewConfig<DeckCardsRequest, DeckCardsQuery>();
-        config.NewConfig<DeckCardsQueryResult, DeckCardsResponse>();
-
-        config.NewConfig<CardResult, CardResponse>()
-            .TwoWays();
-
-        config.NewConfig<CreateCardRequest, CreateCardCommand>();
-        config.NewConfig<CreateCardCommandResult, CreateCardResponse>();
-
-        config.NewConfig<EditCardRequest, EditCardCommand>();
-        config.NewConfig<EditCardCommandResult, ResultResponse>();
-
-        config.NewConfig<DeleteCardRequest, DeleteCardCommand>();
-        config.NewConfig<DeleteCardCommandResult, ResultResponse>();
     }
 }

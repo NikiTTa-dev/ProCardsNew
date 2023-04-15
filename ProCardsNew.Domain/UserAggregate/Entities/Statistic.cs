@@ -15,6 +15,11 @@ public sealed class Statistic : Entity<UserId>
     {
     }
 
+    public void IncreaseCardsCreated()
+    {
+        CardsCreated++;
+    }
+
     public static Statistic Create(UserId userId)
     {
         return new(userId);

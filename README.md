@@ -157,7 +157,7 @@ GET host/users/preview
   "location": "string",
   "cardsViewed": 0,
   "hours": 0,
-  "cardsCreatedCount": 0,
+  "cardsCreated": 0,
   "score": 0
 }
 ```
@@ -282,9 +282,7 @@ POST host/editing/decks
 {
   "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "name": "string",
-  "description": "string",
-  "isPrivate": true,
-  "password": "string"
+  "description": "string"
 }
 ```
 

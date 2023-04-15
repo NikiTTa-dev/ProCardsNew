@@ -21,7 +21,8 @@ public interface IDeckRepository
         Expression<Func<Deck, bool>> filter,
         Expression<Func<Deck, object>> orderByDesc);
     
-    Task<List<Deck>> GetAllIncludingAsync(params Expression<Func<Deck, object?>>[] includeProperties);
+    Task<List<Deck>> GetAllIncludingAsync(
+        params Expression<Func<Deck, object?>>[] includeProperties);
     
     Task<List<Deck>> GetWhereIncludingAsync(
         Expression<Func<Deck, bool>> filter,

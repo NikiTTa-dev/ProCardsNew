@@ -5,7 +5,7 @@ using ProCardsNew.Application.Account.Authentication.Commands.Register;
 using ProCardsNew.Application.Account.Authentication.Common;
 using ProCardsNew.Contracts.Account.Authentication;
 
-namespace ProCardsNew.Api.Common.Mapping;
+namespace ProCardsNew.Api.Common.Mapping.Account;
 
 public class AuthenticationMappingConfig: IRegister
 {

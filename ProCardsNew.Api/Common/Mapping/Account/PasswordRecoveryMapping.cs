@@ -6,7 +6,7 @@ using ProCardsNew.Application.Account.PasswordRecovery.Common;
 using ProCardsNew.Contracts.Account.PasswordRecovery;
 using ProCardsNew.Contracts.Common;
 
-namespace ProCardsNew.Api.Common.Mapping;
+namespace ProCardsNew.Api.Common.Mapping.Account;
 
 public class PasswordRecoveryMapping: IRegister
 {

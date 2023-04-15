@@ -39,8 +39,6 @@ public sealed class Deck : AggregateRoot<DeckId>
         DeckId id,
         string name,
         string description,
-        string? passwordHash,
-        bool isPublic,
         UserId ownerId,
         DateTime createdAtDateTime,
         DateTime updatedAtDateTime)
@@ -49,8 +47,6 @@ public sealed class Deck : AggregateRoot<DeckId>
         OwnerId = ownerId;
         Name = name;
         Description = description;
-        PasswordHash = passwordHash;
-        IsPublic = isPublic;
         CreatedAtDateTime = createdAtDateTime;
         UpdatedAtDateTime = updatedAtDateTime;
     }
@@ -58,16 +54,12 @@ public sealed class Deck : AggregateRoot<DeckId>
     public static Deck Create(
         string name,
         string description,
-        bool isPublic,
-        string? passwordHash,
         UserId ownerId)
     {
         return new(
             DeckId.CreateUnique(),
             name,
             description,
-            passwordHash,
-            isPublic,
             ownerId,
             DateTime.UtcNow,
             DateTime.UtcNow);

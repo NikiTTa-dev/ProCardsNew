@@ -25,11 +25,5 @@ public class CreateDeckCommandValidator : AbstractValidator<CreateDeckCommand>
             .ContainsNoEdgeSpaces()
             .ContainsNoMultipleSpaces()
             .MaximumLength(validationSettings.DeckDescriptionLength);
-
-        RuleFor(c => c.Password)
-            .NotEmpty()
-            .ContainsNoSpaces()
-            .MinimumLength(validationSettings.DeckPasswordMinLength)
-            .MaximumLength(validationSettings.DeckPasswordMaxLength);
     }
 }
