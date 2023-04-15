@@ -108,6 +108,20 @@ public sealed class User: AggregateRoot<UserId>
         return RefreshToken;
     }
 
+    public void Edit(
+        string firstName,
+        string lastName,
+        string email,
+        string location)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        Email = email;
+        Location = location;
+        
+        UpdatedAtDateTime = DateTime.UtcNow;
+    }
+
     public void RehashPassword(string newPasswordHash)
     {
         PasswordHash = newPasswordHash;
