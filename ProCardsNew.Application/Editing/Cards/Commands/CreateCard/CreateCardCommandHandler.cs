@@ -24,7 +24,6 @@ public class CreateCardCommandHandler
     
     public async Task<ErrorOr<CreateCardCommandResult>> Handle(CreateCardCommand command, CancellationToken cancellationToken)
     {
-        UserId.Create(command.UserId);
         var user = await _userRepository.GetByIdIncludeAsync(
             UserId.Create(command.UserId),
             u => u.Statistic);

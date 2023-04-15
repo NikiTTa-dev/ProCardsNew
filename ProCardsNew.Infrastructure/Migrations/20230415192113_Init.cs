@@ -124,7 +124,7 @@ namespace ProCardsNew.Infrastructure.Migrations
                     Name = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                     FileExtension = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
                     Data = table.Column<byte[]>(type: "bytea", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {

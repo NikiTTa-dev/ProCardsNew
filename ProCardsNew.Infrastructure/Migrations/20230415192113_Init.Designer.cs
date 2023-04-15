@@ -12,7 +12,7 @@ using ProCardsNew.Infrastructure.Persistence;
 namespace ProCardsNew.Infrastructure.Migrations
 {
     [DbContext(typeof(ProCardsDbContext))]
-    [Migration("20230415120922_Init")]
+    [Migration("20230415192113_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -90,6 +90,9 @@ namespace ProCardsNew.Infrastructure.Migrations
                     b.Property<Guid>("SideId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<byte[]>("Data")
                         .IsRequired()
                         .HasColumnType("bytea");
@@ -103,9 +106,6 @@ namespace ProCardsNew.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("CardId", "SideId");
 

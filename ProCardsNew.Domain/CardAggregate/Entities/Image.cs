@@ -12,7 +12,7 @@ public sealed class Image: Entity
     public string Name { get; private set; }
     public string FileExtension { get; private set; }
     public byte[] Data { get; private set; }
-    public DateTime UpdatedAt { get; private set; }
+    public DateTime CreatedAt { get; private set; }
     
     private Image(
         CardId cardId,
@@ -20,14 +20,14 @@ public sealed class Image: Entity
         string name,
         string fileExtension, 
         byte[] data,
-        DateTime updatedAt)
+        DateTime createdAt)
     {
         CardId = cardId;
         SideId = sideId;
         Name = name;
         FileExtension = fileExtension;
         Data = data;
-        UpdatedAt = updatedAt;
+        CreatedAt = createdAt;
     }
 
     public static Image Create(

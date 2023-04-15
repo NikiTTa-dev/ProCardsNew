@@ -54,16 +54,36 @@ GET host/images
 
 ## AddCardImageRequest
 POST host/images
-```json
+```text
 {
-  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "cardId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "side": "string",
-  "image": "string"
+  query
+  userId=3fa85f64-5717-4562-b3fc-2c963f66afa6
+  cardId=3fa85f64-5717-4562-b3fc-2c963f66afa6
+  side=string
+  
+  IFormFile
+  Image
 }
 ```
 
 ## AddCardImageResponse
+```json
+{
+  "result": "string"
+}
+```
+
+## DeleteCardImageRequest
+DELETE host/images
+```json
+{
+  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "cardId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "Side": "string"
+}
+```
+
+## DeleteCardImageResponse
 ```json
 {
   "result": "string"

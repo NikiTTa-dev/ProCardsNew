@@ -87,6 +87,9 @@ namespace ProCardsNew.Infrastructure.Migrations
                     b.Property<Guid>("SideId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<byte[]>("Data")
                         .IsRequired()
                         .HasColumnType("bytea");
@@ -100,9 +103,6 @@ namespace ProCardsNew.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("CardId", "SideId");
 

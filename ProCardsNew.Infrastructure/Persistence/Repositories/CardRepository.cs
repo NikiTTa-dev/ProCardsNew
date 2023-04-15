@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProCardsNew.Application.Common.Interfaces.Persistence;
 using ProCardsNew.Domain.CardAggregate;
+using ProCardsNew.Domain.CardAggregate.Entities;
 using ProCardsNew.Domain.CardAggregate.ValueObjects;
 using ProCardsNew.Domain.DeckAggregate.ValueObjects;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;
@@ -22,6 +23,11 @@ public class CardRepository : ICardRepository
         await _dbContext.Cards.AddAsync(card);
     }
 
+    public async Task<Side?> GetSideByNameAsync(string name)
+    {
+        return await _dbContext.Sides.FirstOrDefaultAsync(s => s.SideName == name);
+    }
+
     public async Task<Card?> GetByIdAsync(CardId id)
     {
         return await _dbContext.Cards
@@ -34,7 +40,7 @@ public class CardRepository : ICardRepository
             .Where(d => d.FrontSide == frontSide)
             .FirstOrDefaultAsync(d => d.OwnerId == userId);
     }
-    
+
     public async Task<List<Card>> GetByOwnerIdWhereAsync(
         UserId userId,
         Expression<Func<Card, bool>> filter,
@@ -46,7 +52,7 @@ public class CardRepository : ICardRepository
             .OrderByDescending(orderByDesc)
             .ToListAsync();
     }
-    
+
     public async Task<List<Card>> GetByOwnerIdAndDeckIdWhereAsync(
         UserId userId,
         DeckId deckId,
@@ -61,7 +67,7 @@ public class CardRepository : ICardRepository
             .ToListAsync();
     }
 
-    public async Task<bool> HasImage(
+    public async Task<bool> HasImageAsync(
         CardId cardId,
         string side)
     {
@@ -72,7 +78,7 @@ public class CardRepository : ICardRepository
     
     public void Delete(Card card)
     {
-        _dbContext.Remove(card);
+        _dbContext.Cards.Remove(card);
     }
 
     public async Task SaveChangesAsync()

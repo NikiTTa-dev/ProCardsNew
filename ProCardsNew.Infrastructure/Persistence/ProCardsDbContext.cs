@@ -26,6 +26,7 @@ public class ProCardsDbContext : DbContext
     public DbSet<Deck> Decks { get; init; } = null!;
     public DbSet<Card> Cards { get; init; } = null!;
     public DbSet<User> Users { get; init; } = null!;
+    public DbSet<Side> Sides { get; init; } = null!;
     public DbSet<DeckCard> DeckCards { get; init; } = null!;
     public DbSet<Image> Images { get; init; } = null!;
 

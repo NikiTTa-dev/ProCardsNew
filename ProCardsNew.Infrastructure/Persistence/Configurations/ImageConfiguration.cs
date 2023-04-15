@@ -55,7 +55,7 @@ public class ImageConfiguration : IEntityTypeConfiguration<Image>
         builder.Property(i => i.Data)
             .IsRequired();
 
-        builder.Property(i => i.UpdatedAt)
+        builder.Property(i => i.CreatedAt)
             .IsRequired();
     }
 }

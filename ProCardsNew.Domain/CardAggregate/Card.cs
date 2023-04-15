@@ -71,6 +71,12 @@ public sealed class Card: AggregateRoot<CardId>
         BackSide = backSide;
         UpdatedAtDateTime = DateTime.UtcNow;
     }
+
+    public void AddImage(Image image)
+    {
+        _images.Add(image);
+        UpdatedAtDateTime = DateTime.UtcNow;
+    }
     
 #pragma warning disable CS8618
     // ReSharper disable once UnusedMember.Local
