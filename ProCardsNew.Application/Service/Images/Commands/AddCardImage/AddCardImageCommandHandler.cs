@@ -54,8 +54,9 @@ public class AddCardImageCommandHandler
 
             card.AddImage(image);
             await _cardRepository.SaveChangesAsync();
-            await command.Data.DisposeAsync();
         }
+        
+        await command.Data.DisposeAsync();
 
         return new AddCardImageCommandResult();
     }

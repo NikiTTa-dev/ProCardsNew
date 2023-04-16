@@ -32,7 +32,8 @@ public class EditDeckCommandHandler
         if (deck.OwnerId != user.Id)
             return Errors.User.AccessDenied;
 
-        if (await _deckRepository.GetByNameAsync(user.Id, command.Name) is not null)
+        if (await _deckRepository.GetByNameAsync(user.Id, command.Name) is { } deckWithGivenName 
+            && deck.Id != deckWithGivenName.Id)
             return Errors.Deck.DuplicateName;
 
         deck.Edit(

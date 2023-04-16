@@ -1,6 +1,7 @@
 ﻿using ErrorOr;
 using MediatR;
 using ProCardsNew.Application.Common.Interfaces.Persistence;
+using ProCardsNew.Domain.CardAggregate.ValueObjects;
 using ProCardsNew.Domain.Common.Errors;
 using ProCardsNew.Domain.DeckAggregate.ValueObjects;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;
@@ -38,10 +39,17 @@ public class CardImageQueryHandler
         if (await _deckRepository.GetByIdAsync(DeckId.Create(query.DeckId)) is not { } deck)
             return Errors.Deck.NotFound;
 
+        if (await _cardRepository.GetByIdAsync(CardId.Create(query.CardId)) is not { } card)
+            return Errors.Card.NotFound;
+        
         // TODO: check if user have access to image
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
 
-        // if (await _imageRepository.GetByCardIdAndSide(card.Id, query.Side) is not { } image)
-        //     return Errors.Image.NotFound;
+        if (await _imageRepository.GetByCardIdAndSide(card.Id, query.Side) is not { } image)
+            return Errors.Image.NotFound;
+
+        return new CardImageQueryResult(
+            Data: image.Data,
+            FileExtension: image.FileExtension);
     }
 }

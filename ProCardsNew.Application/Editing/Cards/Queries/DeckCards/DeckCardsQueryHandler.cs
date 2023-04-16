@@ -48,12 +48,17 @@ public class DeckCardsQueryHandler
                     .Contains(query.SearchQuery.ToUpper()),
             orderByDesc: c => c.UpdatedAtDateTime);
 
-        return new DeckCardsQueryResult(cards.ConvertAll(c => 
-            new CardResult(
-                Id: c.Id.Value,
-                FrontSide: c.FrontSide,
-                BackSide: c.BackSide,
-                HasFrontImage: false,
-                HasBackImage: false)));
+        var cardResults = await Task
+            .WhenAll(cards
+                .Select(async c => new CardResult(
+                    Id: c.Id.Value,
+                    FrontSide: c.FrontSide,
+                    BackSide: c.BackSide,
+                    HasFrontImage: await _cardRepository.HasImageAsync(c.Id, "Front"),
+                    HasBackImage: await _cardRepository.HasImageAsync(c.Id, "Back"))));
+
+        return new DeckCardsQueryResult(
+            DeckName: deck.Name,
+            cardResults.ToList());
     }
 }

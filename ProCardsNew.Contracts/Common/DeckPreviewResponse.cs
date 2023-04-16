@@ -3,4 +3,5 @@
 public record DeckPreviewResponse(
     Guid DeckId,
     string Name,
-    bool IsOwner);
+    string Description,
+    bool IsPrivate);
