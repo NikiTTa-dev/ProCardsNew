@@ -457,6 +457,7 @@ TODO: check if user already have this deck
   "name": "string",
   "description": "string",
   "ownerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "ownerLogin": "string",
   "cardsCount": 0,
   "statistics": [
     {

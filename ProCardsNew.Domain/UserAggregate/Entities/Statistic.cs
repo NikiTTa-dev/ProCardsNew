@@ -18,12 +18,53 @@ public sealed class Statistic : Entity<UserId>
     public void IncreaseCardsCreated()
     {
         CardsCreated++;
-        UpdateScore();
+        UpdateScore(1, 5, 360);
     }
 
-    private void UpdateScore()
+    private void UpdateScore(
+        float cardsViewedCoefficient,
+        float cardsCreatedCoefficient,
+        float hoursCoefficient)
     {
-        Score = CardsViewed + CardsCreated + (int)Hours;
+        var average = (CardsViewed * cardsViewedCoefficient
+                       + CardsCreated * cardsCreatedCoefficient
+                       + (int)(Hours * hoursCoefficient))
+                      / 3;
+        var normalizedCardsViewedCoefficient = cardsViewedCoefficient;
+        var normalizedCardsCreatedCoefficient = cardsCreatedCoefficient;
+        var normalizedHoursCoefficient = hoursCoefficient;
+        
+        if (cardsViewedCoefficient * CardsViewed > 1.2f * average)
+        {
+            normalizedCardsViewedCoefficient *=
+                Math.Min(1f, 1f /
+                             (3f * average /
+                              (CardsCreated * cardsCreatedCoefficient
+                               + Hours * hoursCoefficient)));
+        }
+
+        if (cardsCreatedCoefficient * CardsCreated > 1.2f * average)
+        {
+            normalizedCardsCreatedCoefficient *=
+                Math.Min(1f,
+                    1f /
+                    (3f * average /
+                     (CardsViewed * cardsViewedCoefficient +
+                      Hours * hoursCoefficient)));
+        }
+        
+        if (hoursCoefficient * Hours > 1.2f * average)
+        {
+            normalizedHoursCoefficient *= Math.Min(1f,
+                1f /
+                (3f * average /
+                 (CardsCreated * cardsCreatedCoefficient +
+                  CardsViewed * cardsViewedCoefficient)));
+        }
+
+        Score = (int)(CardsViewed * normalizedCardsViewedCoefficient
+                      + CardsCreated * normalizedCardsCreatedCoefficient
+                      + Hours * normalizedHoursCoefficient);
     }
 
     public static Statistic Create(UserId userId)

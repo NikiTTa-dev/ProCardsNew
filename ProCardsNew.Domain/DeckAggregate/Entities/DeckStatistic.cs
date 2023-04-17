@@ -50,7 +50,34 @@ public sealed class DeckStatistic : Entity
     {
         CardsViewed += cardsViewed;
         Hours += hours;
+        UpdateScore(1, 360);
         return this;
+    }
+
+    private void UpdateScore(
+        float cardsViewedCoefficient,
+        float hoursCoefficient)
+    {
+        var average = (CardsViewed * cardsViewedCoefficient
+                       + (int)(Hours * hoursCoefficient))
+                      / 2;
+        var normalizedCardsViewedCoefficient = cardsViewedCoefficient;
+        var normalizedHoursCoefficient = hoursCoefficient;
+        
+        if (cardsViewedCoefficient * CardsViewed > 1.2f * average)
+        {
+            normalizedCardsViewedCoefficient *=
+                Math.Min(1f, 1f / (2f * average / (Hours * hoursCoefficient)));
+        }
+
+        if (hoursCoefficient * Hours > 1.2f * average)
+        {
+            normalizedHoursCoefficient *= Math.Min(1f,
+                1f / (2f * average / (CardsViewed * cardsViewedCoefficient)));
+        }
+
+        Score = (int)(CardsViewed * normalizedCardsViewedCoefficient
+                      + Hours * normalizedHoursCoefficient);
     }
 
 #pragma warning disable CS8618
