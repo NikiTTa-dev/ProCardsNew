@@ -5,10 +5,10 @@ namespace ProCardsNew.Application.Common.Validators;
 public static class ImageValidator
 {
     public static IRuleBuilderOptions<T, Stream> FileLength<T>(
-        this IRuleBuilder<T, Stream> ruleBuilder)
+        this IRuleBuilder<T, Stream> ruleBuilder, int length)
     {
         return ruleBuilder
-            .Must(c => c.Length <= 3145728)
+            .Must(c => c.Length <= length)
             .WithMessage("File is too large.");
     }
     public static IRuleBuilderOptions<T, string> ImageFileExtension<T>(

@@ -7,6 +7,7 @@ using ProCardsNew.Domain.CardAggregate.Entities;
 using ProCardsNew.Domain.DeckAggregate;
 using ProCardsNew.Domain.DeckAggregate.Entities;
 using ProCardsNew.Domain.UserAggregate;
+using ProCardsNew.Domain.UserAggregate.Entities;
 using ProCardsNew.Infrastructure.Persistence.Extensions;
 
 namespace ProCardsNew.Infrastructure.Persistence;
@@ -29,6 +30,7 @@ public class ProCardsDbContext : DbContext
     public DbSet<Side> Sides { get; init; } = null!;
     public DbSet<DeckCard> DeckCards { get; init; } = null!;
     public DbSet<Image> Images { get; init; } = null!;
+    public DbSet<Statistic> Statistics { get; init; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

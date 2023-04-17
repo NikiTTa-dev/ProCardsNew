@@ -30,7 +30,7 @@ public class CardImageQueryHandler
     
     public async Task<ErrorOr<CardImageQueryResult>> Handle(CardImageQuery query, CancellationToken cancellationToken)
     {
-        if (await _cardRepository.GetSideByNameAsync(query.Side) is not { } side)
+        if (await _cardRepository.GetSideByNameAsync(query.Side) is null)
             return Errors.Side.NotFound;
         
         if (await _userRepository.GetByIdAsync(UserId.Create(query.UserId)) is not { } user)
@@ -41,9 +41,10 @@ public class CardImageQueryHandler
 
         if (await _cardRepository.GetByIdAsync(CardId.Create(query.CardId)) is not { } card)
             return Errors.Card.NotFound;
-        
-        // TODO: check if user have access to image
-        //throw new NotImplementedException();
+
+        if (card.OwnerId != user.Id)
+            // TODO: check if user have access to image
+            return Errors.User.AccessDenied;
 
         if (await _imageRepository.GetByCardIdAndSide(card.Id, query.Side) is not { } image)
             return Errors.Image.NotFound;

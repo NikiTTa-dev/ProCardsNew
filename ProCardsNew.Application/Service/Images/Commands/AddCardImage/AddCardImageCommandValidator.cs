@@ -5,10 +5,10 @@ using ProCardsNew.Application.Common.Validators;
 
 namespace ProCardsNew.Application.Service.Images.Commands.AddCardImage;
 
-public class AddImageCommandValidator
+public class AddCardImageCommandValidator
     : AbstractValidator<AddCardImageCommand>
 {
-    public AddImageCommandValidator(IOptions<ValidationSettings> settings)
+    public AddCardImageCommandValidator(IOptions<ValidationSettings> settings)
     {
         var validationSettings = settings.Value;
 
@@ -33,6 +33,6 @@ public class AddImageCommandValidator
 
         RuleFor(c => c.Data)
             .NotEmpty()
-            .FileLength();
+            .FileLength(validationSettings.CardImageLength);
     }
 }

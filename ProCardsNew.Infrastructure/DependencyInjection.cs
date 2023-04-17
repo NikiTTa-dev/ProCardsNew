@@ -46,6 +46,7 @@ public static class DependencyInjection
         services.AddScoped<IDeckRepository, DeckRepository>();
         services.AddScoped<ICardRepository, CardRepository>();
         services.AddScoped<IImageRepository, ImageRepository>();
+        services.AddScoped<IStatisticRepository, StatisticRepository>();
         
         services.AddDbContext<ProCardsDbContext>(options =>
         {

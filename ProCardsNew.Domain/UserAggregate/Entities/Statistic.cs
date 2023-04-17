@@ -18,6 +18,12 @@ public sealed class Statistic : Entity<UserId>
     public void IncreaseCardsCreated()
     {
         CardsCreated++;
+        UpdateScore();
+    }
+
+    private void UpdateScore()
+    {
+        Score = CardsViewed + CardsCreated + (int)Hours;
     }
 
     public static Statistic Create(UserId userId)

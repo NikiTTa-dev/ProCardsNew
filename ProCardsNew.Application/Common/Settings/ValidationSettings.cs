@@ -8,6 +8,7 @@ public class ValidationSettings
     
     public int CardSideMaxLength { get; init; }
     public int CardSideMinLength { get; init; }
+    public int CardImageLength { get; init; } 
     
     public int DeckNameLength { get; init; }
     public int DeckDescriptionLength { get; init; }
@@ -17,8 +18,6 @@ public class ValidationSettings
 
     public int UserLoginLength { get; init; }
     public int UserEmailLength { get; init; }
-    public int UserNormalizedLoginLength { get; init; }
-    public int UserNormalizedEmailLength { get; init; } 
     public int UserFirstNameLength { get; init; }
     public int UserLastNameLength { get; init; }
     public int UserLocationLength { get; init; }
@@ -33,4 +32,6 @@ public class ValidationSettings
     public int ImageFileExtensionLength { get; init; }
 
     public int SideNameLength { get; init; }
+    
+    public int StatisticTopUsersCount { get; init; }
 }
