@@ -87,7 +87,21 @@ public sealed class Deck : AggregateRoot<DeckId>
 
     public void OpenDeck()
     {
+        IsPublic = true;
         _deckAccesses.Add(DeckAccess.Create(Id, true));
+        UpdatedAtDateTime = DateTime.UtcNow;
+    }
+
+    public void CloseDeck(DeckAccess? deckAccess)
+    {
+        IsPublic = false;
+        deckAccess?.Close();
+        UpdatedAtDateTime = DateTime.UtcNow;
+    }
+
+    public void AddStatistic(UserId userId)
+    {
+        _deckStatistics.Add(DeckStatistic.Create(Id, userId));
     }
 
 #pragma warning disable CS8618

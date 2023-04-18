@@ -27,14 +27,12 @@ public class EditPasswordCommandHandler
         if (await _userRepository.GetByIdAsync(UserId.Create(command.UserId)) is not { } user)
             return Errors.User.NotFound;
 
-        var hashedPassword = _passwordHasherService.GeneratePasswordHash(command.NewPassword);
-        
         if (_passwordHasherService
-                .VerifyPasswordHash(hashedPassword, command.OldPassword)
+                .VerifyPasswordHash(user.PasswordHash, command.OldPassword)
             is PasswordVerificationResult.Failed)
             return Errors.Authentication.InvalidCredentials;
         
-        user.RehashPassword(hashedPassword);
+        user.RehashPassword(_passwordHasherService.GeneratePasswordHash(command.NewPassword));
         await _userRepository.SaveChangesAsync();
         
         return new EditPasswordCommandResult();

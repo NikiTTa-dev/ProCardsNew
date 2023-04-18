@@ -39,7 +39,7 @@ public class EditDeckPasswordCommandHandler
             return Errors.User.AccessDenied;
 
         string? passwordHash = null;
-        var deckAccess = await _deckRepository.GetDeckAccessAsync(deck.Id);
+        var deckAccess = await _deckRepository.GetAccessibleDeckAccessAsync(deck.Id);
         if (!command.IsPrivate)
         {
             passwordHash = _passwordHasherService.GeneratePasswordHash(command.Password);
@@ -47,8 +47,8 @@ public class EditDeckPasswordCommandHandler
                 deck.OpenDeck();
         }
         else
-            deckAccess?.Close();
-        
+            deck.CloseDeck(deckAccess);
+
         deck.EditPassword(passwordHash: passwordHash);
         await _deckRepository.SaveChangesAsync();
 

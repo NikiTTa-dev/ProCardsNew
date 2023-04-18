@@ -32,6 +32,7 @@ public class ProCardsDbContext : DbContext
     public DbSet<Image> Images { get; init; } = null!;
     public DbSet<Statistic> Statistics { get; init; } = null!;
     public DbSet<DeckAccess> DeckAccesses { get; init; } = null!;
+    public DbSet<DeckStatistic> DeckStatistics { get; init; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

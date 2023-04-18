@@ -27,17 +27,32 @@ public class DeckRepository : IDeckRepository
         await _dbContext.Decks.AddAsync(deck);
     }
 
-    public async Task<DeckAccess?> GetDeckAccessAsync(
+    public async Task<DeckAccess?> GetAccessibleDeckAccessAsync(
         DeckId deckId)
     {
         return await _dbContext.DeckAccesses
-            .FirstOrDefaultAsync(da => 
+            .FirstOrDefaultAsync(da =>
                 da.DeckId == deckId && da.IsAccessible == true);
     }
 
     public async Task<Deck?> GetByIdAsync(DeckId id)
     {
         return await _dbContext.Decks.FirstOrDefaultAsync(d => d.Id == id);
+    }
+
+    public async Task<Deck?> GetByIdIncludingAsync(
+        DeckId id,
+        params Expression<Func<Deck, object>>[] includedProperties)
+    {
+        var decks = _dbContext.Decks
+            .Where(d => d.Id == id);
+
+        foreach (var includedProperty in includedProperties)
+        {
+            decks = decks.Include(includedProperty);
+        }
+
+        return await decks.FirstOrDefaultAsync();
     }
 
     public async Task<Deck?> GetByNameAsync(UserId userId, string name)
@@ -86,11 +101,29 @@ public class DeckRepository : IDeckRepository
         return await decks.ToListAsync();
     }
 
+    public async Task<int> GetCardsCount(DeckId deckId)
+    {
+        return await _dbContext.DeckCards
+            .Where(d => d.DeckId == deckId)
+            .CountAsync();
+    }
+
+    public async Task<bool> HasAccess(DeckId deckId, UserId userId)
+    {
+        return await _dbContext.DeckAccesses
+            .Include(da => da.UserDecks)
+            .Where(da => da.DeckId == deckId)
+            .Where(da => da.IsAccessible)
+            .Where(da => da.UserDecks
+                .FirstOrDefault(ud => ud.UserId == userId) != null)
+            .FirstOrDefaultAsync() != null;
+    }
+
     public void Delete(Deck deck)
     {
         _dbContext.Remove(deck);
     }
-    
+
     public async Task SaveChangesAsync()
     {
         await _dbContext.SaveChangesAsync();
