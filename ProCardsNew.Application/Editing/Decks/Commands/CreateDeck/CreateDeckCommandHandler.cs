@@ -36,7 +36,7 @@ public class CreateDeckCommandHandler
             description: command.Description,
             ownerId: userId);
         
-        user.AddDeck(deck);
+        user.AddOwnedDeck(deck);
         await _userRepository.SaveChangesAsync();
 
         return new CreateDeckCommandResult(deck.Id.Value);

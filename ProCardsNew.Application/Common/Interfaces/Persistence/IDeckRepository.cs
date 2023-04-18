@@ -9,8 +9,10 @@ namespace ProCardsNew.Application.Common.Interfaces.Persistence;
 public interface IDeckRepository
 {
     void ChangeStateToAdd(object entity);
-    Task AddDeckCardAsync(DeckCard dc);
     Task AddAsync(Deck deck);
+
+    Task<DeckAccess?> GetDeckAccessAsync(
+        DeckId deckId);
     
     Task<Deck?> GetByIdAsync(DeckId id);
     

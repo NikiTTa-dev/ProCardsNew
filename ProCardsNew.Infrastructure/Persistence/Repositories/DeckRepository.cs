@@ -22,14 +22,17 @@ public class DeckRepository : IDeckRepository
         _dbContext.Entry(entity).State = EntityState.Added;
     }
 
-    public async Task AddDeckCardAsync(DeckCard dc)
-    {
-        await _dbContext.AddAsync(dc);
-    }
-
     public async Task AddAsync(Deck deck)
     {
         await _dbContext.Decks.AddAsync(deck);
+    }
+
+    public async Task<DeckAccess?> GetDeckAccessAsync(
+        DeckId deckId)
+    {
+        return await _dbContext.DeckAccesses
+            .FirstOrDefaultAsync(da => 
+                da.DeckId == deckId && da.IsAccessible == true);
     }
 
     public async Task<Deck?> GetByIdAsync(DeckId id)
@@ -87,7 +90,7 @@ public class DeckRepository : IDeckRepository
     {
         _dbContext.Remove(deck);
     }
-
+    
     public async Task SaveChangesAsync()
     {
         await _dbContext.SaveChangesAsync();

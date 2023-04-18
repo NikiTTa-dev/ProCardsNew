@@ -12,7 +12,7 @@ using ProCardsNew.Infrastructure.Persistence;
 namespace ProCardsNew.Infrastructure.Migrations
 {
     [DbContext(typeof(ProCardsDbContext))]
-    [Migration("20230415192113_Init")]
+    [Migration("20230418090123_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -167,6 +167,24 @@ namespace ProCardsNew.Infrastructure.Migrations
                     b.ToTable("Decks", (string)null);
                 });
 
+            modelBuilder.Entity("ProCardsNew.Domain.DeckAggregate.Entities.DeckAccess", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("DeckId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsAccessible")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeckId");
+
+                    b.ToTable("DeckAccess", (string)null);
+                });
+
             modelBuilder.Entity("ProCardsNew.Domain.DeckAggregate.Entities.DeckCard", b =>
                 {
                     b.Property<Guid>("DeckId")
@@ -238,18 +256,15 @@ namespace ProCardsNew.Infrastructure.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("DeckId")
+                    b.Property<Guid>("DeckAccessId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("OpenedAtDateTime")
+                    b.Property<DateTime>("LastOpenedAtDateTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
+                    b.HasKey("UserId", "DeckAccessId");
 
-                    b.HasKey("UserId", "DeckId", "OpenedAtDateTime");
-
-                    b.HasIndex("DeckId");
+                    b.HasIndex("DeckAccessId");
 
                     b.ToTable("UserDeck", (string)null);
                 });
@@ -388,6 +403,17 @@ namespace ProCardsNew.Infrastructure.Migrations
                     b.Navigation("Owner");
                 });
 
+            modelBuilder.Entity("ProCardsNew.Domain.DeckAggregate.Entities.DeckAccess", b =>
+                {
+                    b.HasOne("ProCardsNew.Domain.DeckAggregate.Deck", "Deck")
+                        .WithMany("DeckAccesses")
+                        .HasForeignKey("DeckId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Deck");
+                });
+
             modelBuilder.Entity("ProCardsNew.Domain.DeckAggregate.Entities.DeckCard", b =>
                 {
                     b.HasOne("ProCardsNew.Domain.CardAggregate.Card", "Card")
@@ -439,9 +465,9 @@ namespace ProCardsNew.Infrastructure.Migrations
 
             modelBuilder.Entity("ProCardsNew.Domain.UserAggregate.Entities.UserDeck", b =>
                 {
-                    b.HasOne("ProCardsNew.Domain.DeckAggregate.Deck", "Deck")
-                        .WithMany("UserDecks")
-                        .HasForeignKey("DeckId")
+                    b.HasOne("ProCardsNew.Domain.DeckAggregate.Entities.DeckAccess", "DeckAccess")
+                        .WithMany()
+                        .HasForeignKey("DeckAccessId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -451,7 +477,7 @@ namespace ProCardsNew.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Deck");
+                    b.Navigation("DeckAccess");
 
                     b.Navigation("User");
                 });
@@ -467,11 +493,11 @@ namespace ProCardsNew.Infrastructure.Migrations
 
             modelBuilder.Entity("ProCardsNew.Domain.DeckAggregate.Deck", b =>
                 {
+                    b.Navigation("DeckAccesses");
+
                     b.Navigation("DeckCards");
 
                     b.Navigation("DeckStatistics");
-
-                    b.Navigation("UserDecks");
                 });
 
             modelBuilder.Entity("ProCardsNew.Domain.UserAggregate.User", b =>

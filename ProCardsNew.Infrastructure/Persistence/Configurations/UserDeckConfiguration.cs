@@ -12,7 +12,7 @@ public class UserDeckConfiguration : IEntityTypeConfiguration<UserDeck>
     {
         builder.ToTable("UserDeck");
 
-        builder.HasKey(ud => new { ud.UserId, ud.DeckId, ud.OpenedAtDateTime });
+        builder.HasKey(ud => new { ud.UserId, ud.DeckAccessId });
 
         builder.Property(ud => ud.UserId)
             .ValueGeneratedNever()
@@ -20,21 +20,18 @@ public class UserDeckConfiguration : IEntityTypeConfiguration<UserDeck>
                 id => id.Value,
                 value => UserId.Create(value));
 
-        builder.Property(ud => ud.DeckId)
+        builder.Property(ud => ud.DeckAccessId)
             .ValueGeneratedNever()
             .HasConversion(
                 id => id.Value,
-                value => DeckId.Create(value));
+                value => DeckAccessId.Create(value));
         
         ConfigureProperties(builder);
     }
 
     private void ConfigureProperties(EntityTypeBuilder<UserDeck> builder)
     {
-        builder.Property(ud => ud.OpenedAtDateTime)
-            .IsRequired();
-
-        builder.Property(ud => ud.IsActive)
+        builder.Property(ud => ud.LastOpenedAtDateTime)
             .IsRequired();
     }
 }

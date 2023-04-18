@@ -5,7 +5,6 @@ using ProCardsNew.Application.Common.Settings;
 using ProCardsNew.Domain.DeckAggregate;
 using ProCardsNew.Domain.DeckAggregate.Entities;
 using ProCardsNew.Domain.DeckAggregate.ValueObjects;
-using ProCardsNew.Domain.UserAggregate.Entities;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;
 
 namespace ProCardsNew.Infrastructure.Persistence.Configurations;
@@ -25,7 +24,7 @@ public class DeckConfiguration : IEntityTypeConfiguration<Deck>
         ConfigureProperties(builder);
         ConfigureDeckCard(builder);
         ConfigureDeckStatistic(builder);
-        ConfigureUserDeck(builder);
+        ConfigureDeckAccess(builder);
         ConfigureOwner(builder);
     }
 
@@ -98,13 +97,9 @@ public class DeckConfiguration : IEntityTypeConfiguration<Deck>
             .UsingEntity<DeckStatistic>();
     }
 
-    private void ConfigureUserDeck(EntityTypeBuilder<Deck> builder)
+    private void ConfigureDeckAccess(EntityTypeBuilder<Deck> builder)
     {
-        builder.HasMany(d => d.UserDecks)
+        builder.HasMany(d => d.DeckAccesses)
             .WithOne(ud => ud.Deck);
-
-        builder.HasMany(d => d.Users)
-            .WithMany(u => u.Decks)
-            .UsingEntity<UserDeck>();
     }
 }

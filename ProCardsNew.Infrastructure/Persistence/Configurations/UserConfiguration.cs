@@ -4,7 +4,6 @@ using Microsoft.Extensions.Options;
 using ProCardsNew.Application.Common.Settings;
 using ProCardsNew.Domain.DeckAggregate.Entities;
 using ProCardsNew.Domain.UserAggregate;
-using ProCardsNew.Domain.UserAggregate.Entities;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;
 
 namespace ProCardsNew.Infrastructure.Persistence.Configurations;
@@ -105,10 +104,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         builder.HasMany(u => u.UserDecks)
             .WithOne(ud => ud.User);
-
-        builder.HasMany(u => u.Decks)
-            .WithMany(d => d.Users)
-            .UsingEntity<UserDeck>();
     }
 
     private void ConfigureStatistic(EntityTypeBuilder<User> builder)

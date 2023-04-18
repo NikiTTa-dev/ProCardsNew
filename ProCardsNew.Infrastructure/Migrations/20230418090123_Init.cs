@@ -144,6 +144,25 @@ namespace ProCardsNew.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DeckAccess",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    DeckId = table.Column<Guid>(type: "uuid", nullable: false),
+                    IsAccessible = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DeckAccess", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DeckAccess_Decks_DeckId",
+                        column: x => x.DeckId,
+                        principalTable: "Decks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DeckCard",
                 columns: table => new
                 {
@@ -232,18 +251,17 @@ namespace ProCardsNew.Infrastructure.Migrations
                 name: "UserDeck",
                 columns: table => new
                 {
-                    DeckId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DeckAccessId = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    OpenedAtDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
+                    LastOpenedAtDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserDeck", x => new { x.UserId, x.DeckId, x.OpenedAtDateTime });
+                    table.PrimaryKey("PK_UserDeck", x => new { x.UserId, x.DeckAccessId });
                     table.ForeignKey(
-                        name: "FK_UserDeck_Decks_DeckId",
-                        column: x => x.DeckId,
-                        principalTable: "Decks",
+                        name: "FK_UserDeck_DeckAccess_DeckAccessId",
+                        column: x => x.DeckAccessId,
+                        principalTable: "DeckAccess",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -258,6 +276,11 @@ namespace ProCardsNew.Infrastructure.Migrations
                 name: "IX_Cards_OwnerId",
                 table: "Cards",
                 column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeckAccess_DeckId",
+                table: "DeckAccess",
+                column: "DeckId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeckCard_CardId",
@@ -290,9 +313,9 @@ namespace ProCardsNew.Infrastructure.Migrations
                 column: "SideId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserDeck_DeckId",
+                name: "IX_UserDeck_DeckAccessId",
                 table: "UserDeck",
-                column: "DeckId");
+                column: "DeckAccessId");
         }
 
         /// <inheritdoc />
@@ -321,6 +344,9 @@ namespace ProCardsNew.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Sides");
+
+            migrationBuilder.DropTable(
+                name: "DeckAccess");
 
             migrationBuilder.DropTable(
                 name: "Decks");

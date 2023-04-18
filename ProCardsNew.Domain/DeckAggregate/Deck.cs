@@ -3,7 +3,6 @@ using ProCardsNew.Domain.Common.Models;
 using ProCardsNew.Domain.DeckAggregate.Entities;
 using ProCardsNew.Domain.DeckAggregate.ValueObjects;
 using ProCardsNew.Domain.UserAggregate;
-using ProCardsNew.Domain.UserAggregate.Entities;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;
 
 namespace ProCardsNew.Domain.DeckAggregate;
@@ -30,10 +29,8 @@ public sealed class Deck : AggregateRoot<DeckId>
     private readonly List<User> _leaderboardUsers = new();
     public IReadOnlyList<User> LeaderboardUsers => _leaderboardUsers.AsReadOnly();
 
-    private readonly List<UserDeck> _userDecks = new();
-    public IReadOnlyList<UserDeck> UserDecks => _userDecks.AsReadOnly();
-    private readonly List<User> _users = new();
-    public IReadOnlyList<User> Users => _users.AsReadOnly();
+    private readonly List<DeckAccess> _deckAccesses = new();
+    public IReadOnlyList<DeckAccess> DeckAccesses => _deckAccesses.AsReadOnly();
 
     private Deck(
         DeckId id,
@@ -67,7 +64,6 @@ public sealed class Deck : AggregateRoot<DeckId>
 
     public DeckCard AddCard(Card card)
     {
-        _cards.Add(card);
         var deckCard = DeckCard.Create(card.Id, Id);
         _deckCards.Add(deckCard);
         
@@ -83,17 +79,15 @@ public sealed class Deck : AggregateRoot<DeckId>
         UpdatedAtDateTime = DateTime.UtcNow;
     }
 
-    public void EditPassword(
-        bool isPublic,
-        string? passwordHash)
+    public void EditPassword(string? passwordHash)
     {
-        IsPublic = isPublic;
         PasswordHash = passwordHash;
-
-        if (!isPublic)
-            PasswordHash = null;
-
         UpdatedAtDateTime = DateTime.UtcNow;
+    }
+
+    public void OpenDeck()
+    {
+        _deckAccesses.Add(DeckAccess.Create(Id, true));
     }
 
 #pragma warning disable CS8618

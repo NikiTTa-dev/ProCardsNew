@@ -1,5 +1,5 @@
 ﻿using ProCardsNew.Domain.Common.Models;
-using ProCardsNew.Domain.DeckAggregate;
+using ProCardsNew.Domain.DeckAggregate.Entities;
 using ProCardsNew.Domain.DeckAggregate.ValueObjects;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;
 
@@ -7,39 +7,35 @@ namespace ProCardsNew.Domain.UserAggregate.Entities;
 
 public class UserDeck: Entity
 {
-    public DeckId DeckId { get; private set; }
+    public DeckAccessId DeckAccessId { get; private set; }
     public UserId UserId { get; private set; }
-    public Deck? Deck { get; private set; }
+    public DeckAccess? DeckAccess { get; private set; }
     public User? User { get; private set; }
-    public DateTime OpenedAtDateTime { get; private set; }
-    public bool IsActive { get; private set; }
+    public DateTime LastOpenedAtDateTime { get; private set; }
     
     private UserDeck(
         UserId userId,
-        DeckId deckId,
-        DateTime openedAtDateTime,
-        bool isActive)
+        DeckAccessId deckAccessId,
+        DateTime lastOpenedAtDateTime)
     {
         UserId = userId;
-        DeckId = deckId;
-        OpenedAtDateTime = openedAtDateTime;
-        IsActive = isActive;
+        DeckAccessId = deckAccessId;
+        LastOpenedAtDateTime = lastOpenedAtDateTime;
     }
 
-    public static UserDeck Create(UserId userId, DeckId deckId)
+    public static UserDeck Create(UserId userId, DeckAccessId deckAccessId)
     {
         return new(
             userId,
-            deckId,
-            DateTime.UtcNow, 
-            true);
+            deckAccessId,
+            DateTime.UtcNow);
     }
 
     public override IEnumerable<object?> GetEqualityComponents()
     {
         yield return UserId;
-        yield return DeckId;
-        yield return OpenedAtDateTime;
+        yield return DeckAccessId;
+        yield return LastOpenedAtDateTime;
     }
     
 #pragma warning disable CS8618

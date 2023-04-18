@@ -39,8 +39,6 @@ public sealed class User: AggregateRoot<UserId>
     
     private readonly List<UserDeck> _userDecks = new();
     public IReadOnlyList<UserDeck> UserDecks => _userDecks.AsReadOnly();
-    private readonly List<Deck> _decks = new();
-    public IReadOnlyList<Deck> Decks => _decks.AsReadOnly();
 
     private User(
         UserId id,
@@ -88,10 +86,9 @@ public sealed class User: AggregateRoot<UserId>
             DateTime.UtcNow);
     }
 
-    public void AddDeck(Deck deck)
+    public void AddOwnedDeck(Deck deck)
     {
-        _decks.Add(deck);
-        _userDecks.Add(UserDeck.Create(Id, deck.Id));
+        _ownedDecks.Add(deck);
         _deckStatistics.Add(DeckStatistic.Create(deck.Id, Id));
     }
 

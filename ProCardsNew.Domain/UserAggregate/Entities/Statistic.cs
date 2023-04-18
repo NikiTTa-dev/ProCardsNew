@@ -14,6 +14,11 @@ public sealed class Statistic : Entity<UserId>
     private Statistic(UserId id) : base(id)
     {
     }
+    
+    public static Statistic Create(UserId userId)
+    {
+        return new(userId);
+    }
 
     public void IncreaseCardsCreated()
     {
@@ -33,7 +38,7 @@ public sealed class Statistic : Entity<UserId>
         var normalizedCardsViewedCoefficient = cardsViewedCoefficient;
         var normalizedCardsCreatedCoefficient = cardsCreatedCoefficient;
         var normalizedHoursCoefficient = hoursCoefficient;
-        
+
         if (cardsViewedCoefficient * CardsViewed > 1.2f * average)
         {
             normalizedCardsViewedCoefficient *=
@@ -52,7 +57,7 @@ public sealed class Statistic : Entity<UserId>
                      (CardsViewed * cardsViewedCoefficient +
                       Hours * hoursCoefficient)));
         }
-        
+
         if (hoursCoefficient * Hours > 1.2f * average)
         {
             normalizedHoursCoefficient *= Math.Min(1f,
@@ -65,10 +70,5 @@ public sealed class Statistic : Entity<UserId>
         Score = (int)(CardsViewed * normalizedCardsViewedCoefficient
                       + CardsCreated * normalizedCardsCreatedCoefficient
                       + Hours * normalizedHoursCoefficient);
-    }
-
-    public static Statistic Create(UserId userId)
-    {
-        return new(userId);
     }
 }

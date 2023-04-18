@@ -25,11 +25,13 @@ public class EditDeckPasswordCommandHandler
         _passwordHasherService = passwordHasherService;
     }
 
-    public async Task<ErrorOr<EditDeckPasswordCommandResult>> Handle(EditDeckPasswordCommand command, CancellationToken cancellationToken)
+    public async Task<ErrorOr<EditDeckPasswordCommandResult>> Handle(
+        EditDeckPasswordCommand command,
+        CancellationToken cancellationToken)
     {
-        if (await _userRepository.GetByIdAsync(UserId.Create(command.UserId)) is not {} user)
+        if (await _userRepository.GetByIdAsync(UserId.Create(command.UserId)) is not { } user)
             return Errors.User.NotFound;
-        
+
         if (await _deckRepository.GetByIdAsync(DeckId.Create(command.DeckId)) is not { } deck)
             return Errors.Deck.NotFound;
 
@@ -37,12 +39,17 @@ public class EditDeckPasswordCommandHandler
             return Errors.User.AccessDenied;
 
         string? passwordHash = null;
+        var deckAccess = await _deckRepository.GetDeckAccessAsync(deck.Id);
         if (!command.IsPrivate)
+        {
             passwordHash = _passwordHasherService.GeneratePasswordHash(command.Password);
-
-        deck.EditPassword(
-            isPublic: !command.IsPrivate,
-            passwordHash: passwordHash);
+            if (deckAccess is null)
+                deck.OpenDeck();
+        }
+        else
+            deckAccess?.Close();
+        
+        deck.EditPassword(passwordHash: passwordHash);
         await _deckRepository.SaveChangesAsync();
 
         return new EditDeckPasswordCommandResult();
