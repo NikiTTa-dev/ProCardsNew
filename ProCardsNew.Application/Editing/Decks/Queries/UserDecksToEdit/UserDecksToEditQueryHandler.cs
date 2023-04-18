@@ -23,12 +23,11 @@ public class UserDecksToEditQueryHandler :
     public async Task<ErrorOr<UserDecksToEditQueryResult>> Handle(UserDecksToEditQuery query,
         CancellationToken cancellationToken)
     {
-        var userId = UserId.Create(query.UserId);
-        if (await _userRepository.GetByIdAsync(userId) is null)
+        if (await _userRepository.GetByIdAsync(UserId.Create(query.UserId)) is not { } user)
             return Errors.User.NotFound;
 
         var decks = await _deckRepository.GetByOwnerIdWhereAsync(
-            userId: userId,
+            userId: user.Id,
             filter: d => d.Name
                 .ToUpper()
                 .Contains(query.SearchQuery.ToUpper()),

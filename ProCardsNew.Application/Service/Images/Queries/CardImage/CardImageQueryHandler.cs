@@ -44,10 +44,9 @@ public class CardImageQueryHandler
 
         if (!await _deckRepository.HasCard(deck.Id, card.Id))
             return Errors.User.AccessDenied;
-        
-        if (card.OwnerId != user.Id)
-            if (!await _deckRepository.HasAccess(deck.Id, user.Id))
-                return Errors.User.AccessDenied;
+
+        if (!await _deckRepository.HasAccess(deck.Id, user.Id))
+            return Errors.User.AccessDenied;
 
         if (await _imageRepository.GetByCardIdAndSide(card.Id, query.Side) is not { } image)
             return Errors.Image.NotFound;

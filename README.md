@@ -114,6 +114,14 @@ POST host/account/login
 }
 ```
 
+## RefreshTokenRequest
+POST host/account/refresh
+```json
+{
+  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+```
+
 ## AuthenticationResponse
 ```json
 {
@@ -410,11 +418,10 @@ DELETE host/editing/cards
 
 ## UserDecksRequest
 GET host/decks
-```json
-{
-  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "searchQuery": "string"
-}
+```text
+QUERY
+  userId=3fa85f64-5717-4562-b3fc-2c963f66afa6
+  searchQuery=string
 ```
 
 ## UserDecksResponse
@@ -486,11 +493,11 @@ POST host/decks/remove
 
 ## StudyCardsRequest
 GET host/cards
-```json
-{
-  "deckId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-}
+```text
+QUERY
+  deckId=3fa85f64-5717-4562-b3fc-2c963f66afa6
+  userId=3fa85f64-5717-4562-b3fc-2c963f66afa6
+
 ```
 
 ## StudyCardsResponse

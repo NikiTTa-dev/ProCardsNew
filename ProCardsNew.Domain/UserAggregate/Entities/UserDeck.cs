@@ -31,6 +31,11 @@ public class UserDeck: Entity
             DateTime.UtcNow);
     }
 
+    public void UpdateOpenedAtDateTime()
+    {
+        LastOpenedAtDateTime = DateTime.UtcNow;
+    }
+
     public override IEnumerable<object?> GetEqualityComponents()
     {
         yield return UserId;

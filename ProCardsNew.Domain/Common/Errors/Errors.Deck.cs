@@ -14,6 +14,10 @@ public static partial class Errors
             code: "Deck.Duplicate",
             description: "User already have this deck.");
         
+        public static Error AlreadyRemoved => Error.Conflict(
+            code: "Deck.AlreadyRemoved",
+            description: "Source already been removed.");
+        
         public static Error NotFound => Error.NotFound(
             code: "Deck.NotFound",
             description: "Deck not found.");

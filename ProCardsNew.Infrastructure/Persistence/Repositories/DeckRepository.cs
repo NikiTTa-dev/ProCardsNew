@@ -5,6 +5,7 @@ using ProCardsNew.Domain.CardAggregate.ValueObjects;
 using ProCardsNew.Domain.DeckAggregate;
 using ProCardsNew.Domain.DeckAggregate.Entities;
 using ProCardsNew.Domain.DeckAggregate.ValueObjects;
+using ProCardsNew.Domain.UserAggregate.Entities;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;
 
 namespace ProCardsNew.Infrastructure.Persistence.Repositories;
@@ -27,6 +28,18 @@ public class DeckRepository : IDeckRepository
     {
         await _dbContext.Decks.AddAsync(deck);
     }
+    
+    public async Task<List<Deck>> GetUserDecks(UserId userId, string searchQuery)
+    {
+        return await _dbContext.UserDecks
+            .OrderByDescending(ud => ud.LastOpenedAtDateTime)
+            .Where(ud => ud.UserId == userId)
+            .Select(ud => ud.DeckAccess!)
+            .Where(da => da.IsAccessible || da.Deck!.OwnerId == userId)
+            .Select(da => da.Deck!)
+            .Where(d => d.Name.ToUpper().Contains(searchQuery.ToUpper()))
+            .ToListAsync();
+    }
 
     public async Task<DeckAccess?> GetAccessibleDeckAccessAsync(
         DeckId deckId)
@@ -34,6 +47,18 @@ public class DeckRepository : IDeckRepository
         return await _dbContext.DeckAccesses
             .FirstOrDefaultAsync(da =>
                 da.DeckId == deckId && da.IsAccessible == true);
+    }
+
+    public async Task<UserDeck?> GetUserDeck(
+        DeckId deckId,
+        UserId userId)
+    {
+        return await _dbContext.DeckAccesses
+            .Where(da => da.DeckId == deckId && 
+                         (da.IsAccessible || da.Deck!.OwnerId == userId))
+            .SelectMany(da => da.UserDecks)
+            .Where(ud => ud.UserId == userId)
+            .FirstOrDefaultAsync();
     }
 
     public async Task<Deck?> GetByIdAsync(DeckId id)
@@ -111,13 +136,15 @@ public class DeckRepository : IDeckRepository
 
     public async Task<bool> HasAccess(DeckId deckId, UserId userId)
     {
-        return await _dbContext.DeckAccesses
-            .Include(da => da.UserDecks)
-            .Where(da => da.DeckId == deckId)
-            .Where(da => da.IsAccessible)
-            .Where(da => da.UserDecks
-                .FirstOrDefault(ud => ud.UserId == userId) != null)
-            .FirstOrDefaultAsync() != null;
+        var a = await _dbContext.DeckAccesses
+            .Where(da => da.DeckId == deckId &&
+                         (da.Deck!.OwnerId == userId ||
+                          (da.IsAccessible &&
+                           da.UserDecks
+                               .FirstOrDefault(ud => ud.UserId == userId)
+                           != null)))
+            .FirstOrDefaultAsync();
+        return a != null;
     }
 
     public async Task<bool> HasCard(DeckId deckId, CardId cardId)
@@ -125,6 +152,11 @@ public class DeckRepository : IDeckRepository
         return await _dbContext.DeckCards
             .Where(dc => dc.DeckId == deckId && dc.CardId == cardId)
             .FirstOrDefaultAsync() != null;
+    }
+
+    public void DeleteUserDeck(UserDeck userDeck)
+    {
+        _dbContext.Remove(userDeck);
     }
 
     public void Delete(Deck deck)

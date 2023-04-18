@@ -1,6 +1,6 @@
 ﻿namespace ProCardsNew.Contracts.Learning;
 
-public record AddDeckResponse(
+public record DeckResponse(
     Guid Id,
     string Name,
     string Description,

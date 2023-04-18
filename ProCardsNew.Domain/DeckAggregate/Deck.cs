@@ -53,13 +53,15 @@ public sealed class Deck : AggregateRoot<DeckId>
         string description,
         UserId ownerId)
     {
-        return new(
+        var deck = new Deck(
             DeckId.CreateUnique(),
             name,
             description,
             ownerId,
             DateTime.UtcNow,
             DateTime.UtcNow);
+        deck._deckAccesses.Add(DeckAccess.Create(deck.Id, false));
+        return deck;
     }
 
     public DeckCard AddCard(Card card)

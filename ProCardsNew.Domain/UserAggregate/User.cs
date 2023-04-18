@@ -89,6 +89,7 @@ public sealed class User: AggregateRoot<UserId>
     public void AddOwnedDeck(Deck deck)
     {
         _ownedDecks.Add(deck);
+        _userDecks.Add(UserDeck.Create(Id, deck.DeckAccesses.First().Id));
         _deckStatistics.Add(DeckStatistic.Create(deck.Id, Id));
     }
 

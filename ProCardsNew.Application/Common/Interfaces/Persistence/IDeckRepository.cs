@@ -3,6 +3,7 @@ using ProCardsNew.Domain.CardAggregate.ValueObjects;
 using ProCardsNew.Domain.DeckAggregate;
 using ProCardsNew.Domain.DeckAggregate.Entities;
 using ProCardsNew.Domain.DeckAggregate.ValueObjects;
+using ProCardsNew.Domain.UserAggregate.Entities;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;
 
 namespace ProCardsNew.Application.Common.Interfaces.Persistence;
@@ -12,8 +13,14 @@ public interface IDeckRepository
     void ChangeStateToAdd(object entity);
     Task AddAsync(Deck deck);
 
+    public Task<List<Deck>> GetUserDecks(UserId userId, string searchQuery);
+    
     Task<DeckAccess?> GetAccessibleDeckAccessAsync(
         DeckId deckId);
+
+    public Task<UserDeck?> GetUserDeck(
+        DeckId deckId,
+        UserId userId);
 
     Task<Deck?> GetByIdAsync(DeckId id);
 
@@ -40,6 +47,7 @@ public interface IDeckRepository
     public Task<bool> HasCard(DeckId deckId, CardId cardId);
     
     void Delete(Deck deck);
+    public void DeleteUserDeck(UserDeck userDeck);
 
     Task SaveChangesAsync();
 }
