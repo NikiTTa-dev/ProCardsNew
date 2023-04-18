@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using ProCardsNew.Domain.CardAggregate.ValueObjects;
 using ProCardsNew.Domain.DeckAggregate;
 using ProCardsNew.Domain.DeckAggregate.Entities;
 using ProCardsNew.Domain.DeckAggregate.ValueObjects;
@@ -36,7 +37,8 @@ public interface IDeckRepository
 
     public Task<int> GetCardsCount(DeckId deckId);
     public Task<bool> HasAccess(DeckId deckId, UserId userId);
-
+    public Task<bool> HasCard(DeckId deckId, CardId cardId);
+    
     void Delete(Deck deck);
 
     Task SaveChangesAsync();

@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using ProCardsNew.Application.Common.Interfaces.Persistence;
+using ProCardsNew.Domain.CardAggregate.ValueObjects;
 using ProCardsNew.Domain.DeckAggregate;
 using ProCardsNew.Domain.DeckAggregate.Entities;
 using ProCardsNew.Domain.DeckAggregate.ValueObjects;
@@ -116,6 +117,13 @@ public class DeckRepository : IDeckRepository
             .Where(da => da.IsAccessible)
             .Where(da => da.UserDecks
                 .FirstOrDefault(ud => ud.UserId == userId) != null)
+            .FirstOrDefaultAsync() != null;
+    }
+
+    public async Task<bool> HasCard(DeckId deckId, CardId cardId)
+    {
+        return await _dbContext.DeckCards
+            .Where(dc => dc.DeckId == deckId && dc.CardId == cardId)
             .FirstOrDefaultAsync() != null;
     }
 

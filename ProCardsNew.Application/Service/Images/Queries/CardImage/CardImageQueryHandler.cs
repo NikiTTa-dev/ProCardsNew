@@ -27,12 +27,12 @@ public class CardImageQueryHandler
         _deckRepository = deckRepository;
         _imageRepository = imageRepository;
     }
-    
+
     public async Task<ErrorOr<CardImageQueryResult>> Handle(CardImageQuery query, CancellationToken cancellationToken)
     {
         if (await _cardRepository.GetSideByNameAsync(query.Side) is null)
             return Errors.Side.NotFound;
-        
+
         if (await _userRepository.GetByIdAsync(UserId.Create(query.UserId)) is not { } user)
             return Errors.User.NotFound;
 
@@ -42,9 +42,12 @@ public class CardImageQueryHandler
         if (await _cardRepository.GetByIdAsync(CardId.Create(query.CardId)) is not { } card)
             return Errors.Card.NotFound;
 
-        if (card.OwnerId != user.Id)
-            // TODO: check if user have access to image
+        if (!await _deckRepository.HasCard(deck.Id, card.Id))
             return Errors.User.AccessDenied;
+        
+        if (card.OwnerId != user.Id)
+            if (!await _deckRepository.HasAccess(deck.Id, user.Id))
+                return Errors.User.AccessDenied;
 
         if (await _imageRepository.GetByCardIdAndSide(card.Id, query.Side) is not { } image)
             return Errors.Image.NotFound;
