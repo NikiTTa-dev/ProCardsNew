@@ -30,7 +30,7 @@ public class UserDecksQueryHandler
         return new UserDecksQueryResult(
             decks.ConvertAll(d => new UserDeckPreview(
                 DeckId: d.Id.Value,
-                Name: d.Name,
+                DeckName: d.Name,
                 IsOwner: d.OwnerId == user.Id)));
     }
 }

@@ -5,5 +5,5 @@ public record UserDecksQueryResult(
     
 public record UserDeckPreview(
     Guid DeckId,
-    string Name,
+    string DeckName,
     bool IsOwner);

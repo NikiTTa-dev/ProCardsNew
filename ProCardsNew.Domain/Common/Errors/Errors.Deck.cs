@@ -14,6 +14,10 @@ public static partial class Errors
             code: "Deck.Duplicate",
             description: "User already have this deck.");
         
+        public static Error YouAreOwner => Error.Conflict(
+            code: "Deck.YouAreOwner",
+            description: "Owner can not delete his deck.");
+        
         public static Error AlreadyRemoved => Error.Conflict(
             code: "Deck.AlreadyRemoved",
             description: "Source already been removed.");

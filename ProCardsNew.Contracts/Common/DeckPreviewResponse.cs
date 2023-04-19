@@ -2,6 +2,6 @@
 
 public record DeckPreviewResponse(
     Guid DeckId,
-    string Name,
+    string DeckName,
     string Description,
     bool IsPrivate);

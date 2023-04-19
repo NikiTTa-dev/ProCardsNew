@@ -60,6 +60,8 @@ public class CardRepository : ICardRepository
         Expression<Func<Card, object>> orderByDesc)
     {
         return await _dbContext.Cards
+            .Include(c => c.Images)
+            .ThenInclude(i => i.Side)
             .Where(filter)
             .Where(c => c.OwnerId == userId)
             .Where(c => c.Decks.Count(d => d.Id == deckId) > 0)
@@ -75,7 +77,7 @@ public class CardRepository : ICardRepository
             .Include(i => i.Side)
             .CountAsync(i => i.Side!.SideName == side && i.CardId == cardId) > 0;
     }
-    
+
     public void Delete(Card card)
     {
         _dbContext.Cards.Remove(card);

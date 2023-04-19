@@ -36,7 +36,7 @@ public class UserDecksToEditQueryHandler :
         return new UserDecksToEditQueryResult(
             decks.ConvertAll(d => new DeckPreview(
                 DeckId: d.Id.Value,
-                Name: d.Name,
+                DeckName: d.Name,
                 Description: d.Description,
                 IsPrivate: !d.IsPublic)));
     }

@@ -31,6 +31,9 @@ public class RemoveDeckFromLatestCommandHandler
         if (await _deckRepository.GetByIdAsync(DeckId.Create(command.DeckId)) is not { } deck)
             return Errors.Deck.NotFound;
 
+        if (deck.OwnerId == user.Id)
+            return Errors.Deck.YouAreOwner;
+        
         if (!await _deckRepository.HasAccess(deck.Id, user.Id))
             return Errors.User.AccessDenied;
 

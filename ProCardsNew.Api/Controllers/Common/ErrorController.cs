@@ -12,6 +12,6 @@ public class ErrorsController : ControllerBase
         if (HttpContext.Features.Get<IExceptionHandlerFeature>()?.Error is { } exception)
             return Problem(title: exception.Message);
         
-        return Problem();
+        return Problem("Something went wrong.");
     }
 }

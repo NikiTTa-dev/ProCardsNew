@@ -5,6 +5,6 @@ public record UserDecksResponse(
 
 public record UserDeckPreviewResponse(
     Guid DeckId,
-    string Name,
+    string DeckName,
     bool IsOwner);
     

@@ -5,6 +5,6 @@ public record UserDecksToEditQueryResult(
 
 public record DeckPreview(
     Guid DeckId,
-    string Name,
+    string DeckName,
     string Description,
     bool IsPrivate);
