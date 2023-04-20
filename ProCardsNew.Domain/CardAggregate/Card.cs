@@ -3,6 +3,7 @@ using ProCardsNew.Domain.CardAggregate.ValueObjects;
 using ProCardsNew.Domain.Common.Models;
 using ProCardsNew.Domain.DeckAggregate;
 using ProCardsNew.Domain.DeckAggregate.Entities;
+using ProCardsNew.Domain.DeckAggregate.ValueObjects;
 using ProCardsNew.Domain.UserAggregate;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;
 
@@ -76,6 +77,11 @@ public sealed class Card: AggregateRoot<CardId>
     {
         _images.Add(image);
         UpdatedAtDateTime = DateTime.UtcNow;
+    }
+
+    public void GradeCard(UserId userId, DeckId deckId, int grade)
+    {
+        _grades.Add(Grade.Create(Id, deckId, userId, grade));
     }
     
 #pragma warning disable CS8618

@@ -13,7 +13,7 @@ public class GradeConfiguration : IEntityTypeConfiguration<Grade>
     {
         builder.ToTable("Grades");
 
-        builder.HasKey(g => new { g.CardId, g.DeckId, g.UserId });
+        builder.HasKey(g => new { g.CardId, g.DeckId, g.UserId, g.GradedAtDateTime });
 
         builder.Property(g => g.CardId)
             .ValueGeneratedNever()

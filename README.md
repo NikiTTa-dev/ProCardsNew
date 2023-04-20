@@ -35,13 +35,13 @@ GET host/statistic
 
 ## CardImageRequest
 GET host/images
-```json
-{
-  "deckId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "cardId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "side": "string"
-}
+```text
+QUERY
+  deckId=3fa85f64-5717-4562-b3fc-2c963f66afa6
+  userId=3fa85f64-5717-4562-b3fc-2c963f66afa6
+  cardId=3fa85f64-5717-4562-b3fc-2c963f66afa6
+  side=string
+
 ```
 
 ## CardImageResponse
@@ -172,10 +172,10 @@ POST host/account/recovery/newpass
 
 ## UserProfilePreviewRequest
 GET host/users/preview
-```json
-{
-  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-}
+```text
+QUERY
+  userId=3fa85f64-5717-4562-b3fc-2c963f66afa6
+
 ```
 
 ## UserProfilePreviewResponse
@@ -192,10 +192,10 @@ GET host/users/preview
 
 ## UserProfileRequest
 GET host/users/profile
-```json
-{
-  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-}
+```text
+QUERY
+  userId=3fa85f64-5717-4562-b3fc-2c963f66afa6
+
 ```
 
 ## UserProfileEditResponse

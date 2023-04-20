@@ -221,12 +221,12 @@ namespace ProCardsNew.Infrastructure.Migrations
                     CardId = table.Column<Guid>(type: "uuid", nullable: false),
                     DeckId = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    GradeValue = table.Column<int>(type: "integer", nullable: false),
-                    GradedAtDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    GradedAtDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    GradeValue = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Grades", x => new { x.CardId, x.DeckId, x.UserId });
+                    table.PrimaryKey("PK_Grades", x => new { x.CardId, x.DeckId, x.UserId, x.GradedAtDateTime });
                     table.ForeignKey(
                         name: "FK_Grades_Cards_CardId",
                         column: x => x.CardId,

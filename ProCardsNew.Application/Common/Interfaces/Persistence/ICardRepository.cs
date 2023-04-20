@@ -10,6 +10,7 @@ namespace ProCardsNew.Application.Common.Interfaces.Persistence;
 public interface ICardRepository
 {
     public Task AddAsync(Card card);
+    public Task<List<Card>> GetCardsWithGradesAsync(DeckId deckId, UserId userId);
     public Task<Side?> GetSideByNameAsync(string name);
 
     public Task<Card?> GetByIdAsync(CardId id);

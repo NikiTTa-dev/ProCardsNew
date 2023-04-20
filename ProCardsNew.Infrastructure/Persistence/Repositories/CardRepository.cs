@@ -23,6 +23,17 @@ public class CardRepository : ICardRepository
         await _dbContext.Cards.AddAsync(card);
     }
 
+    public async Task<List<Card>> GetCardsWithGradesAsync(DeckId deckId, UserId userId)
+    {
+        return await _dbContext.Cards
+            .Include(c => c.Images)
+            .Include(c => c.Grades
+                .Where(g => g.UserId == userId)
+                .Take(5))
+            .Where(c => c.DeckCards.FirstOrDefault(dc => dc.DeckId == deckId) != null)
+            .ToListAsync();
+    }
+
     public async Task<Side?> GetSideByNameAsync(string name)
     {
         return await _dbContext.Sides.FirstOrDefaultAsync(s => s.SideName == name);

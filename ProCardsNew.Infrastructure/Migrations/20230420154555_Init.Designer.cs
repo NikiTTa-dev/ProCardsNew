@@ -12,7 +12,7 @@ using ProCardsNew.Infrastructure.Persistence;
 namespace ProCardsNew.Infrastructure.Migrations
 {
     [DbContext(typeof(ProCardsDbContext))]
-    [Migration("20230418090123_Init")]
+    [Migration("20230420154555_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -67,13 +67,13 @@ namespace ProCardsNew.Infrastructure.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("GradeValue")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("GradedAtDateTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("CardId", "DeckId", "UserId");
+                    b.Property<int>("GradeValue")
+                        .HasColumnType("integer");
+
+                    b.HasKey("CardId", "DeckId", "UserId", "GradedAtDateTime");
 
                     b.HasIndex("DeckId");
 
@@ -466,7 +466,7 @@ namespace ProCardsNew.Infrastructure.Migrations
             modelBuilder.Entity("ProCardsNew.Domain.UserAggregate.Entities.UserDeck", b =>
                 {
                     b.HasOne("ProCardsNew.Domain.DeckAggregate.Entities.DeckAccess", "DeckAccess")
-                        .WithMany()
+                        .WithMany("UserDecks")
                         .HasForeignKey("DeckAccessId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -498,6 +498,11 @@ namespace ProCardsNew.Infrastructure.Migrations
                     b.Navigation("DeckCards");
 
                     b.Navigation("DeckStatistics");
+                });
+
+            modelBuilder.Entity("ProCardsNew.Domain.DeckAggregate.Entities.DeckAccess", b =>
+                {
+                    b.Navigation("UserDecks");
                 });
 
             modelBuilder.Entity("ProCardsNew.Domain.UserAggregate.User", b =>

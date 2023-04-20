@@ -20,6 +20,15 @@ public sealed class Statistic : Entity<UserId>
         return new(userId);
     }
 
+    public void IncreaseStatistic(
+        int cardsViewed,
+        float hours)
+    {
+        CardsViewed += cardsViewed;
+        Hours += hours;
+        UpdateScore(1, 5, 360);
+    }
+
     public void IncreaseCardsCreated()
     {
         CardsCreated++;

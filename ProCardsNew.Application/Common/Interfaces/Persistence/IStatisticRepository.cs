@@ -8,6 +8,9 @@ namespace ProCardsNew.Application.Common.Interfaces.Persistence;
 
 public interface IStatisticRepository
 {
+    public Task<DeckStatistic?> GetDeckStatisticsAsync(
+        DeckId deckId,
+        UserId userId);
     public Task<List<Statistic>> GetTopStatisticIncludeUserAsync();
     public Task<List<DeckStatistic>> GetDeckStatisticsWhereIncludingAsync(
         DeckId deckId,

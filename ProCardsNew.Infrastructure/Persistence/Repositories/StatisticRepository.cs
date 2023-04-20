@@ -23,6 +23,12 @@ public class StatisticRepository : IStatisticRepository
         _settings = settings.Value;
     }
 
+    public async Task<DeckStatistic?> GetDeckStatisticsAsync(DeckId deckId, UserId userId)
+    {
+        return await _dbContext.DeckStatistics
+            .FirstOrDefaultAsync(ds => ds.DeckId == deckId && ds.UserId == userId);
+    }
+
     public async Task<List<Statistic>> GetTopStatisticIncludeUserAsync()
     {
         return await _dbContext.Statistics
