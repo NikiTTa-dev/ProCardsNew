@@ -460,7 +460,7 @@ TODO: check if user already have this deck
 ```json
 {
   "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "name": "string",
+  "deckName": "string",
   "description": "string",
   "ownerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "ownerLogin": "string",

@@ -3,7 +3,6 @@ using MediatR;
 using ProCardsNew.Application.Common.Interfaces.Persistence;
 using ProCardsNew.Application.Editing.Cards.Queries.DeckCards;
 using ProCardsNew.Domain.CardAggregate;
-using ProCardsNew.Domain.CardAggregate.ValueObjects;
 using ProCardsNew.Domain.Common.Errors;
 using ProCardsNew.Domain.DeckAggregate.ValueObjects;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;

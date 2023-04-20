@@ -70,7 +70,7 @@ public class AddDeckCommandHandler
         var cardsCount = await _deckRepository.GetCardsCount(deck.Id);
         return new DeckResult(
             Id: deck.Id.Value,
-            Name: deck.Name,
+            DeckName: deck.Name,
             Description: deck.Description,
             OwnerId: deck.OwnerId.Value,
             OwnerLogin: deck.Owner!.Login,

@@ -50,7 +50,7 @@ public class DeckCommandHandler
         
         return new DeckResult(
             Id: deck.Id.Value,
-            Name: deck.Name,
+            DeckName: deck.Name,
             Description: deck.Description,
             OwnerId: deck.OwnerId.Value,
             OwnerLogin: deck.Owner!.Login,

@@ -2,7 +2,7 @@
 
 public record DeckResponse(
     Guid Id,
-    string Name,
+    string DeckName,
     string Description,
     Guid OwnerId,
     string OwnerLogin,
