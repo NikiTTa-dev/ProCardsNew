@@ -13,19 +13,29 @@ public class AddCardImageCommandHandler
 {
     private readonly IUserRepository _userRepository;
     private readonly ICardRepository _cardRepository;
+    private readonly IImageRepository _imageRepository;
 
     public AddCardImageCommandHandler(
         IUserRepository userRepository,
-        ICardRepository cardRepository)
+        ICardRepository cardRepository,
+        IImageRepository imageRepository)
     {
         _userRepository = userRepository;
         _cardRepository = cardRepository;
+        _imageRepository = imageRepository;
     }
 
     public async Task<ErrorOr<AddCardImageCommandResult>> Handle(
         AddCardImageCommand command,
         CancellationToken cancellationToken)
     {
+        if (!await _imageRepository.SideExists("Front") || !await _imageRepository.SideExists("Back"))
+        {
+            await _imageRepository.InsertSide(Side.Create("Front"));
+            await _imageRepository.InsertSide(Side.Create("Back"));
+            await _imageRepository.SaveChangesAsync();
+        }
+
         if (await _cardRepository.GetSideByNameAsync(command.Side) is not { } side)
             return Errors.Side.NotFound;
 
@@ -41,7 +51,7 @@ public class AddCardImageCommandHandler
 
         if (await _cardRepository.HasImageAsync(cardId, command.Side))
             return Errors.Image.HasImage;
-                
+
         using (var stream = new MemoryStream())
         {
             await command.Data.CopyToAsync(stream, cancellationToken);
@@ -55,7 +65,7 @@ public class AddCardImageCommandHandler
             card.AddImage(image);
             await _cardRepository.SaveChangesAsync();
         }
-        
+
         await command.Data.DisposeAsync();
 
         return new AddCardImageCommandResult();

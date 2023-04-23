@@ -19,7 +19,7 @@ builder.Services
 
 var app = builder.Build();
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseCookieReader();
 
@@ -49,7 +49,7 @@ else
 {
     app.UseCookiePolicy(new CookiePolicyOptions
     {
-        Secure = CookieSecurePolicy.SameAsRequest,
+        Secure = CookieSecurePolicy.Always,
         MinimumSameSitePolicy = SameSiteMode.None,
         HttpOnly = HttpOnlyPolicy.Always
         // MinimumSameSitePolicy = SameSiteMode.Strict,

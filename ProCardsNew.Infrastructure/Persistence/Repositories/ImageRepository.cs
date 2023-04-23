@@ -14,6 +14,16 @@ public class ImageRepository : IImageRepository
         _dbContext = dbContext;
     }
 
+    public async Task<bool> SideExists(string side)
+    {
+        return await _dbContext.Images.FirstOrDefaultAsync(i => i.Side!.SideName == side) != null;
+    }
+
+    public async Task InsertSide(Side side)
+    {
+        await _dbContext.AddAsync(side);
+    }
+
     public async Task<Image?> GetByCardIdAndSide(
         CardId cardId,
         string side)
