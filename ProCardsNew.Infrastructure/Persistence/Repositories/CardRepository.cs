@@ -27,6 +27,7 @@ public class CardRepository : ICardRepository
     {
         return await _dbContext.Cards
             .Include(c => c.Images)
+            .ThenInclude(i => i.Side)
             .Include(c => c.Grades
                 .Where(g => g.UserId == userId)
                 .Take(5))
