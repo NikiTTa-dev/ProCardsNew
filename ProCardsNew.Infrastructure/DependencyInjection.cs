@@ -51,7 +51,6 @@ public static class DependencyInjection
         services.AddDbContext<ProCardsDbContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("default"));
-            options.EnableSensitiveDataLogging();
         });
 
         return services;

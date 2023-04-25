@@ -50,20 +50,8 @@ else
     app.UseCookiePolicy(new CookiePolicyOptions
     {
         Secure = CookieSecurePolicy.Always,
-        MinimumSameSitePolicy = SameSiteMode.None,
+        MinimumSameSitePolicy = SameSiteMode.Strict,
         HttpOnly = HttpOnlyPolicy.Always
-        // MinimumSameSitePolicy = SameSiteMode.Strict,
-        // HttpOnly = HttpOnlyPolicy.Always,
-        // Secure = CookieSecurePolicy.Always
-    });
-    app.UseCors(c =>
-    {
-        c.AllowCredentials();
-        c.WithOrigins(
-            "https://localhost:3000",
-            "http://localhost:3000");
-        c.AllowAnyMethod();
-        c.AllowAnyHeader();
     });
 }
 
