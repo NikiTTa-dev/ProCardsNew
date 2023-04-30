@@ -6,5 +6,5 @@ namespace ProCardsNew.Application.Account.PasswordRecovery.Commands.PasswordReco
 
 public record PasswordRecoveryNewPasswordCommand(
     string Code,
-    string Email,
+    string Login,
     string Password) : IRequest<ErrorOr<PasswordRecoveryResult>>;

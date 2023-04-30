@@ -17,10 +17,9 @@ public class PasswordRecoveryCodeCommandValidator : AbstractValidator<PasswordRe
             .ContainsNumbersOnly()
             .MaximumLength(validationSettings.UserPasswordRecoveryCodeLength);
 
-        RuleFor(q => q.Email)
+        RuleFor(q => q.Login)
             .NotEmpty()
-            .EmailAddress()
             .ContainsNoSpaces()
-            .MaximumLength(validationSettings.UserEmailLength);
+            .MaximumLength(validationSettings.UserLoginLength);
     }
 }

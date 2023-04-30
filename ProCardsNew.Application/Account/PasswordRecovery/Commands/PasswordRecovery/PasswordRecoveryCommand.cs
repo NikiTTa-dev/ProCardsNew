@@ -5,5 +5,5 @@ using ProCardsNew.Application.Account.PasswordRecovery.Common;
 namespace ProCardsNew.Application.Account.PasswordRecovery.Commands.PasswordRecovery;
 
 public record PasswordRecoveryCommand(
-    string Email) 
+    string Login) 
     : IRequest<ErrorOr<PasswordRecoveryResult>>;

@@ -3,4 +3,4 @@
 public record PasswordRecoveryNewPasswordRequest(
     string Code,
     string Password,
-    string Email);
+    string Login);

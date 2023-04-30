@@ -11,10 +11,9 @@ public class PasswordRecoveryCommandValidator: AbstractValidator<PasswordRecover
     {
         var validationSettings = settings.Value;
         
-        RuleFor(c => c.Email)
+        RuleFor(c => c.Login)
             .NotEmpty()
-            .EmailAddress()
             .ContainsNoSpaces()
-            .MaximumLength(validationSettings.UserEmailLength);
+            .MaximumLength(validationSettings.UserLoginLength);
     }
 }

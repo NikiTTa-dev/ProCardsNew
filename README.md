@@ -138,7 +138,7 @@ POST host/account/refresh
 POST host/account/recovery
 ```json
 {
-  "email": "string"
+  "login": "string"
 }
 ```
 
@@ -146,7 +146,7 @@ POST host/account/recovery
 POST host/account/recovery/code
 ```json
 {
-  "email": "string",
+  "login": "string",
   "code": "string"
 }
 ```
@@ -157,7 +157,7 @@ POST host/account/recovery/newpass
 {
   "code": "string",
   "password": "string",
-  "email": "string"
+  "login": "string"
 }
 ```
 

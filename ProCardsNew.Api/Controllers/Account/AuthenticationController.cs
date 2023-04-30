@@ -78,8 +78,7 @@ public class AuthenticationController : ApiController
         HttpContext.Response.Cookies.Append(_jwtSettings.RefreshTokenName, result.RefreshToken,
             new CookieOptions
             {
-                MaxAge = TimeSpan.FromHours(_jwtSettings.RefreshTokenExpiryHours),
-                Path = "/account/refresh"
+                MaxAge = TimeSpan.FromHours(_jwtSettings.RefreshTokenExpiryHours)
             });
         
         return Ok(_mapper.Map<AuthenticationResponse>(result));

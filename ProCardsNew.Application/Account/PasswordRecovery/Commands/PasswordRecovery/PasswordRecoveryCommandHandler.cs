@@ -36,7 +36,7 @@ public class PasswordRecoveryCommandHandler:
     
     public async Task<ErrorOr<PasswordRecoveryResult>> Handle(PasswordRecoveryCommand command, CancellationToken cancellationToken)
     {
-        if (await _userRepository.GetByEmailAsync(command.Email.ToUpper()) is not { } user)
+        if (await _userRepository.GetByLoginAsync(command.Login.ToUpper()) is not { } user)
             return new PasswordRecoveryResult();
         
         user.DeletePasswordRecoveryCode();
@@ -50,7 +50,7 @@ public class PasswordRecoveryCommandHandler:
         
         _logger.Log(LogLevel.Information, "Sending email");
         var result = await _emailSender.SendEmailAsync(
-            command.Email,
+            user.Email,
             user.PasswordRecoveryCode!,
             "RecoveryCode");
         

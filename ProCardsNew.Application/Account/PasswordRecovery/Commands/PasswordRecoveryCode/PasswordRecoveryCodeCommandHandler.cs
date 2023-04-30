@@ -28,7 +28,7 @@ public class PasswordRecoveryCodeCommandHandler
     
     public async Task<ErrorOr<PasswordRecoveryResult>> Handle(PasswordRecoveryCodeCommand command, CancellationToken cancellationToken)
     {
-        if (await _userRepository.GetByEmailAsync(command.Email.ToUpper()) is not { } user)
+        if (await _userRepository.GetByLoginAsync(command.Login.ToUpper()) is not { } user)
             return Errors.User.NotFound;
 
         if (user.PasswordRecoveryCode == null ||
