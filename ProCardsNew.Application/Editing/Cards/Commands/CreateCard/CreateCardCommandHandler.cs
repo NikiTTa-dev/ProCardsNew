@@ -13,13 +13,16 @@ public class CreateCardCommandHandler
 {
     private readonly IUserRepository _userRepository;
     private readonly IDeckRepository _deckRepository;
+    private readonly ICardRepository _cardRepository;
 
     public CreateCardCommandHandler(
         IUserRepository userRepository,
-        IDeckRepository deckRepository)
+        IDeckRepository deckRepository,
+        ICardRepository cardRepository)
     {
         _userRepository = userRepository;
         _deckRepository = deckRepository;
+        _cardRepository = cardRepository;
     }
     
     public async Task<ErrorOr<CreateCardCommandResult>> Handle(CreateCardCommand command, CancellationToken cancellationToken)
@@ -30,6 +33,9 @@ public class CreateCardCommandHandler
         
         if (user is null)
             return Errors.User.NotFound;
+
+        if (await _cardRepository.GetByNameAsync(user.Id, command.FrontSide, command.BackSide) is not null)
+            return Errors.Card.AlreadyExists;
 
         if (await _deckRepository.GetByIdAsync(DeckId.Create(command.DeckId)) is not { } deck)
             return Errors.Deck.NotFound;

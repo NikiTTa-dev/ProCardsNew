@@ -2,21 +2,21 @@
 
 namespace ProCardsNew.Domain.CardAggregate.ValueObjects;
 
-public sealed class SideId: ValueObject
+public sealed class ImageId: ValueObject
 {
     public Guid Value { get; }
 
-    private SideId(Guid value)
+    private ImageId(Guid value)
     {
         Value = value;
     }
 
-    public static SideId CreateUnique()
+    public static ImageId CreateUnique()
     {
         return new(Guid.NewGuid());
     }
 
-    public static SideId Create(Guid value)
+    public static ImageId Create(Guid value)
     {
         return new(value);
     }

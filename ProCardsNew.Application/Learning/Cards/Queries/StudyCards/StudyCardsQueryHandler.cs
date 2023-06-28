@@ -60,8 +60,8 @@ public class StudyCardsQueryHandler
                     Id: cw.Item2.Id.Value,
                     FrontSide: cw.Item2.FrontSide,
                     BackSide: cw.Item2.BackSide,
-                    HasFrontImage: cw.Item2.Images.FirstOrDefault(i => i.Side!.SideName == "Front") != null,
-                    HasBackImage: cw.Item2.Images.FirstOrDefault(i => i.Side!.SideName == "Back") != null))
+                    HasFrontImage: cw.Item2.FrontImage != null,
+                    HasBackImage: cw.Item2.BackImage != null))
                 .ToList());
     }
 }

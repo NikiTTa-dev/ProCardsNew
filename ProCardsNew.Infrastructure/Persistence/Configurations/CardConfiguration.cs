@@ -58,6 +58,15 @@ public class CardConfiguration : IEntityTypeConfiguration<Card>
 
         builder.Property(c => c.UpdatedAtDateTime)
             .IsRequired();
+
+        builder.HasOne(c => c.FrontImage)
+            .WithMany(i => i.CardsWithFrontSide)
+            .HasForeignKey(c => c.FrontImageId);
+
+        builder
+            .HasOne(c => c.BackImage)
+            .WithMany(i => i.CardsWithBackSide)
+            .HasForeignKey(c => c.BackImageId);
     }
     
     private void ConfigureOwner(EntityTypeBuilder<Card> builder)

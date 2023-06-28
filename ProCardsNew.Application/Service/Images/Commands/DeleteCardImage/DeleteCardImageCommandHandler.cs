@@ -1,6 +1,7 @@
 ﻿using ErrorOr;
 using MediatR;
 using ProCardsNew.Application.Common.Interfaces.Persistence;
+using ProCardsNew.Domain.CardAggregate.Entities;
 using ProCardsNew.Domain.CardAggregate.ValueObjects;
 using ProCardsNew.Domain.Common.Errors;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;
@@ -37,8 +38,22 @@ public class DeleteCardImageCommandHandler
         if (card.OwnerId != user.Id)
             return Errors.User.AccessDenied;
 
-        if (await _imageRepository.GetByCardIdAndSide(card.Id, command.Side) is not { } image)
-            return Errors.Image.NotFound;
+        Image? image;
+        switch (command.Side)
+        {
+            case "Front":
+                image = await _imageRepository.GetFrontImageByCardId(card.Id);
+                if (image is null)
+                    return Errors.Image.NotFound;
+                break;
+            case "Back":
+                image = await _imageRepository.GetBackImageByCardId(card.Id);
+                if (image is null)
+                    return Errors.Image.NotFound;
+                break;
+            default:
+                return Errors.Side.NotFound;
+        }
         
         _imageRepository.DeleteImage(image);
         await _imageRepository.SaveChangesAsync();

@@ -13,56 +13,52 @@ public class AddCardImageCommandHandler
 {
     private readonly IUserRepository _userRepository;
     private readonly ICardRepository _cardRepository;
-    private readonly IImageRepository _imageRepository;
 
     public AddCardImageCommandHandler(
         IUserRepository userRepository,
-        ICardRepository cardRepository,
-        IImageRepository imageRepository)
+        ICardRepository cardRepository)
     {
         _userRepository = userRepository;
         _cardRepository = cardRepository;
-        _imageRepository = imageRepository;
     }
 
     public async Task<ErrorOr<AddCardImageCommandResult>> Handle(
         AddCardImageCommand command,
         CancellationToken cancellationToken)
     {
-        if (!await _imageRepository.SideExists("Front") || !await _imageRepository.SideExists("Back"))
-        {
-            await _imageRepository.InsertSide(Side.Create("Front"));
-            await _imageRepository.InsertSide(Side.Create("Back"));
-            await _imageRepository.SaveChangesAsync();
-        }
-
-        if (await _cardRepository.GetSideByNameAsync(command.Side) is not { } side)
-            return Errors.Side.NotFound;
-
         if (await _userRepository.GetByIdAsync(UserId.Create(command.UserId)) is not { } user)
             return Errors.User.NotFound;
 
-        var cardId = CardId.Create(command.CardId);
-        if (await _cardRepository.GetByIdAsync(cardId) is not { } card)
+        if (await _cardRepository.GetByIdAsync(CardId.Create(command.CardId)) is not { } card)
             return Errors.Deck.NotFound;
 
         if (card.OwnerId != user.Id)
             return Errors.User.AccessDenied;
 
-        if (await _cardRepository.HasImageAsync(cardId, command.Side))
-            return Errors.Image.HasImage;
+        switch (command.Side)
+        {
+            case "Front": 
+                if (await _cardRepository.HasFrontImageAsync(card.Id))
+                    return Errors.Image.HasImage;
+                break;
+            case "Back":
+                if (await _cardRepository.HasBackImageAsync(card.Id))
+                    return Errors.Image.HasImage;
+                break;
+            default:
+                return Errors.Side.NotFound;
+        }
 
         using (var stream = new MemoryStream())
         {
             await command.Data.CopyToAsync(stream, cancellationToken);
             var image = Image.Create(
-                sideId: side.Id,
                 cardId: card.Id,
                 name: command.Name,
                 fileExtension: command.FileExtension,
-                data: stream.ToArray());
+                data: ImageData.Create(stream.ToArray()));
 
-            card.AddImage(image);
+            card.AddImage(image, command.Side);
             await _cardRepository.SaveChangesAsync();
         }
 

@@ -5,42 +5,39 @@ using ProCardsNew.Domain.CardAggregate.ValueObjects;
 
 namespace ProCardsNew.Infrastructure.Persistence.Repositories;
 
-public class ImageRepository : IImageRepository
+public class ImageRepository : RepositoryBase, IImageRepository
 {
-    private readonly ProCardsDbContext _dbContext;
-
-    public ImageRepository(ProCardsDbContext dbContext)
+    public ImageRepository(ProCardsDbContext dbContext) : base(dbContext)
     {
-        _dbContext = dbContext;
     }
 
-    public async Task<bool> SideExists(string side)
+    public async Task<Image?> GetFrontImageByCardId(
+        CardId cardId)
     {
-        return await _dbContext.Images.FirstOrDefaultAsync(i => i.Side!.SideName == side) != null;
+        return await DbContext.Cards
+            .Where(c => c.Id == cardId)
+            .Include(c => c.FrontImage!.ImageData)
+            .Select(c => c.FrontImage)
+            .FirstOrDefaultAsync();
     }
-
-    public async Task InsertSide(Side side)
+    
+    public async Task<Image?> GetBackImageByCardId(
+        CardId cardId)
     {
-        await _dbContext.AddAsync(side);
-    }
-
-    public async Task<Image?> GetByCardIdAndSide(
-        CardId cardId,
-        string side)
-    {
-        return await _dbContext.Images
-            .FirstOrDefaultAsync(i =>
-                i.CardId == cardId
-                && i.Side!.SideName == side);
+        return await DbContext.Cards
+            .Where(c => c.Id == cardId)
+            .Include(c => c.BackImage!.ImageData)
+            .Select(c => c.BackImage)
+            .FirstOrDefaultAsync();
     }
 
     public void DeleteImage(Image image)
     {
-        _dbContext.Images.Remove(image);
+        DbContext.Images.Remove(image);
     }
 
     public async Task SaveChangesAsync()
     {
-        await _dbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync();
     }
 }

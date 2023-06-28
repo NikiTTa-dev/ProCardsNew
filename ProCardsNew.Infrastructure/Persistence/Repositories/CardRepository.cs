@@ -2,32 +2,29 @@
 using Microsoft.EntityFrameworkCore;
 using ProCardsNew.Application.Common.Interfaces.Persistence;
 using ProCardsNew.Domain.CardAggregate;
-using ProCardsNew.Domain.CardAggregate.Entities;
 using ProCardsNew.Domain.CardAggregate.ValueObjects;
 using ProCardsNew.Domain.DeckAggregate.ValueObjects;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;
 
 namespace ProCardsNew.Infrastructure.Persistence.Repositories;
 
-public class CardRepository : ICardRepository
+public class CardRepository : RepositoryBase, ICardRepository
 {
-    private readonly ProCardsDbContext _dbContext;
-
     public CardRepository(ProCardsDbContext dbContext)
+        : base(dbContext)
     {
-        _dbContext = dbContext;
     }
 
     public async Task AddAsync(Card card)
     {
-        await _dbContext.Cards.AddAsync(card);
+        await DbContext.Cards.AddAsync(card);
     }
 
     public async Task<List<Card>> GetCardsWithGradesAsync(DeckId deckId, UserId userId)
     {
-        return await _dbContext.Cards
-            .Include(c => c.Images)
-            .ThenInclude(i => i.Side)
+        return await DbContext.Cards
+            .Include(c => c.FrontImage)
+            .Include(c => c.BackImage)
             .Include(c => c.Grades
                 .Where(g => g.UserId == userId)
                 .Take(5))
@@ -35,21 +32,19 @@ public class CardRepository : ICardRepository
             .ToListAsync();
     }
 
-    public async Task<Side?> GetSideByNameAsync(string name)
-    {
-        return await _dbContext.Sides.FirstOrDefaultAsync(s => s.SideName == name);
-    }
-
     public async Task<Card?> GetByIdAsync(CardId id)
     {
-        return await _dbContext.Cards
+        return await DbContext.Cards
             .FirstOrDefaultAsync(u => u.Id == id);
     }
 
-    public async Task<Card?> GetByNameAsync(UserId userId, string frontSide)
+    public async Task<Card?> GetByNameAsync(
+        UserId userId,
+        string frontSide,
+        string backSide)
     {
-        return await _dbContext.Cards
-            .Where(d => d.FrontSide == frontSide)
+        return await DbContext.Cards
+            .Where(d => d.FrontSide == frontSide && d.BackSide == backSide)
             .FirstOrDefaultAsync(d => d.OwnerId == userId);
     }
 
@@ -58,9 +53,9 @@ public class CardRepository : ICardRepository
         Expression<Func<Card, bool>> filter,
         Expression<Func<Card, object>> orderByDesc)
     {
-        return await _dbContext.Cards
-            .Include(c => c.Images)
-            .ThenInclude(i => i.Side)
+        return await DbContext.Cards
+            .Include(c => c.FrontImage)
+            .Include(c => c.BackImage)
             .Where(filter)
             .Where(c => c.OwnerId == userId)
             .OrderByDescending(orderByDesc)
@@ -73,9 +68,9 @@ public class CardRepository : ICardRepository
         Expression<Func<Card, bool>> filter,
         Expression<Func<Card, object>> orderByDesc)
     {
-        return await _dbContext.Cards
-            .Include(c => c.Images)
-            .ThenInclude(i => i.Side)
+        return await DbContext.Cards
+            .Include(c => c.FrontImage)
+            .Include(c => c.BackImage)
             .Where(filter)
             .Where(c => c.OwnerId == userId)
             .Where(c => c.Decks.Count(d => d.Id == deckId) > 0)
@@ -83,22 +78,31 @@ public class CardRepository : ICardRepository
             .ToListAsync();
     }
 
-    public async Task<bool> HasImageAsync(
-        CardId cardId,
-        string side)
+    public async Task<bool> HasFrontImageAsync(
+        CardId cardId)
     {
-        return await _dbContext.Images
-            .Include(i => i.Side)
-            .CountAsync(i => i.Side!.SideName == side && i.CardId == cardId) > 0;
+        return await DbContext.Cards
+            .Where(c => c.Id == cardId)
+            .Where(c => c.FrontImage != null)
+            .AnyAsync();
+    }
+    
+    public async Task<bool> HasBackImageAsync(
+        CardId cardId)
+    {
+        return await DbContext.Cards
+            .Where(c => c.Id == cardId)
+            .Where(c => c.BackImage != null)
+            .AnyAsync();
     }
 
     public void Delete(Card card)
     {
-        _dbContext.Cards.Remove(card);
+        DbContext.Cards.Remove(card);
     }
 
     public async Task SaveChangesAsync()
     {
-        await _dbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync();
     }
 }

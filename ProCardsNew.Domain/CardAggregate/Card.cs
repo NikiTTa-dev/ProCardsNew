@@ -20,8 +20,10 @@ public sealed class Card: AggregateRoot<CardId>
     public User? Owner { get; private set; }
     public DateTime UpdatedAtDateTime { get; private set; }
     public DateTime CreatedAtDateTime { get; private set; }
-    //public Image FrontImage { get; private set; }
-    //public Image BackImage { get; private set; }
+    public ImageId? FrontImageId { get; private set; }
+    public ImageId? BackImageId { get; private set; }
+    public Image? FrontImage { get; private set; }
+    public Image? BackImage { get; private set; }
 
     private readonly List<DeckCard> _deckCards = new();
     public IReadOnlyList<DeckCard> DeckCards => _deckCards.AsReadOnly();
@@ -30,10 +32,7 @@ public sealed class Card: AggregateRoot<CardId>
     
     private readonly List<Grade> _grades = new();
     public IReadOnlyList<Grade> Grades => _grades.AsReadOnly();
-
-    private readonly List<Image> _images = new();
-    public IReadOnlyList<Image> Images => _images.AsReadOnly();
-
+    
     private Card(
         CardId id, 
         string frontSide,
@@ -75,10 +74,24 @@ public sealed class Card: AggregateRoot<CardId>
         UpdatedAtDateTime = DateTime.UtcNow;
     }
 
-    public void AddImage(Image image)
+    public bool AddImage(
+        Image image,
+        string side)
     {
-        _images.Add(image);
+        switch (side)
+        {
+            case "Front":
+                FrontImage = image;
+                break;
+            case "Back":
+                BackImage = image;
+                break;
+            default:
+                return false;
+        }
+        
         UpdatedAtDateTime = DateTime.UtcNow;
+        return true;
     }
 
     public void GradeCard(UserId userId, DeckId deckId, int grade)

@@ -20,7 +20,7 @@ public class ImageConfiguration : IEntityTypeConfiguration<Image>
     {
         builder.ToTable("Images");
 
-        builder.HasKey(i => new { i.CardId, i.SideId });
+        builder.HasKey(i => i.Id);
 
         builder.Property(i => i.CardId)
             .ValueGeneratedNever()
@@ -28,16 +28,11 @@ public class ImageConfiguration : IEntityTypeConfiguration<Image>
                 id => id.Value,
                 value => CardId.Create(value));
 
-        builder.Property(i => i.SideId)
+        builder.Property(c => c.Id)
             .ValueGeneratedNever()
             .HasConversion(
                 id => id.Value,
-                value => SideId.Create(value));
-
-        builder.HasOne(i => i.Side);
-
-        builder.HasOne(i => i.Card)
-            .WithMany(c => c.Images);
+                value => ImageId.Create(value));
         
         ConfigureProperties(builder);
     }
@@ -52,8 +47,9 @@ public class ImageConfiguration : IEntityTypeConfiguration<Image>
             .IsRequired()
             .HasMaxLength(_validationSettings.ImageFileExtensionLength);
 
-        builder.Property(i => i.Data)
-            .IsRequired();
+        builder.HasOne(i => i.ImageData)
+            .WithOne(id => id.Image)
+            .HasForeignKey(typeof(ImageData),nameof(ImageData.ImageId));
 
         builder.Property(i => i.CreatedAt)
             .IsRequired();

@@ -1,6 +1,7 @@
 ﻿using ErrorOr;
 using MediatR;
 using ProCardsNew.Application.Common.Interfaces.Persistence;
+using ProCardsNew.Domain.CardAggregate.Entities;
 using ProCardsNew.Domain.CardAggregate.ValueObjects;
 using ProCardsNew.Domain.Common.Errors;
 using ProCardsNew.Domain.DeckAggregate.ValueObjects;
@@ -30,9 +31,6 @@ public class CardImageQueryHandler
 
     public async Task<ErrorOr<CardImageQueryResult>> Handle(CardImageQuery query, CancellationToken cancellationToken)
     {
-        if (await _cardRepository.GetSideByNameAsync(query.Side) is null)
-            return Errors.Side.NotFound;
-
         if (await _userRepository.GetByIdAsync(UserId.Create(query.UserId)) is not { } user)
             return Errors.User.NotFound;
 
@@ -48,11 +46,25 @@ public class CardImageQueryHandler
         if (!await _deckRepository.HasAccess(deck.Id, user.Id))
             return Errors.User.AccessDenied;
 
-        if (await _imageRepository.GetByCardIdAndSide(card.Id, query.Side) is not { } image)
-            return Errors.Image.NotFound;
-
+        Image? image;
+        switch (query.Side)
+        {
+            case "Front":
+                image = await _imageRepository.GetFrontImageByCardId(card.Id);
+                if (image is null)
+                    return Errors.Image.NotFound;
+                break;
+            case "Back":
+                image = await _imageRepository.GetBackImageByCardId(card.Id);
+                if (image is null)
+                    return Errors.Image.NotFound;
+                break;
+            default:
+                return Errors.Side.NotFound;
+        }
+        
         return new CardImageQueryResult(
-            Data: image.Data,
+            Data: image.ImageData!.Data,
             FileExtension: image.FileExtension);
     }
 }

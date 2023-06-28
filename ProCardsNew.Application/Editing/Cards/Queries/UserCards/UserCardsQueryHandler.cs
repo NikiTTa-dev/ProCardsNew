@@ -43,7 +43,7 @@ public class UserCardsQueryHandler
                     Id: c.Id.Value,
                     FrontSide: c.FrontSide,
                     BackSide: c.BackSide,
-                    HasFrontImage: c.Images.FirstOrDefault(i => i.Side!.SideName == "Front") != null,
-                    HasBackImage: c.Images.FirstOrDefault(i => i.Side!.SideName == "Back") != null)));
+                    HasFrontImage: c.FrontImage != null,
+                    HasBackImage: c.BackImage != null)));
     }
 }
