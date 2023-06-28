@@ -8,5 +8,6 @@ public record EditProfileCommand(
     string FirstName,
     string LastName,
     string Email,
-    string Location)
+    string Location,
+    int AvatarNumber)
     : IRequest<ErrorOr<EditProfileCommandResult>>;

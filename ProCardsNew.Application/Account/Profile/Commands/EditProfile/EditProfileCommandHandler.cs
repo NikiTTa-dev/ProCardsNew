@@ -28,7 +28,8 @@ public class EditProfileCommandHandler
             firstName: command.FirstName,
             lastName: command.LastName,
             email: command.Email,
-            location: command.Location);
+            location: command.Location,
+            avatarNumber: command.AvatarNumber);
         
         await _userRepository.SaveChangesAsync();
         

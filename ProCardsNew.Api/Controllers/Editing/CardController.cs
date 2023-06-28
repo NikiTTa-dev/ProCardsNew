@@ -39,7 +39,7 @@ public class CardController: ApiController
             errors => Problem(errors));
     }
     
-    [HttpGet("FromDeck")]
+    [HttpGet("fromdeck")]
     public async Task<IActionResult> DeckCards([FromQuery]DeckCardsRequest request)
     {
         if (request.UserId.ToString() != ClaimUserId)

@@ -67,6 +67,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasMaxLength(_validationSettings.UserLocationLength);
 
+        builder.Property(u => u.AvatarNumber)
+            .IsRequired();
+
         builder.Property(u => u.RefreshToken)
             .HasMaxLength(_validationSettings.UserRefreshTokenLength);
 

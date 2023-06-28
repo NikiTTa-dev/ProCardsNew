@@ -38,5 +38,9 @@ public class EditProfileCommandValidator
             .ContainsNoEdgeSpaces()
             .ContainsNoMultipleSpaces()
             .MaximumLength(validationSettings.UserLocationLength);
+
+        RuleFor(c => c.AvatarNumber)
+            .GreaterThan(-1)
+            .LessThanOrEqualTo(validationSettings.UserAvatarsCount - 1);
     }
 }

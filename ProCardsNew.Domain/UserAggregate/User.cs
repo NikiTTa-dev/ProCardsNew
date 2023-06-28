@@ -8,28 +8,29 @@ using ProCardsNew.Domain.UserAggregate.ValueObjects;
 
 namespace ProCardsNew.Domain.UserAggregate;
 
-public sealed class User: AggregateRoot<UserId>
+public sealed class User : AggregateRoot<UserId>
 {
-    public string Login { get; private set;}
-    public string Email { get; private set;}
-    public string FirstName { get; private set;}
-    public string LastName { get; private set;}
-    public string Location { get; private set;}
-    public RefreshToken? RefreshToken { get; private set;}
-    public string? PasswordRecoveryCode { get; private set;}
-    public DateTime? PasswordRecoveryEndDateTime { get; private set;}
+    public string Login { get; private set; }
+    public string Email { get; private set; }
+    public string FirstName { get; private set; }
+    public string LastName { get; private set; }
+    public string Location { get; private set; }
+    public int AvatarNumber { get; private set; }
+    public RefreshToken? RefreshToken { get; private set; }
+    public string? PasswordRecoveryCode { get; private set; }
+    public DateTime? PasswordRecoveryEndDateTime { get; private set; }
     public int PasswordRecoveryFailedCount { get; private set; }
     public DateTime? PasswordRecoveryLastEmailSentDateTime { get; private set; }
-    public string PasswordHash { get; private set;}
+    public string PasswordHash { get; private set; }
     public int AccessFailedCount { get; private set; }
-    public DateTime? LockoutEndDateTime { get; private set;}
-    public DateTime CreatedAtDateTime { get; private set;}
-    public DateTime UpdatedAtDateTime { get; private set;}
+    public DateTime? LockoutEndDateTime { get; private set; }
+    public DateTime CreatedAtDateTime { get; private set; }
+    public DateTime UpdatedAtDateTime { get; private set; }
     public Statistic? Statistic { get; private set; }
 
     private readonly List<Deck> _ownedDecks = new();
     public IReadOnlyList<Deck> OwnedDecks => _ownedDecks.AsReadOnly();
-    
+
     private readonly List<Card> _ownedCards = new();
     public IReadOnlyList<Card> OwnedCards => _ownedCards.AsReadOnly();
 
@@ -37,7 +38,7 @@ public sealed class User: AggregateRoot<UserId>
     public IReadOnlyList<DeckStatistic> DeckStatistics => _deckStatistics.AsReadOnly();
     private readonly List<Deck> _leaderboardWithUserDecks = new();
     public IReadOnlyList<Deck> LeaderboardWithUserDecks => _leaderboardWithUserDecks.AsReadOnly();
-    
+
     private readonly List<UserDeck> _userDecks = new();
     public IReadOnlyList<UserDeck> UserDecks => _userDecks.AsReadOnly();
 
@@ -83,7 +84,7 @@ public sealed class User: AggregateRoot<UserId>
             location,
             passwordHash,
             Statistic.Create(userId),
-            DateTime.UtcNow, 
+            DateTime.UtcNow,
             DateTime.UtcNow);
     }
 
@@ -111,13 +112,15 @@ public sealed class User: AggregateRoot<UserId>
         string firstName,
         string lastName,
         string email,
-        string location)
+        string location,
+        int avatarNumber)
     {
         FirstName = firstName;
         LastName = lastName;
         Email = email;
         Location = location;
-        
+        AvatarNumber = avatarNumber;
+
         UpdatedAtDateTime = DateTime.UtcNow;
     }
 
@@ -145,7 +148,7 @@ public sealed class User: AggregateRoot<UserId>
         PasswordRecoveryCode = null;
         PasswordRecoveryFailedCount = 0;
     }
-    
+
     public void PasswordRecoveryFail(int passwordRecoveryFailedMaxCountInclusive)
     {
         PasswordRecoveryFailedCount++;
@@ -162,11 +165,11 @@ public sealed class User: AggregateRoot<UserId>
         AccessFailedCount++;
         if (AccessFailedCount < accessFailedMaxCountInclusive)
             return AccessFailResult.AccessFailedCounterIncreased;
-        
+
         LockoutUserLogin(lockoutMinutes);
         return AccessFailResult.LockedOut;
     }
-    
+
     public bool IsLockedOut()
     {
         return LockoutEndDateTime > DateTime.UtcNow;

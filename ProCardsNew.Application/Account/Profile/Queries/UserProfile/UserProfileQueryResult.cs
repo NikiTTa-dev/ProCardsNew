@@ -4,4 +4,5 @@ public record UserProfileQueryResult(
     string FirstName,
     string LastName,
     string Email,
-    string Location);
+    string Location,
+    int AvatarNumber);

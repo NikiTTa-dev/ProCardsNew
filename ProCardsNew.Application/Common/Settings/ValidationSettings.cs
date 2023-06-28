@@ -21,6 +21,7 @@ public class ValidationSettings
     public int UserFirstNameLength { get; init; }
     public int UserLastNameLength { get; init; }
     public int UserLocationLength { get; init; }
+    public int UserAvatarsCount { get; init; }
     public int UserRefreshTokenLength { get; init; }
     public int UserRecoveryCodeLength { get; init; }
     public int UserPasswordHashLength { get; init; }

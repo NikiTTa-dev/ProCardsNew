@@ -28,6 +28,7 @@ public class UserProfileQueryHandler
             FirstName: user.FirstName,
             LastName: user.LastName,
             Email: user.Email,
-            Location: user.Location);
+            Location: user.Location,
+            AvatarNumber: user.AvatarNumber);
     }
 }

@@ -4,4 +4,5 @@ public record UserProfileResponse(
     string FirstName,
     string LastName,
     string Email,
-    string Location);
+    string Location,
+    int AvatarNumber);

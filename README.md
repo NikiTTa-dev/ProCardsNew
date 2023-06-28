@@ -186,7 +186,8 @@ QUERY
   "cardsViewed": 0,
   "hours": 0,
   "cardsCreated": 0,
-  "score": 0
+  "score": 0,
+  "avatarNumber": 0
 }
 ```
 
@@ -204,7 +205,8 @@ QUERY
   "firstName": "string",
   "lastName": "string",
   "email": "string",
-  "location": "string"
+  "location": "string",
+  "avatarNumber": 0
 }
 ```
 
@@ -216,7 +218,8 @@ PATCH host/users/profile
   "firstName": "string",
   "lastName": "string",
   "email": "string",
-  "location": "string"
+  "location": "string",
+  "avatarNumber": 0
 }
 ```
 
@@ -247,7 +250,7 @@ PATCH host/users/password
 # Creating
 
 ## UserDecksToEditRequest
-GET host/editing/decks/get
+GET host/editing/decks
 ```text
 QUERY
 userId=3fa85f64-5717-4562-b3fc-2c963f66afa6
@@ -338,12 +341,34 @@ DELETE host/editing/decks
 }
 ```
 
-## DeckCardsRequest
+## UserCardsRequest
 GET host/editing/cards
+```text
+userId=3fa85f64-5717-4562-b3fc-2c963f66afa6
+searchQuery=string
+```
+
+## DeckCardsRequest
+GET host/editing/cards/fromdeck
 ```text
 userId=3fa85f64-5717-4562-b3fc-2c963f66afa6
 deckId=3fa85f64-5717-4562-b3fc-2c963f66afa6
 searchQuery=string
+```
+
+## UserCardsResponse
+```json
+{
+  "cards": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "frontSide": "string",
+      "backSide": "string",
+      "hasFrontImage": true,
+      "hasBackImage": false
+    }
+  ]
+}
 ```
 
 ## DeckCardsResponse

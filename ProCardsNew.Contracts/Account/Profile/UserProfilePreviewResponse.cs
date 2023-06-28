@@ -6,4 +6,5 @@ public record UserProfilePreviewResponse(
     int CardsViewed,
     float Hours,
     int CardsCreated,
-    int Score);
+    int Score,
+    int AvatarNumber);

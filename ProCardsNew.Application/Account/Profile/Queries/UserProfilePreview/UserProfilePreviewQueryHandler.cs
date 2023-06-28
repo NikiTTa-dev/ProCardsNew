@@ -36,6 +36,7 @@ public class UserProfilePreviewQueryHandler
             CardsViewed: user.Statistic.CardsViewed,
             Hours: user.Statistic.Hours,
             CardsCreated: user.Statistic.CardsCreated,
-            Score: user.Statistic.Score);
+            Score: user.Statistic.Score,
+            AvatarNumber: user.AvatarNumber);
     }
 }

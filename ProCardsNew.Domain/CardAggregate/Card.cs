@@ -9,7 +9,7 @@ using ProCardsNew.Domain.UserAggregate.ValueObjects;
 
 namespace ProCardsNew.Domain.CardAggregate;
 
-// TODO: Color
+// TODO: Color IMAGES
 
 public sealed class Card: AggregateRoot<CardId>
 {
@@ -20,6 +20,8 @@ public sealed class Card: AggregateRoot<CardId>
     public User? Owner { get; private set; }
     public DateTime UpdatedAtDateTime { get; private set; }
     public DateTime CreatedAtDateTime { get; private set; }
+    //public Image FrontImage { get; private set; }
+    //public Image BackImage { get; private set; }
 
     private readonly List<DeckCard> _deckCards = new();
     public IReadOnlyList<DeckCard> DeckCards => _deckCards.AsReadOnly();
