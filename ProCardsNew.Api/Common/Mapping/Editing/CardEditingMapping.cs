@@ -3,6 +3,7 @@ using ProCardsNew.Application.Editing.Cards.Commands.CreateCard;
 using ProCardsNew.Application.Editing.Cards.Commands.DeleteCard;
 using ProCardsNew.Application.Editing.Cards.Commands.EditCard;
 using ProCardsNew.Application.Editing.Cards.Queries.DeckCards;
+using ProCardsNew.Application.Editing.Cards.Queries.UserCards;
 using ProCardsNew.Contracts.Common;
 using ProCardsNew.Contracts.Editing.Cards;
 
@@ -14,6 +15,9 @@ public class CardEditingMapping : IRegister
     {
         config.NewConfig<DeckCardsRequest, DeckCardsQuery>();
         config.NewConfig<DeckCardsQueryResult, DeckCardsResponse>();
+
+        config.NewConfig<UserCardsRequest, UserCardsQuery>();
+        config.NewConfig<UserCardsQueryResult, UserCardsResponse>();
 
         config.NewConfig<CardResult, CardResponse>()
             .TwoWays();

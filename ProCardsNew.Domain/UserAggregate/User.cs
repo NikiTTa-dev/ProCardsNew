@@ -19,6 +19,7 @@ public sealed class User: AggregateRoot<UserId>
     public string? PasswordRecoveryCode { get; private set;}
     public DateTime? PasswordRecoveryEndDateTime { get; private set;}
     public int PasswordRecoveryFailedCount { get; private set; }
+    public DateTime? PasswordRecoveryLastEmailSentDateTime { get; private set; }
     public string PasswordHash { get; private set;}
     public int AccessFailedCount { get; private set; }
     public DateTime? LockoutEndDateTime { get; private set;}
@@ -132,6 +133,11 @@ public sealed class User: AggregateRoot<UserId>
     {
         PasswordRecoveryCode = recoveryCode;
         PasswordRecoveryEndDateTime = DateTime.UtcNow.AddMinutes(expirationMinutes);
+    }
+
+    public void SetEmailSendingTimeout()
+    {
+        PasswordRecoveryLastEmailSentDateTime = DateTime.UtcNow;
     }
 
     public void DeletePasswordRecoveryCode()

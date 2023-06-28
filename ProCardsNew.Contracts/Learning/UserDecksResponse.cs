@@ -6,5 +6,6 @@ public record UserDecksResponse(
 public record UserDeckPreviewResponse(
     Guid DeckId,
     string DeckName,
+    string OwnerLogin,
     bool IsOwner);
     

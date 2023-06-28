@@ -47,7 +47,7 @@ public class GradeCardCommandHandler
         if (!await _deckRepository.HasAccess(deck.Id, user.Id))
             return Errors.User.AccessDenied;
 
-        var hours = command.TimeInSeconds / 3600f;
+        var hours = command.TimeInSeconds is <= 30 and >= 1 ? command.TimeInSeconds / 3600f : 0;
         var statistic = (await _statisticRepository.GetDeckStatisticsAsync(deck.Id, user.Id))!;
         statistic.IncreaseStatistic(1, hours);
         user.Statistic!.IncreaseStatistic(1, hours);

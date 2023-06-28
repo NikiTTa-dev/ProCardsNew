@@ -6,6 +6,7 @@ using ProCardsNew.Application.Editing.Cards.Commands.CreateCard;
 using ProCardsNew.Application.Editing.Cards.Commands.DeleteCard;
 using ProCardsNew.Application.Editing.Cards.Commands.EditCard;
 using ProCardsNew.Application.Editing.Cards.Queries.DeckCards;
+using ProCardsNew.Application.Editing.Cards.Queries.UserCards;
 using ProCardsNew.Contracts.Common;
 using ProCardsNew.Contracts.Editing.Cards;
 
@@ -38,7 +39,7 @@ public class CardController: ApiController
             errors => Problem(errors));
     }
     
-    [HttpGet]
+    [HttpGet("FromDeck")]
     public async Task<IActionResult> DeckCards([FromQuery]DeckCardsRequest request)
     {
         if (request.UserId.ToString() != ClaimUserId)
@@ -48,6 +49,20 @@ public class CardController: ApiController
 
         return createResult.Match(
             result => Ok(_mapper.Map<DeckCardsResponse>(result)),
+            errors => Problem(errors));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> UserCards([FromQuery] UserCardsRequest request)
+    {
+        if (request.UserId.ToString() != ClaimUserId)
+            return AccessDenied;
+
+        var query = _mapper.Map<UserCardsQuery>(request);
+        var userCardsResult = await _mediator.Send(query);
+
+        return userCardsResult.Match(
+            result => Ok(_mapper.Map<UserCardsResponse>(result)),
             errors => Problem(errors));
     }
 

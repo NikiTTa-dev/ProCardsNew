@@ -34,10 +34,18 @@ public class PasswordRecoveryCommandHandler:
         _recoveryCodeSettings = recoveryCodeSettings.Value;
     }
     
-    public async Task<ErrorOr<PasswordRecoveryResult>> Handle(PasswordRecoveryCommand command, CancellationToken cancellationToken)
+    public async Task<ErrorOr<PasswordRecoveryResult>> Handle(
+        PasswordRecoveryCommand command,
+        CancellationToken cancellationToken)
     {
         if (await _userRepository.GetByLoginAsync(command.Login.ToUpper()) is not { } user)
             return new PasswordRecoveryResult();
+
+        if (user.PasswordRecoveryLastEmailSentDateTime != null 
+            && user.PasswordRecoveryLastEmailSentDateTime.Value
+                .AddMinutes(_recoveryCodeSettings.EmailLockoutInMinutes)
+            > DateTime.UtcNow)
+            return Errors.Email.EmailAlreadySent;
         
         user.DeletePasswordRecoveryCode();
         user.SetPasswordRecoveryCode(
@@ -46,9 +54,9 @@ public class PasswordRecoveryCommandHandler:
                 .ToString("000000"),
             _recoveryCodeSettings.ExpirationMinutes);
 
-        await _userRepository.SaveChangesAsync();
-        
         _logger.Log(LogLevel.Information, "Sending email");
+        user.SetEmailSendingTimeout();
+
         var result = await _emailSender.SendEmailAsync(
             user.Email,
             user.PasswordRecoveryCode!,
@@ -56,6 +64,8 @@ public class PasswordRecoveryCommandHandler:
         
         if (result == EmailResult.Failure)
             return Errors.Email.EmailSendingFailure;
+        
+        await _userRepository.SaveChangesAsync();
         
         _logger.Log(LogLevel.Information, "Email sent");
 

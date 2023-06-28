@@ -59,6 +59,8 @@ public class CardRepository : ICardRepository
         Expression<Func<Card, object>> orderByDesc)
     {
         return await _dbContext.Cards
+            .Include(c => c.Images)
+            .ThenInclude(i => i.Side)
             .Where(filter)
             .Where(c => c.OwnerId == userId)
             .OrderByDescending(orderByDesc)

@@ -33,6 +33,7 @@ public class DeckRepository : IDeckRepository
     {
         return await _dbContext.UserDecks
             .OrderByDescending(ud => ud.LastOpenedAtDateTime)
+            .Include(ud => ud.DeckAccess!.Deck!.Owner)
             .Where(ud => ud.UserId == userId)
             .Select(ud => ud.DeckAccess!)
             .Where(da => da.IsAccessible || da.Deck!.OwnerId == userId)

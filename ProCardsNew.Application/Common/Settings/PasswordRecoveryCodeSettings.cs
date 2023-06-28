@@ -8,4 +8,5 @@ public class PasswordRecoveryCodeSettings
     public int MaxExclusive { get; init; }
     public int ExpirationMinutes { get; init; }
     
+    public int EmailLockoutInMinutes { get; init; }
 }

@@ -24,7 +24,7 @@ public class DeckCommandHandler
         _deckRepository = deckRepository;
         _statisticRepository = statisticRepository;
     }
-    
+
     public async Task<ErrorOr<DeckResult>> Handle(DeckCommand command, CancellationToken cancellationToken)
     {
         if (await _userRepository.GetByIdAsync(UserId.Create(command.UserId)) is not { } user)
@@ -37,17 +37,17 @@ public class DeckCommandHandler
 
         if (await _deckRepository.GetUserDeck(deck.Id, user.Id) is not { } userDeck)
             return Errors.User.AccessDenied;
-        
+
         userDeck.UpdateOpenedAtDateTime();
         await _deckRepository.SaveChangesAsync();
-        
+
         var statistic =
             await _statisticRepository.GetDeckStatisticsWhereIncludingAsync(
                 deck.Id,
                 ds => ds.User!);
 
         var cardsCount = await _deckRepository.GetCardsCount(deck.Id);
-        
+
         return new DeckResult(
             Id: deck.Id.Value,
             DeckName: deck.Name,
@@ -55,7 +55,7 @@ public class DeckCommandHandler
             OwnerId: deck.OwnerId.Value,
             OwnerLogin: deck.Owner!.Login,
             CardsCount: cardsCount,
-            statistic.ConvertAll(s =>
+            Statistics: statistic.ConvertAll(s =>
                 new DeckStatisticResult(
                     s.UserId.Value,
                     Login: s.User!.Login,
