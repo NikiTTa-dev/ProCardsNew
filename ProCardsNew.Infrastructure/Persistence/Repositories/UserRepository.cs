@@ -35,7 +35,7 @@ public class UserRepository: IUserRepository
         return await _dbContext.Users.FirstOrDefaultAsync(u => u.Email.ToUpper() == normalizedEmail);
     }
 
-    public async Task<User?> GetByIdIncludeAsync(
+    public async Task<User?> GetByIdIncludingAsync(
         UserId id,
         params Expression<Func<User, object?>>[] includeProperties)
     {

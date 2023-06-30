@@ -2,10 +2,12 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ProCardsNew.Api.Controllers.Common;
+using ProCardsNew.Application.Editing.Decks.Commands.AddCard;
 using ProCardsNew.Application.Editing.Decks.Commands.CreateDeck;
 using ProCardsNew.Application.Editing.Decks.Commands.DeleteDeck;
 using ProCardsNew.Application.Editing.Decks.Commands.EditDeck;
 using ProCardsNew.Application.Editing.Decks.Commands.EditDeckPassword;
+using ProCardsNew.Application.Editing.Decks.Commands.RemoveCardFromDeck;
 using ProCardsNew.Application.Editing.Decks.Queries.UserDecksToEdit;
 using ProCardsNew.Contracts.Common;
 using ProCardsNew.Contracts.Editing.Decks;
@@ -38,6 +40,19 @@ public class DeckController: ApiController
             result => Ok(_mapper.Map<CreateDeckResponse>(result)),
             errors => Problem(errors));
     }
+    
+    [HttpPost("addcard")]
+    public async Task<IActionResult> AddCard(AddCardRequest request)
+    {
+        if (request.UserId.ToString() != ClaimUserId)
+            return AccessDenied;
+        var command = _mapper.Map<AddCardCommand>(request);
+        var addCardResult = await _mediator.Send(command);
+
+        return addCardResult.Match(
+            result => Ok(_mapper.Map<AddCardResponse>(result)),
+            errors => Problem(errors));
+    }
 
     [HttpGet]
     public async Task<IActionResult> UserDecksToEdit([FromQuery]UserDecksToEditRequest request)
@@ -45,9 +60,9 @@ public class DeckController: ApiController
         if (request.UserId.ToString() != ClaimUserId)
             return AccessDenied;
         var query = _mapper.Map<UserDecksToEditQuery>(request);
-        var createResult = await _mediator.Send(query);
+        var userDecksResult = await _mediator.Send(query);
 
-        return createResult.Match(
+        return userDecksResult.Match(
             result => Ok(_mapper.Map<UserDecksToEditResponse>(result)),
             errors => Problem(errors));
     }
@@ -58,9 +73,9 @@ public class DeckController: ApiController
         if (request.UserId.ToString() != ClaimUserId)
             return AccessDenied;
         var command = _mapper.Map<EditDeckCommand>(request);
-        var createResult = await _mediator.Send(command);
+        var editDeckResult = await _mediator.Send(command);
 
-        return createResult.Match(
+        return editDeckResult.Match(
             result => Ok(_mapper.Map<ResultResponse>(result)),
             errors => Problem(errors));
     }
@@ -71,9 +86,9 @@ public class DeckController: ApiController
         if (request.UserId.ToString() != ClaimUserId)
             return AccessDenied;
         var command = _mapper.Map<EditDeckPasswordCommand>(request);
-        var createResult = await _mediator.Send(command);
+        var editDeckPasswordResult = await _mediator.Send(command);
 
-        return createResult.Match(
+        return editDeckPasswordResult.Match(
             result => Ok(_mapper.Map<ResultResponse>(result)),
             errors => Problem(errors));
     }
@@ -84,10 +99,23 @@ public class DeckController: ApiController
         if (request.UserId.ToString() != ClaimUserId)
             return AccessDenied;
         var command = _mapper.Map<DeleteDeckCommand>(request);
-        var createResult = await _mediator.Send(command);
+        var deleteDeckResult = await _mediator.Send(command);
 
-        return createResult.Match(
+        return deleteDeckResult.Match(
             result => Ok(_mapper.Map<ResultResponse>(result)),
+            errors => Problem(errors));
+    }
+    
+    [HttpDelete("removecard")]
+    public async Task<IActionResult> RemoveCardFromDeck(RemoveCardFromDeckRequest request)
+    {
+        if (request.UserId.ToString() != ClaimUserId)
+            return AccessDenied;
+        var command = _mapper.Map<RemoveCardFromDeckCommand>(request);
+        var removeCardFromDeckResult = await _mediator.Send(command);
+
+        return removeCardFromDeckResult.Match(
+            result => Ok(_mapper.Map<RemoveCardFromDeckResponse>(result)),
             errors => Problem(errors));
     }
 }

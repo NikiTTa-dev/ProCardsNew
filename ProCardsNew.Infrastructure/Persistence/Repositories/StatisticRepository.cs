@@ -23,6 +23,13 @@ public class StatisticRepository : IStatisticRepository
         _settings = settings.Value;
     }
 
+    public async Task<Statistic?> GetUserStatistic(UserId userId)
+    {
+        return await _dbContext.Statistics
+            .Where(s => s.Id == userId)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<DeckStatistic?> GetDeckStatisticsAsync(DeckId deckId, UserId userId)
     {
         return await _dbContext.DeckStatistics
@@ -38,7 +45,7 @@ public class StatisticRepository : IStatisticRepository
             .ToListAsync();
     }
 
-    public async Task<List<DeckStatistic>> GetDeckStatisticsWhereIncludingAsync(
+    public async Task<List<DeckStatistic>> GetDeckStatisticsIncludingAsync(
         DeckId deckId,
         params Expression<Func<DeckStatistic, object>>[] includedProperties)
     {

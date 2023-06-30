@@ -271,6 +271,40 @@ searchQuery=string
 }
 ```
 
+## AddCardRequest
+POST host/editing/decks/addcard
+```json
+{
+  "userId": "c5e39a9b-a4fc-42db-b6f9-82451275db1c",
+  "deckId": "d9e227fc-8d98-43df-a6f7-d84593386f2f",
+  "cardId": "cd9bb02e-9c4e-4770-8418-fef94a5a6e88"
+}
+```
+
+## AddCardResponse
+```json
+{
+  "result": "string"
+}
+```
+
+## RemoveCardRequest
+DELETE host/editing/decks/removecard
+```json
+{
+  "userId": "c5e39a9b-a4fc-42db-b6f9-82451275db1c",
+  "deckId": "d9e227fc-8d98-43df-a6f7-d84593386f2f",
+  "cardId": "cd9bb02e-9c4e-4770-8418-fef94a5a6e88"
+}
+```
+
+## RemoveCardResponse
+```json
+{
+  "result": "string"
+}
+```
+
 ## EditDeckRequest
 PATCH host/editing/decks
 ```json
@@ -348,14 +382,6 @@ userId=3fa85f64-5717-4562-b3fc-2c963f66afa6
 searchQuery=string
 ```
 
-## DeckCardsRequest
-GET host/editing/cards/fromdeck
-```text
-userId=3fa85f64-5717-4562-b3fc-2c963f66afa6
-deckId=3fa85f64-5717-4562-b3fc-2c963f66afa6
-searchQuery=string
-```
-
 ## UserCardsResponse
 ```json
 {
@@ -369,6 +395,14 @@ searchQuery=string
     }
   ]
 }
+```
+
+## DeckCardsRequest
+GET host/editing/cards/fromdeck
+```text
+userId=3fa85f64-5717-4562-b3fc-2c963f66afa6
+deckId=3fa85f64-5717-4562-b3fc-2c963f66afa6
+searchQuery=string
 ```
 
 ## DeckCardsResponse

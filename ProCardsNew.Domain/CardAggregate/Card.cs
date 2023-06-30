@@ -1,4 +1,5 @@
 ﻿using ProCardsNew.Domain.CardAggregate.Entities;
+using ProCardsNew.Domain.CardAggregate.Events;
 using ProCardsNew.Domain.CardAggregate.ValueObjects;
 using ProCardsNew.Domain.Common.Models;
 using ProCardsNew.Domain.DeckAggregate;
@@ -9,7 +10,7 @@ using ProCardsNew.Domain.UserAggregate.ValueObjects;
 
 namespace ProCardsNew.Domain.CardAggregate;
 
-// TODO: Color IMAGES
+// TODO: Color
 
 public sealed class Card: AggregateRoot<CardId>
 {
@@ -56,13 +57,17 @@ public sealed class Card: AggregateRoot<CardId>
         string frontSide,
         string backSide)
     {
-        return new(
+        var card = new Card(
             CardId.CreateUnique(), 
             frontSide,
             backSide,
             ownerId,
             DateTime.UtcNow,
             DateTime.UtcNow);
+
+        card.AddDomainEvent(new CardCreated(card, ownerId));
+        
+        return card;
     }
 
     public void Edit(
@@ -94,9 +99,12 @@ public sealed class Card: AggregateRoot<CardId>
         return true;
     }
 
-    public void GradeCard(UserId userId, DeckId deckId, int grade)
+    public void GradeCard(UserId userId, DeckId deckId, int grade, float timeInSeconds)
     {
+        var hours = timeInSeconds is <= 30 and >= 1 ? timeInSeconds / 3600f : 0;
+
         _grades.Add(Grade.Create(Id, deckId, userId, grade));
+        AddDomainEvent(new CardGraded(this, deckId, userId, hours));
     }
     
 #pragma warning disable CS8618

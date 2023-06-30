@@ -28,8 +28,7 @@ public class StudyCardsQueryHandler
 
     public async Task<ErrorOr<StudyCardsQueryResult>> Handle(StudyCardsQuery query, CancellationToken cancellationToken)
     {
-        if (await _userRepository.GetByIdIncludeAsync(
-                UserId.Create(query.UserId)) is not { } user)
+        if (await _userRepository.GetByIdAsync(UserId.Create(query.UserId)) is not { } user)
             return Errors.User.NotFound;
 
         if (await _deckRepository.GetByIdAsync(DeckId.Create(query.DeckId)) is not { } deck)

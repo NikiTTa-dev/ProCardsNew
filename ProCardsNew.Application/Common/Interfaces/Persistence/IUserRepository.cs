@@ -10,7 +10,7 @@ public interface IUserRepository
     Task<User?> GetByLoginAsync(string normalizedLogin);
     Task<User?> GetByIdAsync(UserId id);
     Task<User?> GetByEmailAsync(string normalizedEmail);
-    Task<User?> GetByIdIncludeAsync(
+    Task<User?> GetByIdIncludingAsync(
         UserId id,
         params Expression<Func<User, object?>>[] includeProperties);
     Task SaveChangesAsync();

@@ -41,8 +41,8 @@ public class DeckCommandHandler
         userDeck.UpdateOpenedAtDateTime();
         await _deckRepository.SaveChangesAsync();
 
-        var statistic =
-            await _statisticRepository.GetDeckStatisticsWhereIncludingAsync(
+        var statistics =
+            await _statisticRepository.GetDeckStatisticsIncludingAsync(
                 deck.Id,
                 ds => ds.User!);
 
@@ -55,7 +55,7 @@ public class DeckCommandHandler
             OwnerId: deck.OwnerId.Value,
             OwnerLogin: deck.Owner!.Login,
             CardsCount: cardsCount,
-            Statistics: statistic.ConvertAll(s =>
+            Statistics: statistics.ConvertAll(s =>
                 new DeckStatisticResult(
                     s.UserId.Value,
                     Login: s.User!.Login,

@@ -13,6 +13,7 @@ using ProCardsNew.Application.Common.Settings;
 using ProCardsNew.Domain.UserAggregate;
 using ProCardsNew.Infrastructure.Authentication;
 using ProCardsNew.Infrastructure.Persistence;
+using ProCardsNew.Infrastructure.Persistence.Interceptors;
 using ProCardsNew.Infrastructure.Persistence.Repositories;
 using ProCardsNew.Infrastructure.Services;
 using ProCardsNew.Infrastructure.Settings;
@@ -42,12 +43,13 @@ public static class DependencyInjection
         this IServiceCollection services,
         ConfigurationManager configuration)
     {
+        services.AddScoped<PublishDomainEventsInterceptor>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IDeckRepository, DeckRepository>();
         services.AddScoped<ICardRepository, CardRepository>();
         services.AddScoped<IImageRepository, ImageRepository>();
         services.AddScoped<IStatisticRepository, StatisticRepository>();
-        
+
         services.AddDbContext<ProCardsDbContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("default"));

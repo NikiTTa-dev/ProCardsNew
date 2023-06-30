@@ -19,7 +19,7 @@ public class DeckRepository : IDeckRepository
         _dbContext = dbContext;
     }
 
-    public void ChangeStateToAdd(object entity)
+    public void ChangeStateToAdded(object entity)
     {
         _dbContext.Entry(entity).State = EntityState.Added;
     }
@@ -153,6 +153,15 @@ public class DeckRepository : IDeckRepository
         return await _dbContext.DeckCards
             .Where(dc => dc.DeckId == deckId && dc.CardId == cardId)
             .FirstOrDefaultAsync() != null;
+    }
+
+    public async Task RemoveCardFromDeck(DeckId deckId, CardId cardId)
+    {
+        var deckCard = await _dbContext.DeckCards
+            .FirstOrDefaultAsync(dc => dc.DeckId == deckId && dc.CardId == cardId);
+
+        if(deckCard is not null)
+            _dbContext.Remove(deckCard);
     }
 
     public void DeleteUserDeck(UserDeck userDeck)

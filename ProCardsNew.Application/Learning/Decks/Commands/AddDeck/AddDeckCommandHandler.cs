@@ -49,13 +49,14 @@ public class AddDeckCommandHandler
         var verificationResult = _passwordHasherService
             .VerifyPasswordHash(deck.PasswordHash!, command.Password);
 
-        if (verificationResult
-            is PasswordVerificationResult.Failed)
-            return Errors.Deck.InvalidCredentials;
-
-        if (verificationResult
-            is PasswordVerificationResult.SuccessRehashNeeded)
-            deck.EditPassword(_passwordHasherService.GeneratePasswordHash(command.Password));
+        switch (verificationResult)
+        {
+            case PasswordVerificationResult.Failed:
+                return Errors.Deck.InvalidCredentials;
+            case PasswordVerificationResult.SuccessRehashNeeded:
+                deck.EditPassword(_passwordHasherService.GeneratePasswordHash(command.Password));
+                break;
+        }
 
         deckAccess.AddUser(user.Id);
         if (!await _statisticRepository.HasStatistic(deck.Id, user.Id))
@@ -63,7 +64,7 @@ public class AddDeckCommandHandler
         await _deckRepository.SaveChangesAsync();
 
         var statistic =
-            await _statisticRepository.GetDeckStatisticsWhereIncludingAsync(
+            await _statisticRepository.GetDeckStatisticsIncludingAsync(
                 deck.Id,
                 ds => ds.User!);
 

@@ -1,8 +1,10 @@
 ﻿using Mapster;
+using ProCardsNew.Application.Editing.Decks.Commands.AddCard;
 using ProCardsNew.Application.Editing.Decks.Commands.CreateDeck;
 using ProCardsNew.Application.Editing.Decks.Commands.DeleteDeck;
 using ProCardsNew.Application.Editing.Decks.Commands.EditDeck;
 using ProCardsNew.Application.Editing.Decks.Commands.EditDeckPassword;
+using ProCardsNew.Application.Editing.Decks.Commands.RemoveCardFromDeck;
 using ProCardsNew.Application.Editing.Decks.Queries.UserDecksToEdit;
 using ProCardsNew.Contracts.Common;
 using ProCardsNew.Contracts.Editing.Decks;
@@ -15,6 +17,12 @@ public class DeckEditingMapping : IRegister
     {
         config.NewConfig<CreateDeckRequest, CreateDeckCommand>();
         config.NewConfig<CreateDeckCommandResult, CreateDeckResponse>();
+
+        config.NewConfig<AddCardRequest, AddCardCommand>();
+        config.NewConfig<AddCardCommandResult, AddCardResponse>();
+
+        config.NewConfig<RemoveCardFromDeckRequest, RemoveCardFromDeckCommand>();
+        config.NewConfig<RemoveCardFromDeckCommandResult, RemoveCardFromDeckResponse>();
 
         config.NewConfig<UserDecksToEditRequest, UserDecksToEditQuery>();
         config.NewConfig<UserDecksToEditQueryResult, UserDecksToEditResponse>();

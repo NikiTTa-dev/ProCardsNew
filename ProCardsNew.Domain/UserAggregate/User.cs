@@ -95,13 +95,6 @@ public sealed class User : AggregateRoot<UserId>
         _deckStatistics.Add(DeckStatistic.Create(deck.Id, Id));
     }
 
-    public void AddCard(Card card)
-    {
-        _ownedCards.Add(card);
-        if (Statistic is not null)
-            Statistic.IncreaseCardsCreated();
-    }
-
     public RefreshToken GenerateRefreshToken()
     {
         RefreshToken = RefreshToken.CreateUnique();

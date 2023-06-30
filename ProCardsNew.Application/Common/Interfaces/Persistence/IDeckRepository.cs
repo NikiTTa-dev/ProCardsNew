@@ -10,7 +10,7 @@ namespace ProCardsNew.Application.Common.Interfaces.Persistence;
 
 public interface IDeckRepository
 {
-    void ChangeStateToAdd(object entity);
+    void ChangeStateToAdded(object entity);
     Task AddAsync(Deck deck);
 
     public Task<List<Deck>> GetUserDecks(UserId userId, string searchQuery);
@@ -45,7 +45,8 @@ public interface IDeckRepository
     public Task<int> GetCardsCount(DeckId deckId);
     public Task<bool> HasAccess(DeckId deckId, UserId userId);
     public Task<bool> HasCard(DeckId deckId, CardId cardId);
-    
+
+    public Task RemoveCardFromDeck(DeckId deckId, CardId cardId);
     void Delete(Deck deck);
     public void DeleteUserDeck(UserDeck userDeck);
 

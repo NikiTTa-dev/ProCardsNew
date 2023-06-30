@@ -22,7 +22,7 @@ public class UserProfilePreviewQueryHandler
         CancellationToken cancellationToken)
     {
         var user = await _userRepository
-            .GetByIdIncludeAsync(
+            .GetByIdIncludingAsync(
                 UserId.Create(query.UserId),
                 u => u.Statistic);
 

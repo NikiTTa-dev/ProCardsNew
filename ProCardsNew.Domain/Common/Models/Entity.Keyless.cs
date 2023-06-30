@@ -1,9 +1,13 @@
 ﻿namespace ProCardsNew.Domain.Common.Models;
 
-public abstract class Entity: IEquatable<Entity>
+public abstract class Entity: IEquatable<Entity>, IHasDomainEvents
 {
-    public abstract IEnumerable<object?> GetEqualityComponents();
+    private readonly List<IDomainEvent> _domainEvents = new();
+    public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
+    public abstract IEnumerable<object?> GetEqualityComponents();
+    
+    
     public override bool Equals(object? obj)
     {
         if (obj is null || obj.GetType() != GetType())
@@ -35,5 +39,15 @@ public abstract class Entity: IEquatable<Entity>
     public bool Equals(Entity? other)
     {
         return Equals((object?)other);
+    }
+
+    public void AddDomainEvent(IDomainEvent domainEvent)
+    {
+        _domainEvents.Add(domainEvent);
+    }
+    
+    public void ClearDomainEvents()
+    {
+        _domainEvents.Clear();
     }
 }

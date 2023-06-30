@@ -3,7 +3,6 @@ using MediatR;
 using ProCardsNew.Application.Common.Interfaces.Persistence;
 using ProCardsNew.Domain.CardAggregate;
 using ProCardsNew.Domain.Common.Errors;
-using ProCardsNew.Domain.DeckAggregate.ValueObjects;
 using ProCardsNew.Domain.UserAggregate.ValueObjects;
 
 namespace ProCardsNew.Application.Editing.Cards.Commands.CreateCard;
@@ -27,29 +26,18 @@ public class CreateCardCommandHandler
     
     public async Task<ErrorOr<CreateCardCommandResult>> Handle(CreateCardCommand command, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByIdIncludeAsync(
-            UserId.Create(command.UserId),
-            u => u.Statistic);
-        
-        if (user is null)
+        if (await _userRepository.GetByIdAsync(UserId.Create(command.UserId)) is not { } user)
             return Errors.User.NotFound;
 
         if (await _cardRepository.GetByNameAsync(user.Id, command.FrontSide, command.BackSide) is not null)
             return Errors.Card.AlreadyExists;
-
-        if (await _deckRepository.GetByIdAsync(DeckId.Create(command.DeckId)) is not { } deck)
-            return Errors.Deck.NotFound;
-
-        if (deck.OwnerId != user.Id)
-            return Errors.User.AccessDenied;
 
         var card = Card.Create(
             ownerId: user.Id,
             frontSide: command.FrontSide,
             backSide: command.BackSide);
 
-        user.AddCard(card);
-        _deckRepository.ChangeStateToAdd(deck.AddCard(card));
+        await _cardRepository.AddAsync(card);
         await _deckRepository.SaveChangesAsync();
         
         return new CreateCardCommandResult(card.Id.Value);

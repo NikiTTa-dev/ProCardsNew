@@ -10,6 +10,10 @@ public static partial class Errors
             code: "Deck.DuplicateName",
             description: "User already have deck with given name.");
         
+        public static Error DuplicateCard => Error.Conflict(
+            code: "Deck.DuplicateCard",
+            description: "Deck already have this card.");
+        
         public static Error Duplicate => Error.Conflict(
             code: "Deck.Duplicate",
             description: "User already have this deck.");
