@@ -1,0 +1,70 @@
+﻿version: '3.7'
+
+networks: 
+  dev:
+    driver: bridge
+
+services:
+  procards:
+    image: docker.io/shhhwrgy/dotnet-docker:latest
+    depends_on:
+      - "app_db"
+    container_name: procards-services
+#    volumes:
+#      - ~/certs:/https
+    ports:
+      - "8080:80"
+      - "8443:443"
+    volumes:
+      - ~/.aspnet/https:/https/
+    build:
+      context: .
+      dockerfile: ProCardsNew.Api/Dockerfile
+    environment:
+#      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/cert.crt
+#      - ASPNETCORE_Kestrel__Certificates__Default__KeyPath=/https/privkey.key
+      - DOTNET_GENERATE_ASPNET_CERTIFICATE=false
+      - JwtSettings__Secret=${JWT_SECRET}
+      - EmailSettings__From=${EMAIL}
+      - EmailSettings__Password=${EMAIL_PASSWORD}
+      - ConnectionStrings__default=UserId=postgres;Password=postgres;Server=app_db;Port=5432;Database=ProCardsDbDriver;IntegratedSecurity=true;Pooling=true;
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=8443
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Protocols=Http1AndHttp2
+    networks:
+      - dev
+      
+  procards_front:
+    image: docker.io/shhhwrgy/procards-react
+    depends_on:
+      - "procards"
+    container_name: procards-frontend
+    networks:
+      - dev
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    
+        
+  app_db:
+    image: postgres:latest
+    container_name: app_db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=ProCardsDbDriver
+    ports:
+      - "5433:5432"
+    restart: always
+    volumes:
+      - app_data:/var/lib/postgresql/data
+    networks:
+      - dev
+        
+volumes:
+  app_data:
+      
+  
