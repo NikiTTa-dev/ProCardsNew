@@ -1,4 +1,6 @@
-﻿using ErrorOr;
+﻿using Amazon.S3;
+using Amazon.S3.Model;
+using ErrorOr;
 using MediatR;
 using ProCardsNew.Application.Common.Interfaces.Persistence;
 using ProCardsNew.Domain.CardAggregate.Entities;
@@ -13,13 +15,15 @@ public class AddCardImageCommandHandler
 {
     private readonly IUserRepository _userRepository;
     private readonly ICardRepository _cardRepository;
+    private readonly IAmazonS3 _amazonS3;
 
     public AddCardImageCommandHandler(
         IUserRepository userRepository,
-        ICardRepository cardRepository)
+        ICardRepository cardRepository, IAmazonS3 amazonS3)
     {
         _userRepository = userRepository;
         _cardRepository = cardRepository;
+        _amazonS3 = amazonS3;
     }
 
     public async Task<ErrorOr<AddCardImageCommandResult>> Handle(
@@ -37,7 +41,7 @@ public class AddCardImageCommandHandler
 
         switch (command.Side)
         {
-            case "Front": 
+            case "Front":
                 if (await _cardRepository.HasFrontImageAsync(card.Id))
                     return Errors.Image.HasImage;
                 break;
@@ -49,18 +53,21 @@ public class AddCardImageCommandHandler
                 return Errors.Side.NotFound;
         }
 
-        using (var stream = new MemoryStream())
+        var s3ImageId = Guid.NewGuid();
+        await _amazonS3.PutObjectAsync(new PutObjectRequest
         {
-            await command.Data.CopyToAsync(stream, cancellationToken);
-            var image = Image.Create(
-                cardId: card.Id,
-                name: command.Name,
-                fileExtension: command.FileExtension,
-                data: ImageData.Create(stream.ToArray()));
+            BucketName = "chatgpt-next-web",
+            Key = s3ImageId.ToString(),
+            InputStream = command.Data
+        }, cancellationToken);
 
-            card.AddImage(image, command.Side);
-            await _cardRepository.SaveChangesAsync();
-        }
+        var image = Image.Create(
+            cardId: card.Id,
+            name: command.Name,
+            fileExtension: command.FileExtension,
+            S3ImageId: s3ImageId);
+        card.AddImage(image, command.Side);
+        await _cardRepository.SaveChangesAsync();
 
         await command.Data.DisposeAsync();
 

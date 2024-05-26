@@ -39,6 +39,8 @@ public class ImageConfiguration : IEntityTypeConfiguration<Image>
 
     private void ConfigureProperties(EntityTypeBuilder<Image> builder)
     {
+        builder.Property(i => i.S3ImageId);
+        
         builder.Property(i => i.Name)
             .IsRequired()
             .HasMaxLength(_validationSettings.ImageNameLength);
@@ -46,10 +48,6 @@ public class ImageConfiguration : IEntityTypeConfiguration<Image>
         builder.Property(i => i.FileExtension)
             .IsRequired()
             .HasMaxLength(_validationSettings.ImageFileExtensionLength);
-
-        builder.HasOne(i => i.ImageData)
-            .WithOne(id => id.Image)
-            .HasForeignKey(typeof(ImageData),nameof(ImageData.ImageId));
 
         builder.Property(i => i.CreatedAt)
             .IsRequired();

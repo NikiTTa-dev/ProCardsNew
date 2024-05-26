@@ -9,7 +9,7 @@ public sealed class Image : Entity<ImageId>
     public Card? Card { get; private set; }
     public string Name { get; private set; }
     public string FileExtension { get; private set; }
-    public ImageData? ImageData { get; private set; }
+    public Guid? S3ImageId { get; private set; }
     public DateTime CreatedAt { get; private set; }
     private readonly List<Card> _cardsWithFrontSide = new();
     public IReadOnlyList<Card> CardsWithFrontSide => _cardsWithFrontSide.AsReadOnly();
@@ -21,11 +21,11 @@ public sealed class Image : Entity<ImageId>
         CardId cardId,
         string name,
         string fileExtension,
-        ImageData data,
+        Guid S3ImageId,
         DateTime createdAt)
         : base(id)
     {
-        ImageData = data;
+        this.S3ImageId = S3ImageId;
         CardId = cardId;
         Name = name;
         FileExtension = fileExtension;
@@ -36,14 +36,14 @@ public sealed class Image : Entity<ImageId>
         CardId cardId,
         string name,
         string fileExtension,
-        ImageData data)
+        Guid S3ImageId)
     {
         return new(
             ImageId.CreateUnique(),
             cardId,
             name,
             fileExtension,
-            data,
+            S3ImageId,
             DateTime.UtcNow);
     }
 

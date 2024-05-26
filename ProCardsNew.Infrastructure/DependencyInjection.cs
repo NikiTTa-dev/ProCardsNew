@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Amazon.S3;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -34,8 +35,20 @@ public static class DependencyInjection
             .AddPersistence(configuration)
             .AddEmailSender(configuration)
             .AddPasswordRecoveryCodeSettings(configuration)
-            .AddLockoutSettings(configuration);
+            .AddLockoutSettings(configuration)
+            .AddAWS(configuration);
         
+        return services;
+    }
+
+    private static IServiceCollection AddAWS(
+        this IServiceCollection services,
+        ConfigurationManager configuration)
+    {
+        
+        services.AddDefaultAWSOptions(configuration.GetAWSOptions())
+            .AddAWSService<IAmazonS3>();
+
         return services;
     }
 
@@ -123,12 +136,14 @@ public static class DependencyInjection
         return services;
     }
 
-    private static void AddLockoutSettings(
+    private static IServiceCollection AddLockoutSettings(
         this IServiceCollection services,
         ConfigurationManager configuration)
     {
         var lockoutSettings = new LockoutSettings();
         configuration.Bind(LockoutSettings.SectionName, lockoutSettings);
         services.AddSingleton(Options.Create(lockoutSettings));
+
+        return services;
     }
 }

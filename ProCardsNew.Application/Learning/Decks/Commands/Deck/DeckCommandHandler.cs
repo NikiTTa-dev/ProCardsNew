@@ -59,6 +59,8 @@ public class DeckCommandHandler
                 new DeckStatisticResult(
                     s.UserId.Value,
                     Login: s.User!.Login,
-                    s.Score)));
+                    s.Score))
+                .OrderByDescending(ds => ds.Score)
+                .ToList());
     }
 }

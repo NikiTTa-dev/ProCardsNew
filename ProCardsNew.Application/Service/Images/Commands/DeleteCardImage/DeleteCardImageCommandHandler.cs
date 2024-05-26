@@ -1,4 +1,6 @@
-﻿using ErrorOr;
+﻿using Amazon.S3;
+using Amazon.S3.Model;
+using ErrorOr;
 using MediatR;
 using ProCardsNew.Application.Common.Interfaces.Persistence;
 using ProCardsNew.Domain.CardAggregate.Entities;
@@ -14,15 +16,17 @@ public class DeleteCardImageCommandHandler
     private readonly IUserRepository _userRepository;
     private readonly ICardRepository _cardRepository;
     private readonly IImageRepository _imageRepository;
+    private readonly IAmazonS3 _amazonS3;
 
     public DeleteCardImageCommandHandler(
         IUserRepository userRepository,
         ICardRepository cardRepository,
-        IImageRepository imageRepository)
+        IImageRepository imageRepository, IAmazonS3 amazonS3)
     {
         _userRepository = userRepository;
         _cardRepository = cardRepository;
         _imageRepository = imageRepository;
+        _amazonS3 = amazonS3;
     }
     
     public async Task<ErrorOr<DeleteCardImageCommandResult>> Handle(
@@ -54,9 +58,14 @@ public class DeleteCardImageCommandHandler
             default:
                 return Errors.Side.NotFound;
         }
-        
+
         _imageRepository.DeleteImage(image);
         await _imageRepository.SaveChangesAsync();
+        await _amazonS3.DeleteObjectAsync(new DeleteObjectRequest
+        {
+            BucketName = "chatgpt-next-web",
+            Key = image.S3ImageId.ToString()
+        }, cancellationToken);
 
         return new DeleteCardImageCommandResult();
     }

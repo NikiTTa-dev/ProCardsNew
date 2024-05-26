@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Amazon.S3;
+using Amazon.S3.Model;
+using Microsoft.EntityFrameworkCore;
 using ProCardsNew.Application.Common.Interfaces.Persistence;
 using ProCardsNew.Domain.CardAggregate.Entities;
 using ProCardsNew.Domain.CardAggregate.ValueObjects;
@@ -7,16 +9,16 @@ namespace ProCardsNew.Infrastructure.Persistence.Repositories;
 
 public class ImageRepository : RepositoryBase, IImageRepository
 {
+    
+    
     public ImageRepository(ProCardsDbContext dbContext) : base(dbContext)
     {
     }
 
-    public async Task<Image?> GetFrontImageByCardId(
-        CardId cardId)
+    public async Task<Image?> GetFrontImageByCardId(CardId cardId)
     {
         return await DbContext.Cards
             .Where(c => c.Id == cardId)
-            .Include(c => c.FrontImage!.ImageData)
             .Select(c => c.FrontImage)
             .FirstOrDefaultAsync();
     }
@@ -26,7 +28,6 @@ public class ImageRepository : RepositoryBase, IImageRepository
     {
         return await DbContext.Cards
             .Where(c => c.Id == cardId)
-            .Include(c => c.BackImage!.ImageData)
             .Select(c => c.BackImage)
             .FirstOrDefaultAsync();
     }

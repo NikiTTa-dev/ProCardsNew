@@ -30,23 +30,21 @@ public static class ModelBuilderExtensions
                 .ToList()
                 .ForEach(i =>
                 {
-                    {
-                        var hasServiceConstructor =
-                            t.GetConstructor(services.Select(s => s.GetType()).ToArray()) != null;
-                        var hasEmptyConstructor = t.GetConstructor(Type.EmptyTypes) != null;
+                    var hasServiceConstructor =
+                        t.GetConstructor(services.Select(s => s.GetType()).ToArray()) != null;
+                    var hasEmptyConstructor = t.GetConstructor(Type.EmptyTypes) != null;
 
-                        if (hasServiceConstructor)
-                        {
-                            applyConfigurationMethod
-                                .MakeGenericMethod(i.GenericTypeArguments[0])
-                                .Invoke(modelBuilder, new[] { Activator.CreateInstance(t, services) });
-                        }
-                        else if (hasEmptyConstructor)
-                        {
-                            applyConfigurationMethod
-                                .MakeGenericMethod(i.GenericTypeArguments[0])
-                                .Invoke(modelBuilder, new[] { Activator.CreateInstance(t) });
-                        }
+                    if (hasServiceConstructor)
+                    {
+                        applyConfigurationMethod
+                            .MakeGenericMethod(i.GenericTypeArguments[0])
+                            .Invoke(modelBuilder, new[] { Activator.CreateInstance(t, services) });
+                    }
+                    else if (hasEmptyConstructor)
+                    {
+                        applyConfigurationMethod
+                            .MakeGenericMethod(i.GenericTypeArguments[0])
+                            .Invoke(modelBuilder, new[] { Activator.CreateInstance(t) });
                     }
                 })
             );

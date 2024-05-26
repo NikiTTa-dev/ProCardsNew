@@ -14,7 +14,7 @@ namespace ProCardsNew.Domain.CardAggregate;
 
 public sealed class Card: AggregateRoot<CardId>
 {
-    public string FrontSide { get; private set; }
+    public string FrontSide { get; private set; } 
     public string BackSide { get; private set; }
     //public string Color { get; private set; }
     public UserId OwnerId { get; private set; }

@@ -1,4 +1,5 @@
-﻿using MapsterMapper;
+﻿using Amazon.S3;
+using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ProCardsNew.Api.Controllers.Common;

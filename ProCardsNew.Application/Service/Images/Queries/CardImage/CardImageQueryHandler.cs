@@ -1,4 +1,6 @@
-﻿using ErrorOr;
+﻿using Amazon.S3;
+using Amazon.S3.Model;
+using ErrorOr;
 using MediatR;
 using ProCardsNew.Application.Common.Interfaces.Persistence;
 using ProCardsNew.Domain.CardAggregate.Entities;
@@ -16,17 +18,19 @@ public class CardImageQueryHandler
     private readonly ICardRepository _cardRepository;
     private readonly IDeckRepository _deckRepository;
     private readonly IImageRepository _imageRepository;
+    private readonly IAmazonS3 _amazonS3;
 
     public CardImageQueryHandler(
         IUserRepository userRepository,
         ICardRepository cardRepository,
         IDeckRepository deckRepository,
-        IImageRepository imageRepository)
+        IImageRepository imageRepository, IAmazonS3 amazonS3)
     {
         _userRepository = userRepository;
         _cardRepository = cardRepository;
         _deckRepository = deckRepository;
         _imageRepository = imageRepository;
+        _amazonS3 = amazonS3;
     }
 
     public async Task<ErrorOr<CardImageQueryResult>> Handle(CardImageQuery query, CancellationToken cancellationToken)
@@ -62,9 +66,17 @@ public class CardImageQueryHandler
             default:
                 return Errors.Side.NotFound;
         }
-        
+
+        var objectResponse = await _amazonS3.GetObjectAsync(new GetObjectRequest
+        {
+            BucketName = "chatgpt-next-web",
+            Key = image.S3ImageId.ToString()
+        }, cancellationToken);
+
+        using var ms = new MemoryStream();
+        await objectResponse.ResponseStream.CopyToAsync(ms, cancellationToken);
         return new CardImageQueryResult(
-            Data: image.ImageData!.Data,
+            Data: ms.ToArray(),
             FileExtension: image.FileExtension);
     }
 }

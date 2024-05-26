@@ -6,7 +6,6 @@ networks:
 
 services:
   procards:
-    image: docker.io/shhhwrgy/dotnet-docker:latest
     depends_on:
       - "app_db"
     container_name: procards-services
@@ -47,17 +46,16 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-    
         
   app_db:
     image: postgres:latest
-    container_name: app_db
+    container_name: app_db_procards
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=ProCardsDbDriver
     ports:
-      - "5433:5432"
+      - "5432:5432"
     restart: always
     volumes:
       - app_data:/var/lib/postgresql/data
@@ -67,4 +65,3 @@ services:
 volumes:
   app_data:
       
-  

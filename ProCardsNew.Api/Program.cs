@@ -47,6 +47,16 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
+    app.UseCors(c =>
+    {
+        c.AllowCredentials();
+        c.WithOrigins(
+            "https://localhost:3000",
+            "http://localhost:3000");
+        c.AllowAnyMethod();
+        c.AllowAnyHeader();
+    });
+    
     app.UseCookiePolicy(new CookiePolicyOptions
     {
         Secure = CookieSecurePolicy.Always,
